@@ -17,15 +17,15 @@ const data = [
 
 export const EngagementChart = () => {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Cumulative Engagement</h3>
+    <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Cumulative Engagement</h3>
       
-      <div className="flex items-center space-x-2 mb-4">
+      <div className="flex items-center space-x-2 mb-6">
         <div className="w-3 h-3 bg-blue-600 rounded"></div>
         <span className="text-sm text-gray-600">Version A</span>
       </div>
       
-      <div className="h-64">
+      <div className="h-80 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
             <XAxis 
@@ -43,9 +43,9 @@ export const EngagementChart = () => {
               type="monotone" 
               dataKey="engagement" 
               stroke="#2563EB"
-              strokeWidth={2}
+              strokeWidth={3}
               dot={false}
-              activeDot={{ r: 4, fill: '#2563EB' }}
+              activeDot={{ r: 6, fill: '#2563EB' }}
             />
           </LineChart>
         </ResponsiveContainer>
