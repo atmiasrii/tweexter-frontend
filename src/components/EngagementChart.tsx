@@ -1,5 +1,5 @@
 
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const data = [
   { time: 0, engagement: 50 },
@@ -28,6 +28,7 @@ export const EngagementChart = () => {
       <div className="h-80 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis 
               dataKey="time" 
               axisLine={false}
@@ -44,8 +45,8 @@ export const EngagementChart = () => {
               dataKey="engagement" 
               stroke="#2563EB"
               strokeWidth={3}
-              dot={false}
-              activeDot={{ r: 6, fill: '#2563EB' }}
+              dot={{ fill: '#2563EB', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, fill: '#2563EB', stroke: '#ffffff', strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>

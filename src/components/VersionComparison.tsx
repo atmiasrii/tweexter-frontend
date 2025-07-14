@@ -1,10 +1,11 @@
 
 import { ChevronDown } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 export const VersionComparison = () => {
   return (
-    <div className="bg-white border-b border-gray-200 p-6">
-      <div className="flex items-center space-x-3">
+    <div className="bg-white p-6">
+      <div className="flex items-center space-x-3 mb-4">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
           <span className="text-white font-semibold text-lg">A</span>
         </div>
@@ -16,10 +17,13 @@ export const VersionComparison = () => {
           <p className="text-sm text-gray-600">Post to Anyone</p>
         </div>
       </div>
-      <div className="mt-4">
-        <p className="text-gray-900 text-base leading-relaxed">
-          built an algorithm that analyzes your digital footprint to create content that triggers you to react. at scale
-        </p>
+      
+      <div className="mb-4">
+        <Textarea 
+          placeholder="What do you want to talk about?"
+          className="min-h-[120px] resize-none border-none shadow-none text-base placeholder:text-gray-500 focus-visible:ring-0 p-0"
+          defaultValue="built an algorithm that analyzes your digital footprint to create content that triggers you to react. at scale"
+        />
       </div>
     </div>
   );
