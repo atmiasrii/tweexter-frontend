@@ -1,46 +1,41 @@
 
 import { 
   Image, 
+  Calendar, 
   FileText, 
-  X, 
-  BarChart3, 
-  MessageCircle, 
-  Camera, 
-  MapPin, 
-  Bold, 
-  Italic, 
-  Heart,
-  Plus 
+  MoreHorizontal,
+  Smile,
+  Plus,
+  Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Toolbar = () => {
-  const iconStyle = "w-5 h-5 text-cyan-400";
-  
   return (
-    <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/20">
-      <div className="flex items-center space-x-4">
-        <Image className={iconStyle} />
-        <FileText className={iconStyle} />
-        <X className={iconStyle} />
-        <BarChart3 className={iconStyle} />
-        <MessageCircle className={iconStyle} />
-        <Camera className={iconStyle} />
-        <MapPin className={iconStyle} />
-        <Bold className={iconStyle} />
-        <Italic className={iconStyle} />
-      </div>
-      
-      <div className="flex items-center space-x-4">
-        <Heart className="w-5 h-5 text-pink-400" />
-        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 flex items-center justify-center">
-          <Plus className="w-4 h-4 text-white" />
+    <div className="bg-white border-b border-gray-200 px-6 py-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 cursor-pointer">
+            <Image className="w-5 h-5" />
+          </div>
+          <div className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 cursor-pointer">
+            <Calendar className="w-5 h-5" />
+          </div>
+          <div className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 cursor-pointer">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 cursor-pointer">
+            <Plus className="w-5 h-5" />
+          </div>
         </div>
-        <Button 
-          className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-6 py-2 rounded-full font-medium border border-white/20"
-        >
-          Predict
-        </Button>
+        
+        <div className="flex items-center space-x-4">
+          <Smile className="w-5 h-5 text-gray-600 hover:text-blue-600 cursor-pointer" />
+          <Clock className="w-5 h-5 text-gray-600" />
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium">
+            Post
+          </Button>
+        </div>
       </div>
     </div>
   );

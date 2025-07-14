@@ -8,18 +8,18 @@ export const StatisticalConfidence = () => {
   ];
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-      <h3 className="text-xl font-bold text-white mb-4">Performance Metrics</h3>
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
       
-      <div className="space-y-3">
+      <div className="space-y-4">
         {metrics.map((metric, index) => (
-          <div key={index} className="bg-gray-700/30 rounded-lg p-3 border border-white/5">
+          <div key={index} className="border border-gray-100 rounded-lg p-4 hover:bg-gray-50 transition-colors">
             <div className="flex justify-between items-center">
-              <h4 className="text-gray-300 text-sm">{metric.label}</h4>
-              <span className="text-xs text-green-400 font-medium">{metric.trend}</span>
+              <h4 className="text-gray-700 font-medium">{metric.label}</h4>
+              <span className="text-sm text-green-600 font-medium">{metric.trend}</span>
             </div>
-            <div className="mt-1">
-              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <div className="mt-2">
+              <span className="text-2xl font-bold text-blue-600">
                 {metric.percentage}
               </span>
             </div>

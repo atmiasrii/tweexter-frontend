@@ -17,42 +17,36 @@ const data = [
 
 export const EngagementChart = () => {
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-      <h3 className="text-xl font-bold text-white mb-4">Cumulative Engagement</h3>
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Cumulative Engagement</h3>
       
-      <div className="flex items-center space-x-2 mb-3">
-        <div className="w-3 h-3 bg-gradient-to-r from-cyan-400 to-purple-400 rounded"></div>
-        <span className="text-sm text-gray-300">Version A</span>
+      <div className="flex items-center space-x-2 mb-4">
+        <div className="w-3 h-3 bg-blue-600 rounded"></div>
+        <span className="text-sm text-gray-600">Version A</span>
       </div>
       
-      <div className="h-48">
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+          <LineChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
             <XAxis 
               dataKey="time" 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#9CA3AF', fontSize: 10 }}
+              tick={{ fill: '#6B7280', fontSize: 12 }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#9CA3AF', fontSize: 10 }}
+              tick={{ fill: '#6B7280', fontSize: 12 }}
             />
             <Line 
               type="monotone" 
               dataKey="engagement" 
-              stroke="url(#gradient)"
-              strokeWidth={3}
+              stroke="#2563EB"
+              strokeWidth={2}
               dot={false}
-              activeDot={{ r: 4, fill: '#22D3EE' }}
+              activeDot={{ r: 4, fill: '#2563EB' }}
             />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#22D3EE" />
-                <stop offset="100%" stopColor="#A855F7" />
-              </linearGradient>
-            </defs>
           </LineChart>
         </ResponsiveContainer>
       </div>
