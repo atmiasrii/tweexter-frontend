@@ -44,7 +44,27 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <style jsx>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #536471;
+            border-radius: 3px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #6e767d;
+          }
+          .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #536471 transparent;  
+          }
+        `}</style>
+        
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800">
           <h2 className="text-xl font-bold text-white">Compose Analytics Post</h2>
@@ -220,7 +240,7 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
                       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                     }}
                   >
-                    {isPosting ? "Publishing..." : "Publish Analysis"}
+                    {isPosting ? "Posting..." : "Post"}
                   </Button>
                 </div>
               </div>
