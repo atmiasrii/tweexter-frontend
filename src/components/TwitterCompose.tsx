@@ -30,25 +30,25 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
       <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 flex-1 flex flex-col justify-center shadow-2xl shadow-black/20 rounded-3xl">
         <div className="p-6 sm:p-8 flex justify-center items-center min-h-0">
           <div className="w-full max-w-lg">
-            <div className="flex items-start space-x-4">
+            <div className="flex items-start space-x-3">
               <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-gray-700/50">
                 <AvatarImage src="/placeholder.svg?height=48&width=48" />
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-lg font-medium">DA</AvatarFallback>
               </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center space-x-2 mb-2">
                   <span className="text-white font-semibold">Data Analytics</span>
                   <span className="text-gray-400 text-sm">@dataanalytics</span>
                   <span className="text-gray-500 text-sm">·</span>
                   <span className="text-gray-400 text-sm">2m</span>
                 </div>
-                <p className="text-white text-lg leading-7 mb-6 font-light">
-                  {postData.content}
+                <p className="text-white text-[15px] leading-5 mb-3 font-normal">
+                  built an algorithm that analyzes your digital footprint to create content that triggers you to react. at scale
                 </p>
                 
                 {/* Display uploaded images */}
                 {postData.images.length > 0 && (
-                  <div className={`grid gap-3 mb-6 ${
+                  <div className={`grid gap-2 mb-3 ${
                     postData.images.length === 1 ? 'grid-cols-1' : 
                     postData.images.length === 2 ? 'grid-cols-2' : 
                     'grid-cols-2'
@@ -65,17 +65,25 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
                   </div>
                 )}
                 
+                {/* Blue globe icon and reply setting */}
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-4 h-4 rounded-full border border-blue-500 flex items-center justify-center">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  </div>
+                  <span className="text-blue-500 text-sm font-normal">Everyone can reply</span>
+                </div>
+                
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-6 text-gray-400">
-                    <div className="flex items-center space-x-2 hover:text-blue-400 transition-colors">
+                    <div className="flex items-center space-x-2 hover:text-blue-400 transition-colors cursor-pointer">
                       <Eye className="h-4 w-4" />
                       <span className="text-sm font-medium">89.1K</span>
                     </div>
-                    <div className="flex items-center space-x-2 hover:text-green-400 transition-colors">
+                    <div className="flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                       <Users className="h-4 w-4" />
                       <span className="text-sm font-medium">3.2K</span>
                     </div>
-                    <div className="flex items-center space-x-2 hover:text-purple-400 transition-colors">
+                    <div className="flex items-center space-x-2 hover:text-purple-400 transition-colors cursor-pointer">
                       <TrendingUp className="h-4 w-4" />
                       <span className="text-sm font-medium">+15.7%</span>
                     </div>
@@ -83,9 +91,9 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
                   
                   <Button 
                     size="sm" 
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 rounded-full px-6 py-2 text-sm font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200"
+                    className="bg-gray-800 hover:bg-gray-700 text-gray-300 border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
                   >
-                    <Sparkles className="h-4 w-4 mr-2" />
+                    <Sparkles className="h-4 w-4 mr-1.5" />
                     Improve
                   </Button>
                 </div>
