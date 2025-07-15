@@ -1,5 +1,6 @@
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
+import { useState, useEffect } from 'react';
 
 const data = [
   { time: '12 AM', engagement: 50 },
@@ -17,6 +18,34 @@ const data = [
 ];
 
 export const TwitterEngagementChart = () => {
+  const [animatedData, setAnimatedData] = useState(data.map(item => ({ ...item, engagement: 0 })));
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  useEffect(() => {
+    const duration = 2000; // 2 seconds
+    const steps = 60; // 60 steps for smooth animation
+    const stepDuration = duration / steps;
+
+    let currentStep = 0;
+    const timer = setInterval(() => {
+      currentStep++;
+      const progress = currentStep / steps;
+      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+
+      setAnimatedData(data.map(item => ({
+        ...item,
+        engagement: Math.round(item.engagement * easeProgress)
+      })));
+
+      if (currentStep >= steps) {
+        clearInterval(timer);
+        setIsAnimating(false);
+      }
+    }, stepDuration);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="bg-black text-white">
       <div className="p-4">
@@ -32,7 +61,7 @@ export const TwitterEngagementChart = () => {
         
         <div className="h-80 w-full bg-gray-900/20 rounded-xl p-4">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+            <LineChart data={animatedData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
               <XAxis 
                 dataKey="time" 
@@ -64,6 +93,8 @@ export const TwitterEngagementChart = () => {
                 dot={{ fill: '#3B82F6', strokeWidth: 2, r: 5 }}
                 activeDot={{ r: 7, fill: '#3B82F6', stroke: '#1F2937', strokeWidth: 3 }}
                 filter="drop-shadow(0 0 6px rgba(59, 130, 246, 0.3))"
+                animationDuration={2000}
+                animationEasing="ease-out"
               />
             </LineChart>
           </ResponsiveContainer>

@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Globe, ImageIcon, FileText, BarChart3, Smile, Calendar, MapPin } from "lucide-react";
+import { Globe, ImageIcon, FileText, BarChart3, Smile, Calendar, MapPin, X } from "lucide-react";
 
 interface TwitterComposeModalProps {
   onPost: () => void;
@@ -11,6 +11,11 @@ interface TwitterComposeModalProps {
 export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
   const [postText, setPostText] = useState("built an algorithm that analyzes your digital footprint to create content that triggers you to react. at scale");
   const [isPosting, setIsPosting] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [showScheduler, setShowScheduler] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePost = async () => {
     setIsPosting(true);
@@ -21,13 +26,29 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
     onPost();
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setSelectedImages(prev => [...prev, ...files].slice(0, 4)); // Max 4 images
+  };
+
+  const removeImage = (index: number) => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const insertEmoji = (emoji: string) => {
+    setPostText(prev => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const popularEmojis = ['😀', '😂', '❤️', '🔥', '👍', '🎉', '💯', '🚀', '✨', '🙌'];
+
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800">
           <h2 className="text-xl font-bold text-white">Compose post</h2>
-          <div className="w-6 h-6"></div> {/* Spacer for centering */}
+          <div className="w-6 h-6"></div>
         </div>
 
         {/* Compose Area */}
@@ -48,6 +69,27 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
               />
+
+              {/* Image Preview */}
+              {selectedImages.length > 0 && (
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {selectedImages.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`Upload ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-xl"
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1 hover:bg-black/90"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               
               {/* Reply setting */}
               <div className="flex items-center space-x-2 mb-6">
@@ -55,13 +97,71 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
                 <span className="text-blue-500 text-sm font-medium hover:underline cursor-pointer">Everyone can reply</span>
               </div>
 
+              {/* Emoji Picker */}
+              {showEmojiPicker && (
+                <div className="mb-4 p-3 bg-gray-900 rounded-xl border border-gray-700">
+                  <div className="grid grid-cols-5 gap-2">
+                    {popularEmojis.map((emoji, index) => (
+                      <button
+                        key={index}
+                        onClick={() => insertEmoji(emoji)}
+                        className="text-2xl p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Location Picker */}
+              {showLocationPicker && (
+                <div className="mb-4 p-3 bg-gray-900 rounded-xl border border-gray-700">
+                  <div className="space-y-2">
+                    <button className="w-full text-left p-2 hover:bg-gray-800 rounded-lg text-white">
+                      📍 Current Location
+                    </button>
+                    <button className="w-full text-left p-2 hover:bg-gray-800 rounded-lg text-white">
+                      🏢 San Francisco, CA
+                    </button>
+                    <button className="w-full text-left p-2 hover:bg-gray-800 rounded-lg text-white">
+                      🌉 Silicon Valley
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Scheduler */}
+              {showScheduler && (
+                <div className="mb-4 p-3 bg-gray-900 rounded-xl border border-gray-700">
+                  <div className="text-white text-sm mb-2">Schedule for later</div>
+                  <input
+                    type="datetime-local"
+                    className="bg-gray-800 text-white p-2 rounded-lg border border-gray-600 w-full"
+                  />
+                </div>
+              )}
+
               {/* Divider line */}
               <div className="border-t border-gray-800 my-4"></div>
 
               {/* Bottom toolbar */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                  />
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
                     <ImageIcon className="h-5 w-5" />
                   </Button>
                   <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0">
@@ -70,13 +170,40 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
                   <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0">
                     <BarChart3 className="h-5 w-5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0"
+                    onClick={() => {
+                      setShowEmojiPicker(!showEmojiPicker);
+                      setShowLocationPicker(false);
+                      setShowScheduler(false);
+                    }}
+                  >
                     <Smile className="h-5 w-5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0"
+                    onClick={() => {
+                      setShowScheduler(!showScheduler);
+                      setShowEmojiPicker(false);
+                      setShowLocationPicker(false);
+                    }}
+                  >
                     <Calendar className="h-5 w-5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-blue-500 hover:bg-blue-500/10 h-10 w-10 rounded-full p-0"
+                    onClick={() => {
+                      setShowLocationPicker(!showLocationPicker);
+                      setShowEmojiPicker(false);
+                      setShowScheduler(false);
+                    }}
+                  >
                     <MapPin className="h-5 w-5" />
                   </Button>
                 </div>
