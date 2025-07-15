@@ -1,55 +1,79 @@
 
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
 
 const data = [
-  { time: 0, engagement: 50 },
-  { time: 100, engagement: 80 },
-  { time: 200, engagement: 120 },
-  { time: 300, engagement: 180 },
-  { time: 400, engagement: 250 },
-  { time: 500, engagement: 320 },
-  { time: 600, engagement: 380 },
-  { time: 700, engagement: 420 },
-  { time: 800, engagement: 450 },
-  { time: 900, engagement: 470 },
-  { time: 1000, engagement: 480 },
+  { time: '12 AM', engagement: 50 },
+  { time: '2 AM', engagement: 30 },
+  { time: '4 AM', engagement: 25 },
+  { time: '6 AM', engagement: 45 },
+  { time: '8 AM', engagement: 120 },
+  { time: '10 AM', engagement: 180 },
+  { time: '12 PM', engagement: 250 },
+  { time: '2 PM', engagement: 320 },
+  { time: '4 PM', engagement: 380 },
+  { time: '6 PM', engagement: 420 },
+  { time: '8 PM', engagement: 450 },
+  { time: '10 PM', engagement: 470 },
 ];
 
 export const TwitterEngagementChart = () => {
   return (
-    <div className="bg-black text-white p-4">
-      <h3 className="text-xl font-bold text-white mb-6">Cumulative Engagement</h3>
-      
-      <div className="flex items-center space-x-2 mb-6">
-        <div className="w-3 h-3 bg-blue-500 rounded"></div>
-        <span className="text-sm text-gray-400">Version A</span>
-      </div>
-      
-      <div className="h-80 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis 
-              dataKey="time" 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#9CA3AF', fontSize: 12 }}
-            />
-            <YAxis 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#9CA3AF', fontSize: 12 }}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="engagement" 
-              stroke="#3B82F6"
-              strokeWidth={3}
-              dot={{ fill: '#3B82F6', strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6, fill: '#3B82F6', stroke: '#000000', strokeWidth: 2 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+    <div className="bg-black text-white">
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-white">Engagement Over Time</h3>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <span className="text-sm text-gray-400">Hourly Engagement</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="h-80 w-full bg-gray-900/20 rounded-xl p-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+              <XAxis 
+                dataKey="time" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                tickMargin={10}
+              />
+              <YAxis 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                tickMargin={10}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: '#1F2937',
+                  border: '1px solid #374151',
+                  borderRadius: '8px',
+                  color: '#F9FAFB'
+                }}
+                labelStyle={{ color: '#9CA3AF' }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="engagement" 
+                stroke="#3B82F6"
+                strokeWidth={3}
+                dot={{ fill: '#3B82F6', strokeWidth: 2, r: 5 }}
+                activeDot={{ r: 7, fill: '#3B82F6', stroke: '#1F2937', strokeWidth: 3 }}
+                filter="drop-shadow(0 0 6px rgba(59, 130, 246, 0.3))"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-500">
+            Peak engagement occurs during evening hours (6-10 PM)
+          </p>
+        </div>
       </div>
     </div>
   );
