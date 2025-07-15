@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Users, Eye } from "lucide-react";
-import { TwitterImprovementModal } from "@/components/TwitterImprovementModal";
 import { HighlightedText } from "@/components/HighlightedText";
 
 interface PostData {
@@ -31,12 +30,12 @@ export const TwitterCompose = ({
   onPostUpdate,
   onAnalyticsRefresh
 }: TwitterComposeProps) => {
-  const [isImprovementModalOpen, setIsImprovementModalOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(postData.content);
   const [textSegments, setTextSegments] = useState<TextSegment[]>([
     { text: postData.content, isImproved: false }
   ]);
   const [hasBeenImproved, setHasBeenImproved] = useState(false);
+  const [isImproving, setIsImproving] = useState(false);
 
   if (!hasPosted || !currentContent) {
     return (
@@ -48,16 +47,33 @@ export const TwitterCompose = ({
     );
   }
 
-  const handleImproveClick = () => {
-    setIsImprovementModalOpen(true);
+  const generateImprovedText = (originalText: string): string => {
+    // Simulate AI improvement - in real app this would call an API
+    const improvements = [
+      { original: "built", improved: "developed" },
+      { original: "algorithm", improved: "AI system" },
+      { original: "analyzes", improved: "intelligently analyzes" },
+      { original: "digital footprint", improved: "user behavior patterns" },
+      { original: "content", improved: "personalized content" },
+      { original: "triggers", improved: "maximizes" },
+      { original: "react", improved: "engagement" },
+      { original: "at scale", improved: "at enterprise scale 🚀" }
+    ];
+
+    let improvedText = originalText;
+    improvements.forEach(({ original, improved }) => {
+      const regex = new RegExp(`\\b${original}\\b`, 'gi');
+      improvedText = improvedText.replace(regex, improved);
+    });
+
+    return improvedText + " #AI #TechInnovation";
   };
 
-  const handleApplyImprovement = (improvedText: string) => {
-    // Simple diff logic - in a real app, you'd use a more sophisticated algorithm
-    const originalWords = postData.content.split(' ');
-    const improvedWords = improvedText.split(' ');
+  const createTextSegments = (original: string, improved: string): TextSegment[] => {
+    const originalWords = original.split(/(\s+)/);
+    const improvedWords = improved.split(/(\s+)/);
+    const segments: TextSegment[] = [];
     
-    const newSegments: TextSegment[] = [];
     let originalIndex = 0;
     let improvedIndex = 0;
     
@@ -66,40 +82,46 @@ export const TwitterCompose = ({
           improvedIndex < improvedWords.length && 
           originalWords[originalIndex] === improvedWords[improvedIndex]) {
         // Words are the same
-        newSegments.push({
+        segments.push({
           text: originalWords[originalIndex],
           isImproved: false
         });
         originalIndex++;
         improvedIndex++;
       } else {
-        // Words are different - find the next matching point
-        let matchFound = false;
-        for (let i = improvedIndex + 1; i < improvedWords.length; i++) {
+        // Find the next matching point or handle differences
+        let foundMatch = false;
+        
+        // Look for next matching word
+        for (let i = improvedIndex; i < improvedWords.length; i++) {
           if (originalIndex < originalWords.length && 
               originalWords[originalIndex] === improvedWords[i]) {
-            // Found a match, the words in between are improvements
-            const improvedSegment = improvedWords.slice(improvedIndex, i).join(' ');
-            newSegments.push({
-              text: improvedSegment,
-              isImproved: true,
-              originalText: originalWords[originalIndex]
-            });
+            // Found match, everything before is an improvement
+            const improvedSegment = improvedWords.slice(improvedIndex, i).join('');
+            if (improvedSegment.trim()) {
+              segments.push({
+                text: improvedSegment,
+                isImproved: true,
+                originalText: originalWords[originalIndex]
+              });
+            }
             improvedIndex = i;
-            matchFound = true;
+            foundMatch = true;
             break;
           }
         }
         
-        if (!matchFound) {
-          // No match found, treat remaining as improved
+        if (!foundMatch) {
+          // Handle remaining text
           if (improvedIndex < improvedWords.length) {
-            const remainingImproved = improvedWords.slice(improvedIndex).join(' ');
-            const remainingOriginal = originalWords.slice(originalIndex).join(' ');
-            newSegments.push({
+            const remainingImproved = improvedWords.slice(improvedIndex).join('');
+            const remainingOriginal = originalIndex < originalWords.length ? 
+              originalWords.slice(originalIndex).join('') : '';
+            
+            segments.push({
               text: remainingImproved,
               isImproved: true,
-              originalText: remainingOriginal
+              originalText: remainingOriginal || remainingImproved
             });
           }
           break;
@@ -107,9 +129,22 @@ export const TwitterCompose = ({
       }
     }
     
+    return segments;
+  };
+
+  const handleImproveClick = async () => {
+    setIsImproving(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const improvedText = generateImprovedText(postData.content);
+    const newSegments = createTextSegments(postData.content, improvedText);
+    
     setTextSegments(newSegments);
     setCurrentContent(improvedText);
     setHasBeenImproved(true);
+    setIsImproving(false);
     
     if (onPostUpdate) {
       onPostUpdate(improvedText);
@@ -129,7 +164,7 @@ export const TwitterCompose = ({
     };
     setTextSegments(newSegments);
     
-    const newContent = newSegments.map(segment => segment.text).join(' ');
+    const newContent = newSegments.map(segment => segment.text).join('');
     setCurrentContent(newContent);
     
     if (onPostUpdate) {
@@ -154,7 +189,7 @@ export const TwitterCompose = ({
         );
       }
       return <span key={index}>{segment.text}</span>;
-    }).reduce((prev, curr, index) => [prev, index > 0 ? ' ' : '', curr], []);
+    });
   };
 
   return (
@@ -224,9 +259,10 @@ export const TwitterCompose = ({
                   <Button 
                     size="sm" 
                     onClick={handleImproveClick}
-                    className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
+                    disabled={isImproving}
+                    className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto disabled:opacity-50"
                   >
-                    Improve
+                    {isImproving ? "Improving..." : "Improve"}
                   </Button>
                 </div>
               </div>
@@ -234,13 +270,6 @@ export const TwitterCompose = ({
           </div>
         </div>
       </Card>
-
-      <TwitterImprovementModal
-        isOpen={isImprovementModalOpen}
-        onClose={() => setIsImprovementModalOpen(false)}
-        originalText={postData.content}
-        onApplyImprovement={handleApplyImprovement}
-      />
     </div>
   );
 };
