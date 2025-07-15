@@ -7,8 +7,10 @@ const Index = () => {
   const [showModal, setShowModal] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
   const [hasPosted, setHasPosted] = useState(false);
+  const [postedContent, setPostedContent] = useState("");
 
-  const handlePost = () => {
+  const handlePost = (content: string) => {
+    setPostedContent(content);
     setShowModal(false);
     setHasPosted(true);
     
@@ -19,15 +21,15 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="h-screen bg-black overflow-hidden">
       {showModal && <TwitterComposeModal onPost={handlePost} />}
       
-      {showDashboard && <TwitterDashboard hasPosted={hasPosted} />}
+      {showDashboard && <TwitterDashboard hasPosted={hasPosted} postedContent={postedContent} />}
       
       {/* Background content when modal is open */}
       {showModal && (
         <div className="blur-sm opacity-30">
-          <TwitterDashboard hasPosted={false} />
+          <TwitterDashboard hasPosted={false} postedContent="" />
         </div>
       )}
     </div>

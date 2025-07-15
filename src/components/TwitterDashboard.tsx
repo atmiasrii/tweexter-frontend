@@ -5,26 +5,31 @@ import { TwitterMetrics } from "@/components/TwitterMetrics";
 
 interface TwitterDashboardProps {
   hasPosted?: boolean;
+  postedContent?: string;
 }
 
-export const TwitterDashboard = ({ hasPosted = false }: TwitterDashboardProps) => {
+export const TwitterDashboard = ({ hasPosted = false, postedContent = "" }: TwitterDashboardProps) => {
   return (
-    <div className="min-h-screen bg-black animate-fade-in">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-6 py-6">
+    <div className="h-screen bg-black overflow-hidden animate-fade-in">
+      <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-4 py-4 h-full">
           {/* Left side - Performance Metrics and Chart */}
-          <div className="w-full lg:w-1/2 xl:w-3/5 space-y-6">
-            {/* Performance Metrics */}
-            <TwitterMetrics />
+          <div className="w-full lg:w-1/2 xl:w-3/5 space-y-4 overflow-y-auto">
+            {/* Performance Metrics - Compact */}
+            <div className="h-[45%]">
+              <TwitterMetrics />
+            </div>
             
-            {/* Engagement Chart */}
-            <TwitterEngagementChart />
+            {/* Engagement Chart - Compact */}
+            <div className="h-[50%]">
+              <TwitterEngagementChart />
+            </div>
           </div>
           
           {/* Right side - Twitter Compose */}
-          <div className="w-full lg:w-1/2 xl:w-2/5">
-            <div className="lg:sticky lg:top-6">
-              <TwitterCompose hasPosted={hasPosted} />
+          <div className="w-full lg:w-1/2 xl:w-2/5 h-full overflow-y-auto">
+            <div className="h-full">
+              <TwitterCompose hasPosted={hasPosted} postedContent={postedContent} />
             </div>
           </div>
         </div>
