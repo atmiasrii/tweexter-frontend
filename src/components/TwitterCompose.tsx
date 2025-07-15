@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Users, Eye, Sparkles } from "lucide-react";
+import { TrendingUp, Users, Eye } from "lucide-react";
 
 interface PostData {
   content: string;
@@ -58,7 +58,7 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
                         <img
                           src={URL.createObjectURL(image)}
                           alt={`Post image ${index + 1}`}
-                          className="w-full h-48 object-cover"
+                          className="w-full aspect-square object-cover"
                         />
                       </div>
                     ))}
@@ -91,9 +91,8 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
                   
                   <Button 
                     size="sm" 
-                    className="bg-gray-800 hover:bg-gray-700 text-gray-300 border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
+                    className="bg-black hover:bg-gray-900 text-gray-400 border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
                   >
-                    <Sparkles className="h-4 w-4 mr-1.5" />
                     Improve
                   </Button>
                 </div>
