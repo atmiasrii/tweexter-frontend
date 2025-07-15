@@ -15,11 +15,11 @@ interface TwitterDashboardProps {
 
 export const TwitterDashboard = ({ hasPosted = false, postData = { content: "", images: [] } }: TwitterDashboardProps) => {
   return (
-    <div className="h-screen bg-black overflow-hidden animate-fade-in">
+    <div className="h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-4 py-4 h-full">
+        <div className="flex flex-col lg:flex-row gap-6 py-6 h-full">
           {/* Left side - Performance Metrics and Chart */}
-          <div className="w-full lg:w-1/2 xl:w-3/5 space-y-4 overflow-y-auto">
+          <div className="w-full lg:w-1/2 xl:w-3/5 space-y-6 overflow-y-auto">
             {/* Performance Metrics - Compact */}
             <div className="h-[45%]">
               <TwitterMetrics />
