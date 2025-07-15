@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Globe, ImageIcon, FileText, BarChart3, Smile, Calendar, MapPin } from "lucide-react";
 
 interface TwitterComposeProps {
@@ -26,9 +27,8 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
   const canPost = hasContentChanged && postText.trim().length > 0;
 
   return (
-    <div className="bg-black">
-      {/* Card container matching X's design */}
-      <div className="bg-black border-b border-gray-800">
+    <div className="p-4">
+      <Card className="bg-black border-gray-800">
         <div className="p-4">
           {/* Main compose area */}
           <div className="flex items-start space-x-3">
@@ -112,7 +112,7 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

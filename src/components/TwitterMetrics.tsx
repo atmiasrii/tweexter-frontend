@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { Card } from "@/components/ui/card";
 
 const metricsData = [
   { label: 'Impressions', value: 89100, trend: '+11.2%', description: 'Times your post was seen' },
@@ -67,20 +68,22 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
 
 export const TwitterMetrics = () => {
   return (
-    <div className="bg-black text-white border-b border-gray-800">
-      <div className="p-4">
-        <h3 className="text-xl font-bold text-white mb-6">Performance Metrics</h3>
-        
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {metricsData.map((metric, index) => (
-            <AnimatedMetric 
-              key={index} 
-              metric={metric} 
-              delay={index * 200} // Stagger the animations
-            />
-          ))}
+    <div className="p-4">
+      <Card className="bg-black border-gray-800">
+        <div className="p-4">
+          <h3 className="text-xl font-bold text-white mb-6">Performance Metrics</h3>
+          
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {metricsData.map((metric, index) => (
+              <AnimatedMetric 
+                key={index} 
+                metric={metric} 
+                delay={index * 200} // Stagger the animations
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
