@@ -25,11 +25,21 @@ const Index = () => {
     }, 300);
   };
 
+  const handlePostUpdate = (updatedContent: string) => {
+    setPostData(prev => ({ ...prev, content: updatedContent }));
+  };
+
   return (
     <div className="h-screen bg-black overflow-hidden">
       {showModal && <TwitterComposeModal onPost={handlePost} />}
       
-      {showDashboard && <TwitterDashboard hasPosted={hasPosted} postData={postData} />}
+      {showDashboard && (
+        <TwitterDashboard 
+          hasPosted={hasPosted} 
+          postData={postData}
+          onPostUpdate={handlePostUpdate}
+        />
+      )}
       
       {/* Background content when modal is open */}
       {showModal && (

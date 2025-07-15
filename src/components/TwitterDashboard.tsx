@@ -11,9 +11,14 @@ interface PostData {
 interface TwitterDashboardProps {
   hasPosted?: boolean;
   postData?: PostData;
+  onPostUpdate?: (updatedContent: string) => void;
 }
 
-export const TwitterDashboard = ({ hasPosted = false, postData = { content: "", images: [] } }: TwitterDashboardProps) => {
+export const TwitterDashboard = ({ 
+  hasPosted = false, 
+  postData = { content: "", images: [] },
+  onPostUpdate
+}: TwitterDashboardProps) => {
   return (
     <div className="h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,7 +39,11 @@ export const TwitterDashboard = ({ hasPosted = false, postData = { content: "", 
           {/* Right side - Twitter Compose */}
           <div className="w-full lg:w-1/2 xl:w-2/5 h-full overflow-y-auto">
             <div className="h-full">
-              <TwitterCompose hasPosted={hasPosted} postData={postData} />
+              <TwitterCompose 
+                hasPosted={hasPosted} 
+                postData={postData}
+                onPostUpdate={onPostUpdate}
+              />
             </div>
           </div>
         </div>

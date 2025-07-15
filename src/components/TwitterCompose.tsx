@@ -1,8 +1,10 @@
 
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Users, Eye } from "lucide-react";
+import { TrendingUp, Users, Eye, Sparkles } from "lucide-react";
+import { TwitterImprovementModal } from "@/components/TwitterImprovementModal";
 
 interface PostData {
   content: string;
@@ -12,10 +14,19 @@ interface PostData {
 interface TwitterComposeProps {
   hasPosted?: boolean;
   postData?: PostData;
+  onPostUpdate?: (updatedContent: string) => void;
 }
 
-export const TwitterCompose = ({ hasPosted = false, postData = { content: "", images: [] } }: TwitterComposeProps) => {
-  if (!hasPosted || !postData.content) {
+export const TwitterCompose = ({ 
+  hasPosted = false, 
+  postData = { content: "", images: [] },
+  onPostUpdate 
+}: TwitterComposeProps) => {
+  const [isImprovementModalOpen, setIsImprovementModalOpen] = useState(false);
+  const [currentContent, setCurrentContent] = useState(postData.content);
+  const [hasBeenImproved, setHasBeenImproved] = useState(false);
+
+  if (!hasPosted || !currentContent) {
     return (
       <div className="w-full h-full flex flex-col">
         <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 flex-1 flex flex-col justify-center items-center shadow-2xl shadow-black/20 rounded-3xl">
@@ -24,6 +35,18 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
       </div>
     );
   }
+
+  const handleImproveClick = () => {
+    setIsImprovementModalOpen(true);
+  };
+
+  const handleApplyImprovement = (improvedText: string) => {
+    setCurrentContent(improvedText);
+    setHasBeenImproved(true);
+    if (onPostUpdate) {
+      onPostUpdate(improvedText);
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -41,9 +64,15 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
                   <span className="text-gray-400 text-sm">@dataanalytics</span>
                   <span className="text-gray-500 text-sm">·</span>
                   <span className="text-gray-400 text-sm">2m</span>
+                  {hasBeenImproved && (
+                    <div className="flex items-center gap-1 bg-blue-500/20 px-2 py-0.5 rounded-full">
+                      <Sparkles className="h-3 w-3 text-blue-400" />
+                      <span className="text-xs text-blue-400 font-medium">Improved</span>
+                    </div>
+                  )}
                 </div>
                 <p className="text-white text-[15px] leading-5 mb-3 font-normal">
-                  built an algorithm that analyzes your digital footprint to create content that triggers you to react. at scale
+                  {currentContent}
                 </p>
                 
                 {/* Display uploaded images */}
@@ -91,8 +120,10 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
                   
                   <Button 
                     size="sm" 
-                    className="bg-black hover:bg-gray-900 text-gray-400 border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
+                    onClick={handleImproveClick}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
                   >
+                    <Sparkles className="h-4 w-4 mr-1.5" />
                     Improve
                   </Button>
                 </div>
@@ -101,6 +132,13 @@ export const TwitterCompose = ({ hasPosted = false, postData = { content: "", im
           </div>
         </div>
       </Card>
+
+      <TwitterImprovementModal
+        isOpen={isImprovementModalOpen}
+        onClose={() => setIsImprovementModalOpen(false)}
+        originalText={postData.content}
+        onApplyImprovement={handleApplyImprovement}
+      />
     </div>
   );
 };
