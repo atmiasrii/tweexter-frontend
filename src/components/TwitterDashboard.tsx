@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
@@ -19,6 +20,12 @@ export const TwitterDashboard = ({
   postData = { content: "", images: [] },
   onPostUpdate
 }: TwitterDashboardProps) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleAnalyticsRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <div className="h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,12 +34,12 @@ export const TwitterDashboard = ({
           <div className="w-full lg:w-1/2 xl:w-3/5 space-y-6 overflow-y-auto">
             {/* Performance Metrics - Compact */}
             <div className="h-[45%]">
-              <TwitterMetrics />
+              <TwitterMetrics key={`metrics-${refreshKey}`} />
             </div>
             
             {/* Engagement Chart - Compact */}
             <div className="h-[50%]">
-              <TwitterEngagementChart />
+              <TwitterEngagementChart key={`chart-${refreshKey}`} />
             </div>
           </div>
           
@@ -43,6 +50,7 @@ export const TwitterDashboard = ({
                 hasPosted={hasPosted} 
                 postData={postData}
                 onPostUpdate={onPostUpdate}
+                onAnalyticsRefresh={handleAnalyticsRefresh}
               />
             </div>
           </div>

@@ -3,8 +3,9 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Users, Eye, Sparkles } from "lucide-react";
+import { TrendingUp, Users, Eye } from "lucide-react";
 import { TwitterImprovementModal } from "@/components/TwitterImprovementModal";
+import { HighlightedText } from "@/components/HighlightedText";
 
 interface PostData {
   content: string;
@@ -15,15 +16,26 @@ interface TwitterComposeProps {
   hasPosted?: boolean;
   postData?: PostData;
   onPostUpdate?: (updatedContent: string) => void;
+  onAnalyticsRefresh?: () => void;
+}
+
+interface TextSegment {
+  text: string;
+  isImproved: boolean;
+  originalText?: string;
 }
 
 export const TwitterCompose = ({ 
   hasPosted = false, 
   postData = { content: "", images: [] },
-  onPostUpdate 
+  onPostUpdate,
+  onAnalyticsRefresh
 }: TwitterComposeProps) => {
   const [isImprovementModalOpen, setIsImprovementModalOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(postData.content);
+  const [textSegments, setTextSegments] = useState<TextSegment[]>([
+    { text: postData.content, isImproved: false }
+  ]);
   const [hasBeenImproved, setHasBeenImproved] = useState(false);
 
   if (!hasPosted || !currentContent) {
@@ -41,11 +53,108 @@ export const TwitterCompose = ({
   };
 
   const handleApplyImprovement = (improvedText: string) => {
+    // Simple diff logic - in a real app, you'd use a more sophisticated algorithm
+    const originalWords = postData.content.split(' ');
+    const improvedWords = improvedText.split(' ');
+    
+    const newSegments: TextSegment[] = [];
+    let originalIndex = 0;
+    let improvedIndex = 0;
+    
+    while (originalIndex < originalWords.length || improvedIndex < improvedWords.length) {
+      if (originalIndex < originalWords.length && 
+          improvedIndex < improvedWords.length && 
+          originalWords[originalIndex] === improvedWords[improvedIndex]) {
+        // Words are the same
+        newSegments.push({
+          text: originalWords[originalIndex],
+          isImproved: false
+        });
+        originalIndex++;
+        improvedIndex++;
+      } else {
+        // Words are different - find the next matching point
+        let matchFound = false;
+        for (let i = improvedIndex + 1; i < improvedWords.length; i++) {
+          if (originalIndex < originalWords.length && 
+              originalWords[originalIndex] === improvedWords[i]) {
+            // Found a match, the words in between are improvements
+            const improvedSegment = improvedWords.slice(improvedIndex, i).join(' ');
+            newSegments.push({
+              text: improvedSegment,
+              isImproved: true,
+              originalText: originalWords[originalIndex]
+            });
+            improvedIndex = i;
+            matchFound = true;
+            break;
+          }
+        }
+        
+        if (!matchFound) {
+          // No match found, treat remaining as improved
+          if (improvedIndex < improvedWords.length) {
+            const remainingImproved = improvedWords.slice(improvedIndex).join(' ');
+            const remainingOriginal = originalWords.slice(originalIndex).join(' ');
+            newSegments.push({
+              text: remainingImproved,
+              isImproved: true,
+              originalText: remainingOriginal
+            });
+          }
+          break;
+        }
+      }
+    }
+    
+    setTextSegments(newSegments);
     setCurrentContent(improvedText);
     setHasBeenImproved(true);
+    
     if (onPostUpdate) {
       onPostUpdate(improvedText);
     }
+    
+    // Trigger analytics refresh with animation
+    if (onAnalyticsRefresh) {
+      onAnalyticsRefresh();
+    }
+  };
+
+  const handleRevertText = (originalText: string, segmentIndex: number) => {
+    const newSegments = [...textSegments];
+    newSegments[segmentIndex] = {
+      text: originalText,
+      isImproved: false
+    };
+    setTextSegments(newSegments);
+    
+    const newContent = newSegments.map(segment => segment.text).join(' ');
+    setCurrentContent(newContent);
+    
+    if (onPostUpdate) {
+      onPostUpdate(newContent);
+    }
+  };
+
+  const renderContent = () => {
+    if (!hasBeenImproved) {
+      return currentContent;
+    }
+
+    return textSegments.map((segment, index) => {
+      if (segment.isImproved && segment.originalText) {
+        return (
+          <HighlightedText
+            key={index}
+            originalText={segment.originalText}
+            improvedText={segment.text}
+            onRevert={(originalText) => handleRevertText(originalText, index)}
+          />
+        );
+      }
+      return <span key={index}>{segment.text}</span>;
+    }).reduce((prev, curr, index) => [prev, index > 0 ? ' ' : '', curr], []);
   };
 
   return (
@@ -64,15 +173,9 @@ export const TwitterCompose = ({
                   <span className="text-gray-400 text-sm">@dataanalytics</span>
                   <span className="text-gray-500 text-sm">·</span>
                   <span className="text-gray-400 text-sm">2m</span>
-                  {hasBeenImproved && (
-                    <div className="flex items-center gap-1 bg-blue-500/20 px-2 py-0.5 rounded-full">
-                      <Sparkles className="h-3 w-3 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-medium">Improved</span>
-                    </div>
-                  )}
                 </div>
                 <p className="text-white text-[15px] leading-5 mb-3 font-normal">
-                  {currentContent}
+                  {renderContent()}
                 </p>
                 
                 {/* Display uploaded images */}
@@ -121,9 +224,8 @@ export const TwitterCompose = ({
                   <Button 
                     size="sm" 
                     onClick={handleImproveClick}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
+                    className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto"
                   >
-                    <Sparkles className="h-4 w-4 mr-1.5" />
                     Improve
                   </Button>
                 </div>
