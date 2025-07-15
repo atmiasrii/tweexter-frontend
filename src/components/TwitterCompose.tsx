@@ -27,19 +27,19 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
   const canPost = hasContentChanged && postText.trim().length > 0;
 
   return (
-    <div className="p-4">
+    <div className="w-full">
       <Card className="bg-black border-gray-800">
-        <div className="p-4">
+        <div className="p-4 sm:p-6">
           {/* Main compose area */}
           <div className="flex items-start space-x-3">
-            <Avatar className="w-10 h-10 flex-shrink-0">
+            <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
               <AvatarImage src="/placeholder.svg?height=40&width=40" />
               <AvatarFallback className="bg-blue-500 text-white text-sm font-medium">A</AvatarFallback>
             </Avatar>
             
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 w-full">
               <textarea
-                className="w-full min-h-[120px] text-xl placeholder-gray-500 border-none outline-none resize-none bg-transparent font-normal text-white leading-6"
+                className="w-full min-h-[120px] sm:min-h-[140px] text-lg sm:text-xl placeholder-gray-500 border-none outline-none resize-none bg-transparent font-normal text-white leading-6"
                 placeholder="What's happening?"
                 value={postText}
                 onChange={(e) => setPostText(e.target.value)}
@@ -50,7 +50,7 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
               
               {/* Reply setting */}
               <div className="flex items-center space-x-2 mb-4 mt-2">
-                <Globe className="h-4 w-4 text-blue-500" />
+                <Globe className="h-4 w-4 text-blue-500 flex-shrink-0" />
                 <span className="text-blue-500 text-sm font-medium hover:underline cursor-pointer">Everyone can reply</span>
               </div>
 
@@ -58,29 +58,29 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
               <div className="border-t border-gray-800 my-3"></div>
 
               {/* Bottom toolbar */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-9 w-9 rounded-full p-0">
-                    <ImageIcon className="h-[18px] w-[18px]" />
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center space-x-1 overflow-x-auto">
+                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 flex-shrink-0">
+                    <ImageIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-9 w-9 rounded-full p-0">
-                    <FileText className="h-[18px] w-[18px]" />
+                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 flex-shrink-0">
+                    <FileText className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-9 w-9 rounded-full p-0">
-                    <BarChart3 className="h-[18px] w-[18px]" />
+                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 flex-shrink-0">
+                    <BarChart3 className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-9 w-9 rounded-full p-0">
-                    <Smile className="h-[18px] w-[18px]" />
+                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 flex-shrink-0">
+                    <Smile className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-9 w-9 rounded-full p-0">
-                    <Calendar className="h-[18px] w-[18px]" />
+                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 flex-shrink-0">
+                    <Calendar className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-9 w-9 rounded-full p-0">
-                    <MapPin className="h-[18px] w-[18px]" />
+                  <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-blue-500/10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 flex-shrink-0">
+                    <MapPin className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                   </Button>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 flex-shrink-0">
                   {/* Character count circle (placeholder) */}
                   <div className="w-5 h-5 rounded-full border-2 border-gray-600"></div>
                   
@@ -88,7 +88,7 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
                     <Button
                       onClick={handlePost}
                       disabled={isPosting || !canPost}
-                      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[64px] h-9"
+                      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white rounded-full px-4 sm:px-6 py-1.5 text-sm sm:text-[15px] font-bold min-w-[60px] sm:min-w-[64px] h-8 sm:h-9"
                       style={{
                         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                       }}
@@ -98,7 +98,7 @@ export const TwitterCompose = ({ hasPosted = false }: TwitterComposeProps) => {
                     
                     {hasPosted && (
                       <Button
-                        className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[64px] h-9"
+                        className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-4 sm:px-6 py-1.5 text-sm sm:text-[15px] font-bold min-w-[60px] sm:min-w-[64px] h-8 sm:h-9"
                         style={{
                           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                         }}

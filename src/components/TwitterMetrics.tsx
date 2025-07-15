@@ -68,12 +68,12 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
 
 export const TwitterMetrics = () => {
   return (
-    <div className="p-4">
+    <div className="w-full">
       <Card className="bg-black border-gray-800">
-        <div className="p-4">
-          <h3 className="text-xl font-bold text-white mb-6">Performance Metrics</h3>
+        <div className="p-4 sm:p-6">
+          <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">Performance Metrics</h3>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
             {metricsData.map((metric, index) => (
               <AnimatedMetric 
                 key={index} 
