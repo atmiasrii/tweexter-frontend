@@ -1,27 +1,33 @@
 
-import { TwitterCompose } from "@/components/TwitterCompose";
-import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
-import { TwitterMetrics } from "@/components/TwitterMetrics";
+import { useState } from "react";
+import { TwitterComposeModal } from "@/components/TwitterComposeModal";
+import { TwitterDashboard } from "@/components/TwitterDashboard";
 
 const Index = () => {
+  const [showModal, setShowModal] = useState(true);
+  const [showDashboard, setShowDashboard] = useState(false);
+
+  const handlePost = () => {
+    setShowModal(false);
+    
+    // Small delay for better UX transition
+    setTimeout(() => {
+      setShowDashboard(true);
+    }, 300);
+  };
+
   return (
     <div className="min-h-screen bg-black">
-      <div className="max-w-2xl mx-auto">
-        {/* Twitter-style compose card */}
-        <div className="border-b border-gray-800">
-          <TwitterCompose />
+      {showModal && <TwitterComposeModal onPost={handlePost} />}
+      
+      {showDashboard && <TwitterDashboard />}
+      
+      {/* Background content when modal is open */}
+      {showModal && (
+        <div className="blur-sm opacity-30">
+          <TwitterDashboard />
         </div>
-        
-        {/* Performance Metrics */}
-        <div className="border-b border-gray-800">
-          <TwitterMetrics />
-        </div>
-        
-        {/* Engagement Chart */}
-        <div>
-          <TwitterEngagementChart />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
