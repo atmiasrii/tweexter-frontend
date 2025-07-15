@@ -43,9 +43,9 @@ export const TwitterDashboard = ({
             </div>
           </div>
           
-          {/* Right side - Twitter Compose */}
-          <div className="w-full lg:w-1/2 xl:w-2/5 h-full overflow-y-auto">
-            <div className="h-full">
+          {/* Right side - Twitter Compose - Centered vertically */}
+          <div className="w-full lg:w-1/2 xl:w-2/5 h-full flex items-center">
+            <div className="w-full">
               <TwitterCompose 
                 hasPosted={hasPosted} 
                 postData={postData}
