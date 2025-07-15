@@ -3,12 +3,17 @@ import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
 
-interface TwitterDashboardProps {
-  hasPosted?: boolean;
-  postedContent?: string;
+interface PostData {
+  content: string;
+  images: File[];
 }
 
-export const TwitterDashboard = ({ hasPosted = false, postedContent = "" }: TwitterDashboardProps) => {
+interface TwitterDashboardProps {
+  hasPosted?: boolean;
+  postData?: PostData;
+}
+
+export const TwitterDashboard = ({ hasPosted = false, postData = { content: "", images: [] } }: TwitterDashboardProps) => {
   return (
     <div className="h-screen bg-black overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,7 +34,7 @@ export const TwitterDashboard = ({ hasPosted = false, postedContent = "" }: Twit
           {/* Right side - Twitter Compose */}
           <div className="w-full lg:w-1/2 xl:w-2/5 h-full overflow-y-auto">
             <div className="h-full">
-              <TwitterCompose hasPosted={hasPosted} postedContent={postedContent} />
+              <TwitterCompose hasPosted={hasPosted} postData={postData} />
             </div>
           </div>
         </div>

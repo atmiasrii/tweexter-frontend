@@ -3,14 +3,19 @@ import { useState } from "react";
 import { TwitterComposeModal } from "@/components/TwitterComposeModal";
 import { TwitterDashboard } from "@/components/TwitterDashboard";
 
+interface PostData {
+  content: string;
+  images: File[];
+}
+
 const Index = () => {
   const [showModal, setShowModal] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
   const [hasPosted, setHasPosted] = useState(false);
-  const [postedContent, setPostedContent] = useState("");
+  const [postData, setPostData] = useState<PostData>({ content: "", images: [] });
 
-  const handlePost = (content: string) => {
-    setPostedContent(content);
+  const handlePost = (content: string, images: File[]) => {
+    setPostData({ content, images });
     setShowModal(false);
     setHasPosted(true);
     
@@ -24,12 +29,12 @@ const Index = () => {
     <div className="h-screen bg-black overflow-hidden">
       {showModal && <TwitterComposeModal onPost={handlePost} />}
       
-      {showDashboard && <TwitterDashboard hasPosted={hasPosted} postedContent={postedContent} />}
+      {showDashboard && <TwitterDashboard hasPosted={hasPosted} postData={postData} />}
       
       {/* Background content when modal is open */}
       {showModal && (
         <div className="blur-sm opacity-30">
-          <TwitterDashboard hasPosted={false} postedContent="" />
+          <TwitterDashboard hasPosted={false} postData={{ content: "", images: [] }} />
         </div>
       )}
     </div>

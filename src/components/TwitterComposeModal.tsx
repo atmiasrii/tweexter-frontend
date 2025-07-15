@@ -1,10 +1,11 @@
+
 import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Globe, ImageIcon, FileText, BarChart3, Smile, Calendar, MapPin, X } from "lucide-react";
 
 interface TwitterComposeModalProps {
-  onPost: (content: string) => void;
+  onPost: (content: string, images: File[]) => void;
 }
 
 export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
@@ -22,7 +23,7 @@ export const TwitterComposeModal = ({ onPost }: TwitterComposeModalProps) => {
     // Simulate posting delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    onPost(postText);
+    onPost(postText, selectedImages);
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
