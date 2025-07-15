@@ -6,9 +6,11 @@ import { TwitterDashboard } from "@/components/TwitterDashboard";
 const Index = () => {
   const [showModal, setShowModal] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [hasPosted, setHasPosted] = useState(false);
 
   const handlePost = () => {
     setShowModal(false);
+    setHasPosted(true);
     
     // Small delay for better UX transition
     setTimeout(() => {
@@ -20,12 +22,12 @@ const Index = () => {
     <div className="min-h-screen bg-black">
       {showModal && <TwitterComposeModal onPost={handlePost} />}
       
-      {showDashboard && <TwitterDashboard />}
+      {showDashboard && <TwitterDashboard hasPosted={hasPosted} />}
       
       {/* Background content when modal is open */}
       {showModal && (
         <div className="blur-sm opacity-30">
-          <TwitterDashboard />
+          <TwitterDashboard hasPosted={false} />
         </div>
       )}
     </div>

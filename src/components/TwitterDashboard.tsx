@@ -3,23 +3,30 @@ import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
 
-export const TwitterDashboard = () => {
+interface TwitterDashboardProps {
+  hasPosted?: boolean;
+}
+
+export const TwitterDashboard = ({ hasPosted = false }: TwitterDashboardProps) => {
   return (
     <div className="min-h-screen bg-black animate-fade-in">
-      <div className="max-w-2xl mx-auto">
-        {/* Twitter-style compose card */}
-        <div className="border-b border-gray-800">
-          <TwitterCompose />
+      <div className="max-w-6xl mx-auto flex">
+        {/* Left side - Performance Metrics and Chart */}
+        <div className="flex-1 max-w-2xl">
+          {/* Performance Metrics */}
+          <div className="border-b border-gray-800">
+            <TwitterMetrics />
+          </div>
+          
+          {/* Engagement Chart */}
+          <div>
+            <TwitterEngagementChart />
+          </div>
         </div>
         
-        {/* Performance Metrics */}
-        <div className="border-b border-gray-800">
-          <TwitterMetrics />
-        </div>
-        
-        {/* Engagement Chart */}
-        <div>
-          <TwitterEngagementChart />
+        {/* Right side - Twitter Compose */}
+        <div className="flex-1 max-w-2xl border-l border-gray-800">
+          <TwitterCompose hasPosted={hasPosted} />
         </div>
       </div>
     </div>
