@@ -40,9 +40,9 @@ export const TwitterCompose = ({
 
   if (!hasPosted || !currentContent) {
     return (
-      <div className="w-full h-full flex flex-col justify-center items-center">
-        <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 flex-1 flex flex-col justify-center items-center shadow-2xl shadow-black/20 rounded-3xl max-w-lg w-full">
-          <div className="text-gray-500 text-lg">No post to display</div>
+      <div className="w-full h-full flex items-center justify-center">
+        <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 p-8 shadow-2xl shadow-black/20 rounded-3xl max-w-lg w-full">
+          <div className="text-gray-500 text-lg text-center">No post to display</div>
         </Card>
       </div>
     );
@@ -208,7 +208,7 @@ export const TwitterCompose = ({
   };
 
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div className="w-full h-full flex items-center justify-center p-4">
       <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 shadow-2xl shadow-black/20 rounded-3xl w-full max-w-lg">
         <ScrollArea className="max-h-[80vh]">
           <div className="p-6 sm:p-8">
@@ -276,22 +276,25 @@ export const TwitterCompose = ({
                       size="sm" 
                       onClick={handleImproveClick}
                       disabled={isImproving}
-                      className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto disabled:opacity-50"
+                      className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 disabled:opacity-50"
                     >
                       {isImproving ? "Improving..." : "Improve"}
                     </Button>
-                    
-                    <Button
-                      onClick={handlePost}
-                      disabled={isPosting}
-                      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                      style={{
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                      }}
-                    >
-                      {isPosting ? "Posting..." : "Post"}
-                    </Button>
                   </div>
+                </div>
+                
+                {/* Post button at the bottom left */}
+                <div className="flex justify-start mt-4">
+                  <Button
+                    onClick={handlePost}
+                    disabled={isPosting}
+                    className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                    style={{
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                    }}
+                  >
+                    {isPosting ? "Posting..." : "Post"}
+                  </Button>
                 </div>
               </div>
             </div>
