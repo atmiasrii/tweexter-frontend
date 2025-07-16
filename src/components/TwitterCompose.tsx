@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
@@ -37,6 +36,7 @@ export const TwitterCompose = ({
   ]);
   const [hasBeenImproved, setHasBeenImproved] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
 
   if (!hasPosted || !currentContent) {
     return (
@@ -173,6 +173,20 @@ export const TwitterCompose = ({
     }
   };
 
+  const handlePost = async () => {
+    setIsPosting(true);
+    
+    // Simulate posting delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setIsPosting(false);
+    
+    // Trigger analytics refresh
+    if (onAnalyticsRefresh) {
+      onAnalyticsRefresh();
+    }
+  };
+
   const renderContent = () => {
     if (!hasBeenImproved) {
       return currentContent;
@@ -257,14 +271,27 @@ export const TwitterCompose = ({
                     </div>
                   </div>
                   
-                  <Button 
-                    size="sm" 
-                    onClick={handleImproveClick}
-                    disabled={isImproving}
-                    className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto disabled:opacity-50"
-                  >
-                    {isImproving ? "Improving..." : "Improve"}
-                  </Button>
+                  <div className="flex items-center space-x-3">
+                    <Button 
+                      size="sm" 
+                      onClick={handleImproveClick}
+                      disabled={isImproving}
+                      className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ml-auto disabled:opacity-50"
+                    >
+                      {isImproving ? "Improving..." : "Improve"}
+                    </Button>
+                    
+                    <Button
+                      onClick={handlePost}
+                      disabled={isPosting}
+                      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                      }}
+                    >
+                      {isPosting ? "Posting..." : "Post"}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
