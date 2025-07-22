@@ -35,7 +35,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-start justify-center pt-12 z-50">
-      <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl">
+      <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl max-h-[85vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <button className="p-2 hover:bg-secondary rounded-full transition-colors">
@@ -79,7 +79,10 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
                         <img
                           src={URL.createObjectURL(image)}
                           alt={`Upload ${index + 1}`}
-                          className="w-full h-32 object-cover rounded-xl border border-border"
+                          className="w-full object-contain rounded-xl border border-border max-h-[400px]"
+                          style={{
+                            aspectRatio: 'auto',
+                          }}
                         />
                         <button
                           onClick={() => removeImage(index)}
