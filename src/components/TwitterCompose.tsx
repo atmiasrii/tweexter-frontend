@@ -346,7 +346,7 @@ export const TwitterCompose = ({
           </div>
           
           {/* Scrollable content area */}
-          <div className={`flex-1 overflow-y-auto px-6 sm:px-8 ${showFullText ? 'scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/40' : ''}`}>
+          <div className="flex-1 overflow-y-auto px-6 sm:px-8">
             <div className="pb-3">
               <div className="ml-[60px] text-foreground">
                 {renderContent()}
