@@ -348,28 +348,28 @@ export const TwitterCompose = ({
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto px-6 sm:px-8">
             <div className="pb-3">
-              <div className="ml-[60px] text-foreground">
+              <div className="ml-[60px] text-foreground space-y-3">
                 {renderContent()}
+                
+                {/* Display uploaded images after text */}
+                {postData.images.length > 0 && (
+                  <div className={`grid gap-2 ${
+                    postData.images.length === 1 ? 'grid-cols-1' : 
+                    postData.images.length === 2 ? 'grid-cols-2' : 
+                    'grid-cols-2'
+                  }`}>
+                    {postData.images.map((image, index) => (
+                      <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Post image ${index + 1}`}
+                          className="w-full aspect-square object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              
-              {/* Display uploaded images */}
-              {postData.images.length > 0 && (
-                <div className={`grid gap-2 mb-3 ${
-                  postData.images.length === 1 ? 'grid-cols-1' : 
-                  postData.images.length === 2 ? 'grid-cols-2' : 
-                  'grid-cols-2'
-                }`}>
-                  {postData.images.map((image, index) => (
-                    <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
-                      <img
-                        src={URL.createObjectURL(image)}
-                        alt={`Post image ${index + 1}`}
-                        className="w-full aspect-square object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
               
               {/* Blue globe icon and reply setting */}
               <div className="flex items-center space-x-2 mb-4">
