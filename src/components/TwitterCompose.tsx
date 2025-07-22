@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { TrendingUp, Users, Eye, Edit3, Check, X } from "lucide-react";
+import { TrendingUp, Users, Eye } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -190,12 +190,16 @@ export const TwitterCompose = ({
     }
   };
 
-  const handleEditClick = () => {
+  const handleContentClick = () => {
     setIsEditing(true);
     setEditContent(currentContent);
   };
 
-  const handleSaveEdit = () => {
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditContent(e.target.value);
+  };
+
+  const handleContentBlur = () => {
     setCurrentContent(editContent);
     setTextSegments([{ text: editContent, isImproved: false }]);
     setHasBeenImproved(false);
@@ -206,52 +210,34 @@ export const TwitterCompose = ({
     }
   };
 
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditContent(currentContent);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Escape') {
+      setEditContent(currentContent);
+      setIsEditing(false);
+    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      handleContentBlur();
+    }
   };
 
   const renderContent = () => {
     if (isEditing) {
       return (
-        <div className="space-y-3">
-          <Textarea
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
-            placeholder="What's happening?"
-            className="min-h-[120px] text-[15px] resize-none border-border bg-background text-foreground placeholder:text-muted-foreground"
-            style={{
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-            }}
-          />
-          <div className="flex items-center space-x-2">
-            <Button
-              onClick={handleSaveEdit}
-              size="sm"
-              className="bg-foreground hover:bg-foreground/90 text-background rounded-full px-4 py-1.5 text-sm font-medium"
-            >
-              <Check className="h-4 w-4 mr-1" />
-              Save
-            </Button>
-            <Button
-              onClick={handleCancelEdit}
-              size="sm"
-              variant="outline"
-              className="rounded-full px-4 py-1.5 text-sm font-medium"
-            >
-              <X className="h-4 w-4 mr-1" />
-              Cancel
-            </Button>
-          </div>
-        </div>
+        <Textarea
+          value={editContent}
+          onChange={handleContentChange}
+          onBlur={handleContentBlur}
+          onKeyDown={handleKeyDown}
+          placeholder="What's happening?"
+          autoFocus
+          className="min-h-[120px] text-[15px] resize-none border-none bg-transparent text-foreground placeholder:text-muted-foreground p-0 focus:ring-0 focus:outline-none"
+          style={{
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          }}
+        />
       );
     }
 
-    if (!hasBeenImproved) {
-      return currentContent;
-    }
-
-    return textSegments.map((segment, index) => {
+    const content = !hasBeenImproved ? currentContent : textSegments.map((segment, index) => {
       if (segment.isImproved && segment.originalText) {
         return (
           <HighlightedText
@@ -264,6 +250,16 @@ export const TwitterCompose = ({
       }
       return <span key={index}>{segment.text}</span>;
     });
+
+    return (
+      <div 
+        onClick={handleContentClick}
+        className="cursor-text hover:bg-muted/20 p-1 -m-1 rounded transition-colors"
+        title="Click to edit"
+      >
+        {content}
+      </div>
+    );
   };
 
   return (
@@ -332,41 +328,30 @@ export const TwitterCompose = ({
                 </div>
                 
                 {/* Buttons at the bottom */}
-                <div className="flex items-center space-x-3 mt-4">
-                  {!isEditing && (
-                    <>
-                      <Button 
-                        onClick={handleEditClick}
-                        size="sm"
-                        variant="outline"
-                        className="rounded-full px-4 py-1.5 text-sm font-medium"
-                      >
-                        <Edit3 className="h-4 w-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button 
-                        onClick={handleImproveClick}
-                        disabled={isImproving}
-                        className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                        style={{
-                          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                        }}
-                      >
-                        {isImproving ? "Improving..." : "Improve"}
-                      </Button>
-                      <Button
-                        onClick={handlePost}
-                        disabled={isPosting}
-                        className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                        style={{
-                          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                        }}
-                      >
-                        {isPosting ? "Posting..." : "Post"}
-                      </Button>
-                    </>
-                  )}
-                </div>
+                {!isEditing && (
+                  <div className="flex items-center space-x-3 mt-4">
+                    <Button 
+                      onClick={handleImproveClick}
+                      disabled={isImproving}
+                      className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                      }}
+                    >
+                      {isImproving ? "Improving..." : "Improve"}
+                    </Button>
+                    <Button
+                      onClick={handlePost}
+                      disabled={isPosting}
+                      className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                      }}
+                    >
+                      {isPosting ? "Posting..." : "Post"}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
