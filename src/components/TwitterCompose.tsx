@@ -1,11 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { TrendingUp, Users, Eye } from "lucide-react";
+import { TrendingUp, Users, Eye, Edit3 } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PostData {
   content: string;
@@ -39,7 +37,25 @@ export const TwitterCompose = ({
   const [isImproving, setIsImproving] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(postData.content);
+  const [showFullText, setShowFullText] = useState(false);
+  const editableRef = useRef<HTMLDivElement>(null);
+
+  // Twitter typically truncates at around 280 characters, but for display purposes, 
+  // they show more and truncate around 3-4 lines which is roughly 200-250 characters
+  const TRUNCATE_LENGTH = 240;
+
+  useEffect(() => {
+    if (isEditing && editableRef.current) {
+      editableRef.current.focus();
+      // Set cursor at the beginning
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.setStart(editableRef.current, 0);
+      range.collapse(true);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  }, [isEditing]);
 
   if (!hasPosted || !currentContent) {
     return (
@@ -52,7 +68,6 @@ export const TwitterCompose = ({
   }
 
   const generateImprovedText = (originalText: string): string => {
-    // Simulate AI improvement - in real app this would call an API
     const improvements = [
       { original: "built", improved: "developed" },
       { original: "algorithm", improved: "AI system" },
@@ -190,54 +205,68 @@ export const TwitterCompose = ({
     }
   };
 
-  const handleContentClick = () => {
+  const handleEditClick = () => {
     setIsEditing(true);
-    setEditContent(currentContent);
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditContent(e.target.value);
-  };
-
-  const handleContentBlur = () => {
-    setCurrentContent(editContent);
-    setTextSegments([{ text: editContent, isImproved: false }]);
-    setHasBeenImproved(false);
-    setIsEditing(false);
-    
-    if (onPostUpdate) {
-      onPostUpdate(editContent);
+  const handleEditableInput = () => {
+    if (editableRef.current) {
+      const newContent = editableRef.current.textContent || '';
+      setCurrentContent(newContent);
+      setTextSegments([{ text: newContent, isImproved: false }]);
+      setHasBeenImproved(false);
+      
+      if (onPostUpdate) {
+        onPostUpdate(newContent);
+      }
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleEditableBlur = () => {
+    setIsEditing(false);
+  };
+
+  const handleEditableKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Escape') {
-      setEditContent(currentContent);
       setIsEditing(false);
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      handleContentBlur();
+      setIsEditing(false);
     }
+  };
+
+  const shouldTruncateText = () => {
+    return currentContent.length > TRUNCATE_LENGTH && !showFullText;
+  };
+
+  const getTruncatedText = () => {
+    if (shouldTruncateText()) {
+      return currentContent.substring(0, TRUNCATE_LENGTH) + '...';
+    }
+    return currentContent;
   };
 
   const renderContent = () => {
     if (isEditing) {
       return (
-        <Textarea
-          value={editContent}
-          onChange={handleContentChange}
-          onBlur={handleContentBlur}
-          onKeyDown={handleKeyDown}
-          placeholder="What's happening?"
-          autoFocus
-          className="min-h-[120px] text-[15px] resize-none border-none bg-transparent text-foreground placeholder:text-muted-foreground p-0 focus:ring-0 focus:outline-none"
+        <div
+          ref={editableRef}
+          contentEditable
+          suppressContentEditableWarning={true}
+          onInput={handleEditableInput}
+          onBlur={handleEditableBlur}
+          onKeyDown={handleEditableKeyDown}
+          className="outline-none text-[15px] leading-5 font-normal min-h-[20px] cursor-text"
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
           }}
+          dangerouslySetInnerHTML={{ __html: currentContent }}
         />
       );
     }
 
-    const content = !hasBeenImproved ? currentContent : textSegments.map((segment, index) => {
+    const displayText = shouldTruncateText() ? getTruncatedText() : currentContent;
+    
+    const content = !hasBeenImproved ? displayText : textSegments.map((segment, index) => {
       if (segment.isImproved && segment.originalText) {
         return (
           <HighlightedText
@@ -252,36 +281,58 @@ export const TwitterCompose = ({
     });
 
     return (
-      <div 
-        onClick={handleContentClick}
-        className="cursor-text hover:bg-muted/20 p-1 -m-1 rounded transition-colors"
-        title="Click to edit"
-      >
+      <div className="text-[15px] leading-5 font-normal">
         {content}
+        {shouldTruncateText() && (
+          <button
+            onClick={() => setShowFullText(true)}
+            className="text-primary hover:underline ml-1"
+          >
+            Show more
+          </button>
+        )}
+        {showFullText && currentContent.length > TRUNCATE_LENGTH && (
+          <button
+            onClick={() => setShowFullText(false)}
+            className="text-primary hover:underline ml-1"
+          >
+            Show less
+          </button>
+        )}
       </div>
     );
   };
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
-      <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg">
-        <ScrollArea className="max-h-[80vh]">
+      <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col">
+        <div className="flex-1 overflow-hidden">
           <div className="p-6 sm:p-8">
             <div className="flex items-start space-x-3">
               <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
                 <AvatarFallback className="bg-primary text-primary-foreground text-lg font-medium">DA</AvatarFallback>
               </Avatar>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 relative">
+                {/* Edit button positioned at top right */}
+                <button
+                  onClick={handleEditClick}
+                  className="absolute -top-1 -right-1 p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
+                  title="Edit post"
+                >
+                  <Edit3 className="h-4 w-4" />
+                </button>
+                
                 <div className="flex items-center space-x-2 mb-2">
                   <span className="text-foreground font-semibold">Data Analytics</span>
                   <span className="text-muted-foreground text-sm">@dataanalytics</span>
                   <span className="text-muted-foreground text-sm">·</span>
                   <span className="text-muted-foreground text-sm">2m</span>
                 </div>
-                <p className="text-foreground text-[15px] leading-5 mb-3 font-normal">
+                
+                <div className="mb-3 text-foreground">
                   {renderContent()}
-                </p>
+                </div>
                 
                 {/* Display uploaded images */}
                 {postData.images.length > 0 && (
@@ -310,7 +361,7 @@ export const TwitterCompose = ({
                   <span className="text-primary text-sm font-normal">Everyone can reply</span>
                 </div>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-6 text-muted-foreground">
                     <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
                       <Eye className="h-4 w-4" />
@@ -326,36 +377,38 @@ export const TwitterCompose = ({
                     </div>
                   </div>
                 </div>
-                
-                {/* Buttons at the bottom */}
-                {!isEditing && (
-                  <div className="flex items-center space-x-3 mt-4">
-                    <Button 
-                      onClick={handleImproveClick}
-                      disabled={isImproving}
-                      className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                      style={{
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                      }}
-                    >
-                      {isImproving ? "Improving..." : "Improve"}
-                    </Button>
-                    <Button
-                      onClick={handlePost}
-                      disabled={isPosting}
-                      className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                      style={{
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                      }}
-                    >
-                      {isPosting ? "Posting..." : "Post"}
-                    </Button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
+        
+        {/* Fixed buttons at the bottom */}
+        {!isEditing && (
+          <div className="flex-shrink-0 px-6 sm:px-8 pb-6 sm:pb-8">
+            <div className="flex items-center space-x-3">
+              <Button 
+                onClick={handleImproveClick}
+                disabled={isImproving}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                }}
+              >
+                {isImproving ? "Improving..." : "Improve"}
+              </Button>
+              <Button
+                onClick={handlePost}
+                disabled={isPosting}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                }}
+              >
+                {isPosting ? "Posting..." : "Post"}
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );
