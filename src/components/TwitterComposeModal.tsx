@@ -73,22 +73,34 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
               {/* Image previews */}
               {selectedImages.length > 0 && (
                 <div className="mt-3">
-                  <div className={`grid gap-2 ${selectedImages.length === 1 ? 'grid-cols-1' : selectedImages.length === 2 ? 'grid-cols-2' : 'grid-cols-2'}`}>
+                  <div className={`grid gap-1 ${
+                    selectedImages.length === 1 ? 'grid-cols-1' : 
+                    selectedImages.length === 2 ? 'grid-cols-2' : 
+                    selectedImages.length === 3 ? 'grid-cols-3' :
+                    'grid-cols-2'
+                  } rounded-2xl overflow-hidden border border-border`}>
                     {selectedImages.map((image, index) => (
                       <div key={index} className="relative group">
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={`Upload ${index + 1}`}
-                          className="w-full object-contain rounded-xl border border-border max-h-[400px]"
-                          style={{
-                            aspectRatio: 'auto',
-                          }}
-                        />
+                        <div className="relative overflow-hidden bg-muted">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Upload ${index + 1}`}
+                            className={`w-full object-cover transition-transform group-hover:scale-105 ${
+                              selectedImages.length === 1 
+                                ? 'aspect-[16/10] max-h-[400px]' 
+                                : selectedImages.length === 2
+                                ? 'aspect-square'
+                                : 'aspect-square'
+                            }`}
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                        </div>
                         <button
                           onClick={() => removeImage(index)}
-                          className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 transition-colors"
+                          className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-full p-1.5 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+                          aria-label="Remove image"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     ))}
