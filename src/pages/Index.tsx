@@ -30,7 +30,7 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen bg-black overflow-hidden">
+    <div className="h-screen bg-background overflow-hidden">
       {showModal && <TwitterComposeModal onPost={handlePost} />}
       
       {showDashboard && (
