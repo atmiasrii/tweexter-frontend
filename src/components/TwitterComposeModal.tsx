@@ -35,7 +35,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-start justify-center pt-12 z-50">
-      <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl max-h-[85vh] overflow-y-auto">
+      <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <button className="p-2 hover:bg-secondary rounded-full transition-colors">
