@@ -280,21 +280,17 @@ export const TwitterCompose = ({
                     >
                       {isImproving ? "Improving..." : "Improve"}
                     </Button>
+                    <Button
+                      onClick={handlePost}
+                      disabled={isPosting}
+                      className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                      }}
+                    >
+                      {isPosting ? "Posting..." : "Post"}
+                    </Button>
                   </div>
-                </div>
-                
-                {/* Post button at the bottom left */}
-                <div className="flex justify-start mt-4">
-                  <Button
-                    onClick={handlePost}
-                    disabled={isPosting}
-                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                    style={{
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                    }}
-                  >
-                    {isPosting ? "Posting..." : "Post"}
-                  </Button>
                 </div>
               </div>
             </div>
