@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Users, Eye } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { TrendingUp, Users, Eye, Edit3, Check, X } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -37,6 +38,8 @@ export const TwitterCompose = ({
   const [hasBeenImproved, setHasBeenImproved] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(postData.content);
 
   if (!hasPosted || !currentContent) {
     return (
@@ -187,7 +190,63 @@ export const TwitterCompose = ({
     }
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditContent(currentContent);
+  };
+
+  const handleSaveEdit = () => {
+    setCurrentContent(editContent);
+    setTextSegments([{ text: editContent, isImproved: false }]);
+    setHasBeenImproved(false);
+    setIsEditing(false);
+    
+    if (onPostUpdate) {
+      onPostUpdate(editContent);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditContent(currentContent);
+  };
+
   const renderContent = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-3">
+          <Textarea
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            placeholder="What's happening?"
+            className="min-h-[120px] text-[15px] resize-none border-border bg-background text-foreground placeholder:text-muted-foreground"
+            style={{
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+            }}
+          />
+          <div className="flex items-center space-x-2">
+            <Button
+              onClick={handleSaveEdit}
+              size="sm"
+              className="bg-foreground hover:bg-foreground/90 text-background rounded-full px-4 py-1.5 text-sm font-medium"
+            >
+              <Check className="h-4 w-4 mr-1" />
+              Save
+            </Button>
+            <Button
+              onClick={handleCancelEdit}
+              size="sm"
+              variant="outline"
+              className="rounded-full px-4 py-1.5 text-sm font-medium"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Cancel
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     if (!hasBeenImproved) {
       return currentContent;
     }
@@ -274,26 +333,39 @@ export const TwitterCompose = ({
                 
                 {/* Buttons at the bottom */}
                 <div className="flex items-center space-x-3 mt-4">
-                  <Button 
-                    onClick={handleImproveClick}
-                    disabled={isImproving}
-                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                    style={{
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                    }}
-                  >
-                    {isImproving ? "Improving..." : "Improve"}
-                  </Button>
-                  <Button
-                    onClick={handlePost}
-                    disabled={isPosting}
-                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                    style={{
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                    }}
-                  >
-                    {isPosting ? "Posting..." : "Post"}
-                  </Button>
+                  {!isEditing && (
+                    <>
+                      <Button 
+                        onClick={handleEditClick}
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full px-4 py-1.5 text-sm font-medium"
+                      >
+                        <Edit3 className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                      <Button 
+                        onClick={handleImproveClick}
+                        disabled={isImproving}
+                        className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                        style={{
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                        }}
+                      >
+                        {isImproving ? "Improving..." : "Improve"}
+                      </Button>
+                      <Button
+                        onClick={handlePost}
+                        disabled={isPosting}
+                        className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                        style={{
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                        }}
+                      >
+                        {isPosting ? "Posting..." : "Post"}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
