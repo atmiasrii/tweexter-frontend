@@ -38,6 +38,7 @@ export const TwitterCompose = ({
   const [isPosting, setIsPosting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showFullText, setShowFullText] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState(0);
   const editableRef = useRef<HTMLDivElement>(null);
 
   // Twitter typically truncates at around 280 characters, but for display purposes, 
@@ -47,15 +48,19 @@ export const TwitterCompose = ({
   useEffect(() => {
     if (isEditing && editableRef.current) {
       editableRef.current.focus();
-      // Set cursor at the beginning
+      // Restore cursor position after edit
       const range = document.createRange();
       const selection = window.getSelection();
-      range.setStart(editableRef.current, 0);
-      range.collapse(true);
-      selection?.removeAllRanges();
-      selection?.addRange(range);
+      const textNode = editableRef.current.firstChild;
+      if (textNode) {
+        const position = Math.min(cursorPosition, textNode.textContent?.length || 0);
+        range.setStart(textNode, position);
+        range.collapse(true);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
     }
-  }, [isEditing]);
+  }, [isEditing, cursorPosition]);
 
   if (!hasPosted || !currentContent) {
     return (
@@ -211,6 +216,13 @@ export const TwitterCompose = ({
 
   const handleEditableInput = () => {
     if (editableRef.current) {
+      // Save cursor position before updating content
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        setCursorPosition(range.startOffset);
+      }
+      
       const newContent = editableRef.current.textContent || '';
       setCurrentContent(newContent);
       setTextSegments([{ text: newContent, isImproved: false }]);
@@ -306,21 +318,21 @@ export const TwitterCompose = ({
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col">
-        <div className="flex-1 overflow-hidden">
-          <div className="p-6 sm:p-8">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="p-6 sm:p-8 flex-shrink-0">
             <div className="flex items-start space-x-3">
               <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
                 <AvatarFallback className="bg-primary text-primary-foreground text-lg font-medium">DA</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0 relative">
-                {/* Edit button positioned at top right */}
+                {/* Edit button positioned at top right - bigger and clearer */}
                 <button
                   onClick={handleEditClick}
-                  className="absolute -top-1 -right-1 p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
+                  className="absolute -top-1 -right-1 p-3 hover:bg-muted rounded-full transition-colors text-foreground hover:text-primary border border-border hover:border-primary bg-background/80 backdrop-blur-sm shadow-sm"
                   title="Edit post"
                 >
-                  <Edit3 className="h-4 w-4" />
+                  <Edit3 className="h-5 w-5" />
                 </button>
                 
                 <div className="flex items-center space-x-2 mb-2">
@@ -329,52 +341,57 @@ export const TwitterCompose = ({
                   <span className="text-muted-foreground text-sm">·</span>
                   <span className="text-muted-foreground text-sm">2m</span>
                 </div>
-                
-                <div className="mb-3 text-foreground">
-                  {renderContent()}
+              </div>
+            </div>
+          </div>
+          
+          {/* Scrollable content area */}
+          <div className={`flex-1 overflow-y-auto px-6 sm:px-8 ${showFullText ? 'scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/40' : ''}`}>
+            <div className="pb-3">
+              <div className="ml-[60px] text-foreground">
+                {renderContent()}
+              </div>
+              
+              {/* Display uploaded images */}
+              {postData.images.length > 0 && (
+                <div className={`grid gap-2 mb-3 ${
+                  postData.images.length === 1 ? 'grid-cols-1' : 
+                  postData.images.length === 2 ? 'grid-cols-2' : 
+                  'grid-cols-2'
+                }`}>
+                  {postData.images.map((image, index) => (
+                    <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`Post image ${index + 1}`}
+                        className="w-full aspect-square object-cover"
+                      />
+                    </div>
+                  ))}
                 </div>
-                
-                {/* Display uploaded images */}
-                {postData.images.length > 0 && (
-                  <div className={`grid gap-2 mb-3 ${
-                    postData.images.length === 1 ? 'grid-cols-1' : 
-                    postData.images.length === 2 ? 'grid-cols-2' : 
-                    'grid-cols-2'
-                  }`}>
-                    {postData.images.map((image, index) => (
-                      <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={`Post image ${index + 1}`}
-                          className="w-full aspect-square object-cover"
-                        />
-                      </div>
-                    ))}
+              )}
+              
+              {/* Blue globe icon and reply setting */}
+              <div className="flex items-center space-x-2 mb-4">
+                <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span className="text-primary text-sm font-normal">Everyone can reply</span>
+              </div>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-6 text-muted-foreground">
+                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
+                    <Eye className="h-4 w-4" />
+                    <span className="text-sm font-medium">89.1K</span>
                   </div>
-                )}
-                
-                {/* Blue globe icon and reply setting */}
-                <div className="flex items-center space-x-2 mb-4">
-                  <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                  <span className="text-primary text-sm font-normal">Everyone can reply</span>
-                </div>
-                
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-6 text-muted-foreground">
-                    <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
-                      <Eye className="h-4 w-4" />
-                      <span className="text-sm font-medium">89.1K</span>
-                    </div>
-                    <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
-                      <Users className="h-4 w-4" />
-                      <span className="text-sm font-medium">3.2K</span>
-                    </div>
-                    <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
-                      <TrendingUp className="h-4 w-4" />
-                      <span className="text-sm font-medium">+15.7%</span>
-                    </div>
+                  <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
+                    <Users className="h-4 w-4" />
+                    <span className="text-sm font-medium">3.2K</span>
+                  </div>
+                  <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
+                    <TrendingUp className="h-4 w-4" />
+                    <span className="text-sm font-medium">+15.7%</span>
                   </div>
                 </div>
               </div>
@@ -384,8 +401,8 @@ export const TwitterCompose = ({
         
         {/* Fixed buttons at the bottom */}
         {!isEditing && (
-          <div className="flex-shrink-0 px-6 sm:px-8 pb-6 sm:pb-8">
-            <div className="flex items-center space-x-3">
+          <div className="flex-shrink-0 px-6 sm:px-8 pb-6 sm:pb-8 border-t border-border/50 bg-card/80 backdrop-blur-sm">
+            <div className="flex items-center justify-center space-x-3 pt-4">
               <Button 
                 onClick={handleImproveClick}
                 disabled={isImproving}
