@@ -270,27 +270,30 @@ export const TwitterCompose = ({
                       <span className="text-sm font-medium">+15.7%</span>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-3">
-                    <Button 
-                      size="sm" 
-                      onClick={handleImproveClick}
-                      disabled={isImproving}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 disabled:opacity-50"
-                    >
-                      {isImproving ? "Improving..." : "Improve"}
-                    </Button>
-                    <Button
-                      onClick={handlePost}
-                      disabled={isPosting}
-                      className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
-                      style={{
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                      }}
-                    >
-                      {isPosting ? "Posting..." : "Post"}
-                    </Button>
-                  </div>
+                </div>
+                
+                {/* Buttons at the bottom */}
+                <div className="flex items-center space-x-3 mt-4">
+                  <Button 
+                    onClick={handleImproveClick}
+                    disabled={isImproving}
+                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                    style={{
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                    }}
+                  >
+                    {isImproving ? "Improving..." : "Improve"}
+                  </Button>
+                  <Button
+                    onClick={handlePost}
+                    disabled={isPosting}
+                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                    style={{
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                    }}
+                  >
+                    {isPosting ? "Posting..." : "Post"}
+                  </Button>
                 </div>
               </div>
             </div>
