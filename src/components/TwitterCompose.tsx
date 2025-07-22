@@ -41,8 +41,8 @@ export const TwitterCompose = ({
   if (!hasPosted || !currentContent) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 p-8 shadow-2xl shadow-black/20 rounded-3xl max-w-lg w-full">
-          <div className="text-gray-500 text-lg text-center">No post to display</div>
+        <Card className="bg-card border-border p-8 shadow-lg rounded-3xl max-w-lg w-full">
+          <div className="text-muted-foreground text-lg text-center">No post to display</div>
         </Card>
       </div>
     );
@@ -209,22 +209,22 @@ export const TwitterCompose = ({
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
-      <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 shadow-2xl shadow-black/20 rounded-3xl w-full max-w-lg">
+      <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg">
         <ScrollArea className="max-h-[80vh]">
           <div className="p-6 sm:p-8">
             <div className="flex items-start space-x-3">
-              <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-gray-700/50">
-                <AvatarImage src="/placeholder.svg?height=48&width=48" />
-                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-lg font-medium">DA</AvatarFallback>
+              <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
+                <AvatarFallback className="bg-primary text-primary-foreground text-lg font-medium">DA</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-white font-semibold">Data Analytics</span>
-                  <span className="text-gray-400 text-sm">@dataanalytics</span>
-                  <span className="text-gray-500 text-sm">·</span>
-                  <span className="text-gray-400 text-sm">2m</span>
+                  <span className="text-foreground font-semibold">Data Analytics</span>
+                  <span className="text-muted-foreground text-sm">@dataanalytics</span>
+                  <span className="text-muted-foreground text-sm">·</span>
+                  <span className="text-muted-foreground text-sm">2m</span>
                 </div>
-                <p className="text-white text-[15px] leading-5 mb-3 font-normal">
+                <p className="text-foreground text-[15px] leading-5 mb-3 font-normal">
                   {renderContent()}
                 </p>
                 
@@ -236,7 +236,7 @@ export const TwitterCompose = ({
                     'grid-cols-2'
                   }`}>
                     {postData.images.map((image, index) => (
-                      <div key={index} className="relative overflow-hidden rounded-2xl border border-gray-700/30">
+                      <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
                         <img
                           src={URL.createObjectURL(image)}
                           alt={`Post image ${index + 1}`}
@@ -249,23 +249,23 @@ export const TwitterCompose = ({
                 
                 {/* Blue globe icon and reply setting */}
                 <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-4 h-4 rounded-full border border-blue-500 flex items-center justify-center">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  </div>
-                  <span className="text-blue-500 text-sm font-normal">Everyone can reply</span>
+                  <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  <span className="text-primary text-sm font-normal">Everyone can reply</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-6 text-gray-400">
-                    <div className="flex items-center space-x-2 hover:text-blue-400 transition-colors cursor-pointer">
+                  <div className="flex items-center space-x-6 text-muted-foreground">
+                    <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
                       <Eye className="h-4 w-4" />
                       <span className="text-sm font-medium">89.1K</span>
                     </div>
-                    <div className="flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+                    <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
                       <Users className="h-4 w-4" />
                       <span className="text-sm font-medium">3.2K</span>
                     </div>
-                    <div className="flex items-center space-x-2 hover:text-purple-400 transition-colors cursor-pointer">
+                    <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
                       <TrendingUp className="h-4 w-4" />
                       <span className="text-sm font-medium">+15.7%</span>
                     </div>
@@ -276,7 +276,7 @@ export const TwitterCompose = ({
                       size="sm" 
                       onClick={handleImproveClick}
                       disabled={isImproving}
-                      className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 disabled:opacity-50"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 disabled:opacity-50"
                     >
                       {isImproving ? "Improving..." : "Improve"}
                     </Button>
@@ -288,7 +288,7 @@ export const TwitterCompose = ({
                   <Button
                     onClick={handlePost}
                     disabled={isPosting}
-                    className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
                     style={{
                       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                     }}

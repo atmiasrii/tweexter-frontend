@@ -50,19 +50,19 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
   }, [metric.value, delay]);
 
   return (
-    <div className="bg-gray-900/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 hover:bg-gray-900/40 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 hover:border-gray-600/50">
+    <div className="bg-card border-border rounded-2xl p-4 hover:bg-accent/50 transition-all duration-300 hover:shadow-md hover:border-border/70">
       <div className="flex justify-between items-start mb-3">
-        <h4 className="text-gray-300 font-medium text-sm">{metric.label}</h4>
-        <span className="text-xs text-green-400 font-semibold bg-green-400/15 px-2 py-1 rounded-full border border-green-400/20">
+        <h4 className="text-muted-foreground font-medium text-sm">{metric.label}</h4>
+        <span className="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full border border-green-200">
           {metric.trend}
         </span>
       </div>
       <div className="mb-2">
-        <span className="text-2xl font-bold text-white tracking-tight">
+        <span className="text-2xl font-bold text-foreground tracking-tight">
           {formatNumber(currentValue)}
         </span>
       </div>
-      <p className="text-xs text-gray-400 leading-relaxed">
+      <p className="text-xs text-muted-foreground leading-relaxed">
         {metric.description}
       </p>
     </div>
@@ -72,13 +72,13 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
 export const TwitterMetrics = () => {
   return (
     <div className="w-full h-full">
-      <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 h-full shadow-2xl shadow-black/20 rounded-3xl">
+      <Card className="bg-card border-border h-full shadow-lg rounded-3xl">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white">Post performance</h3>
+            <h3 className="text-xl font-bold text-foreground">Post performance</h3>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-400">Live</span>
+              <span className="text-xs text-muted-foreground">Live</span>
             </div>
           </div>
           

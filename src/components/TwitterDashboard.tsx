@@ -27,7 +27,7 @@ export const TwitterDashboard = ({
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden animate-fade-in">
+    <div className="h-screen bg-background overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-6 py-6 h-full">
           {/* Left side - Performance Metrics and Chart */}

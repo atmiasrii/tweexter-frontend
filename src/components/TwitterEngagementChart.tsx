@@ -47,59 +47,58 @@ export const TwitterEngagementChart = () => {
 
   return (
     <div className="w-full h-full">
-      <Card className="bg-black/50 backdrop-blur-xl border-gray-700/50 h-full shadow-2xl shadow-black/20 rounded-3xl">
+      <Card className="bg-card border-border h-full shadow-lg rounded-3xl">
         <div className="p-6 h-full flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white">Engagement timeline</h3>
+            <h3 className="text-xl font-bold text-foreground">Engagement timeline</h3>
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-400">Real-time</span>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-xs text-muted-foreground">Real-time</span>
             </div>
           </div>
           
-          <div className="flex-1 bg-gray-900/30 backdrop-blur-sm rounded-2xl p-4 border border-gray-700/30">
+          <div className="flex-1 bg-accent/20 rounded-2xl p-4 border border-border/30">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={animatedData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
                 <XAxis 
                   dataKey="time" 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#9CA3AF', fontSize: 11 }}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
                   tickMargin={8}
                 />
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#9CA3AF', fontSize: 11 }}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
                   tickMargin={8}
                 />
                 <Tooltip 
                   contentStyle={{
-                    backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                    border: '1px solid rgba(55, 65, 81, 0.6)',
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
                     borderRadius: '12px',
-                    color: '#F9FAFB',
+                    color: 'hsl(var(--card-foreground))',
                     fontSize: '12px',
-                    backdropFilter: 'blur(8px)'
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
                   }}
-                  labelStyle={{ color: '#9CA3AF' }}
+                  labelStyle={{ color: 'hsl(var(--muted-foreground))' }}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="engagement" 
-                  stroke="#3B82F6"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  dot={{ fill: '#3B82F6', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: '#3B82F6', stroke: '#1F2937', strokeWidth: 3 }}
-                  filter="drop-shadow(0 0 6px rgba(59, 130, 246, 0.4))"
+                  dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, fill: 'hsl(var(--primary))', stroke: 'hsl(var(--background))', strokeWidth: 3 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
           
           <div className="mt-4 text-center">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-muted-foreground">
               Peak activity: 6-10 PM • Avg response time: 2.3min
             </p>
           </div>
