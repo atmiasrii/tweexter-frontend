@@ -2,16 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
@@ -57,92 +56,85 @@ export const Login = () => {
     setIsLoading(false);
   };
 
+  const handleSubmit = () => {
+    if (isLogin) {
+      handleLogin();
+    } else {
+      handleSignUp();
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Card className="bg-card border-border p-6">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-foreground mb-2">Welcome</h1>
-            <p className="text-muted-foreground">Sign in to your account or create a new one</p>
-          </div>
+    <div className="min-h-screen bg-black flex items-center justify-center py-8">
+      <div className="w-full max-w-sm">
+        <Card className="rounded-3xl border-gray-800 bg-gray-900 p-8">
+          <div className="space-y-6">
+            <h1 className="text-2xl font-medium text-white">
+              {isLogin ? 'Login' : 'Create Account'}
+            </h1>
 
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="login" className="space-y-4 mt-6">
+            <div className="space-y-5">
+              {!isLogin && (
+                <div className="space-y-2">
+                  <label className="text-white text-sm font-normal">Full Name</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 rounded-xl h-12 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              )}
+
               <div className="space-y-2">
-                <Label htmlFor="login-email">Email</Label>
+                <label className="text-white text-sm font-normal">Email</label>
                 <Input
-                  id="login-email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Enter Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 rounded-xl h-12 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="login-password">Password</Label>
-                <Input
-                  id="login-password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button 
-                onClick={handleLogin}
-                className="w-full"
-                disabled={isLoading || !email || !password}
-              >
-                {isLoading ? "Signing in..." : "Sign In"}
-              </Button>
-            </TabsContent>
-            
-            <TabsContent value="signup" className="space-y-4 mt-6">
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
-                <Input
-                  id="signup-email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-password">Password</Label>
-                <Input
-                  id="signup-password"
-                  type="password"
-                  placeholder="Create a password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button 
-                onClick={handleSignUp}
-                className="w-full"
-                disabled={isLoading || !email || !password}
-              >
-                {isLoading ? "Creating account..." : "Create Account"}
-              </Button>
-            </TabsContent>
-          </Tabs>
 
-          <Separator className="my-6" />
-          
-          <div className="text-center">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/')}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              ← Back to landing
-            </Button>
+              <div className="space-y-2">
+                <label className="text-white text-sm font-normal">Password</label>
+                <Input
+                  type="password"
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 rounded-xl h-12 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <Button 
+                onClick={handleSubmit}
+                disabled={isLoading || !email || !password || (!isLogin && !name)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 text-base font-medium mt-6"
+              >
+                {isLoading ? (isLogin ? "Signing in..." : "Creating account...") : (isLogin ? 'Login' : "Let's Go")}
+              </Button>
+
+              <div className="text-center mt-4">
+                <button
+                  onClick={() => setIsLogin(!isLogin)}
+                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  {isLogin ? "Don't have an account? Sign up" : "Already a member? Login"}
+                </button>
+              </div>
+
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => navigate('/')}
+                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  ← Back to landing
+                </button>
+              </div>
+            </div>
           </div>
         </Card>
       </div>
