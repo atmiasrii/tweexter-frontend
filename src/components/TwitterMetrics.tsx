@@ -3,10 +3,9 @@ import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 
 const metricsData = [
-  { label: 'Impressions', value: 89100, trend: '+11.2%', description: 'Times your post was seen' },
-  { label: 'Engagements', value: 3200, trend: '+8.9%', description: 'Total interactions' },
-  { label: 'Engagement rate', value: 2.3, trend: '+15.7%', description: 'Engagements ÷ impressions' },
-  { label: 'Profile visits', value: 847, trend: '+12.3%', description: 'Visits to your profile' },
+  { label: 'Likes', value: 56, trend: '+12.5%', description: 'Hearts on your post' },
+  { label: 'Retweets', value: 4, trend: '+25.0%', description: 'Shares of your post' },
+  { label: 'Replies', value: 17, trend: '+8.3%', description: 'Comments on your post' },
 ];
 
 const formatNumber = (num: number): string => {
