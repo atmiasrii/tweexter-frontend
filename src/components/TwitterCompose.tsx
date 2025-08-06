@@ -362,10 +362,10 @@ export const TwitterCompose = ({
                   )}
                 </div>
                 
-                {/* Blue globe icon and reply setting */}
+                {/* Globe icon and reply setting - unclickable status */}
                 <div className="flex items-center space-x-2 mb-4 mt-4">
                   <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM4 12C4 7.582 7.582 4 12 4s8 3.582 8 8-3.582 8-8 8-8-3.582-8-8z"/>
                   </svg>
                   <span className="text-primary text-sm font-normal">Everyone can reply</span>
                 </div>
