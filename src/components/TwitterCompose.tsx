@@ -298,7 +298,7 @@ export const TwitterCompose = ({
         {shouldTruncateText() && (
           <button
             onClick={() => setShowFullText(true)}
-            className="text-primary hover:underline ml-1"
+            className="text-primary hover:underline"
           >
             Show more
           </button>
