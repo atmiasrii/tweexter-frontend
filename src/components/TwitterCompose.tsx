@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Users, Eye, Edit3 } from "lucide-react";
+import { MessageCircle, Repeat2, Heart, Bookmark, Edit3 } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
 
 interface PostData {
@@ -379,16 +379,20 @@ export const TwitterCompose = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-6 text-muted-foreground">
                   <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
-                    <Eye className="h-4 w-4" />
-                    <span className="text-sm font-medium">89.1K</span>
+                    <MessageCircle className="h-4 w-4" />
+                    <span className="text-sm font-medium">17</span>
                   </div>
                   <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
-                    <Users className="h-4 w-4" />
-                    <span className="text-sm font-medium">3.2K</span>
+                    <Repeat2 className="h-4 w-4" />
+                    <span className="text-sm font-medium">4</span>
                   </div>
-                  <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
-                    <TrendingUp className="h-4 w-4" />
-                    <span className="text-sm font-medium">+15.7%</span>
+                  <div className="flex items-center space-x-2 hover:text-red-500 transition-colors cursor-pointer">
+                    <Heart className="h-4 w-4" />
+                    <span className="text-sm font-medium">56</span>
+                  </div>
+                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
+                    <Bookmark className="h-4 w-4" />
+                    <span className="text-sm font-medium">56</span>
                   </div>
                 </div>
               </div>
