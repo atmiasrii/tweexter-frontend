@@ -365,7 +365,7 @@ export const TwitterCompose = ({
             </div>
             
             {/* Bottom sections - Everyone can reply and engagement metrics */}
-            <div className="px-6 pb-4 space-y-3">
+            <div className="mt-6 space-y-3">
               {/* Blue globe icon and reply setting */}
               <div className="flex items-center space-x-2">
                 <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer">
