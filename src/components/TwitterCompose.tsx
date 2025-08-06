@@ -319,7 +319,7 @@ export const TwitterCompose = ({
     <div className="w-full h-full flex items-center justify-center p-4">
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col">
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="p-6 sm:p-8 flex-shrink-0">
+          <div className="p-4 sm:p-6 flex-shrink-0">
             <div className="flex items-start space-x-3">
               <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
