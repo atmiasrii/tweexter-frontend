@@ -317,71 +317,73 @@ export const TwitterCompose = ({
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
-      <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col">
+      <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col relative">
+        {/* Edit button in top right corner */}
+        <button
+          onClick={handleEditClick}
+          className="absolute top-4 right-4 z-10 p-3 hover:bg-muted rounded-full transition-colors text-foreground hover:text-primary border border-border hover:border-primary bg-background/80 backdrop-blur-sm shadow-sm"
+          title="Edit post"
+        >
+          <Edit3 className="h-5 w-5" />
+        </button>
+
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 flex-shrink-0">
-            <div className="flex items-start justify-between">
+          {/* Main content area with photo and text side by side */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex items-start space-x-4">
+              {/* Avatar */}
               <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
                 <AvatarFallback className="bg-primary text-primary-foreground text-lg font-medium">DA</AvatarFallback>
               </Avatar>
-              <button
-                onClick={handleEditClick}
-                className="p-3 hover:bg-muted rounded-full transition-colors text-foreground hover:text-primary border border-border hover:border-primary bg-background/80 backdrop-blur-sm shadow-sm"
-                title="Edit post"
-              >
-                <Edit3 className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-          
-          {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto px-6 sm:px-8 -mt-2">
-            <div className="pb-3">
-              <div className="ml-[60px] text-foreground space-y-3">
-                {renderContent()}
+              
+              {/* Text content */}
+              <div className="flex-1 min-w-0">
+                <div className="text-foreground space-y-3">
+                  {renderContent()}
+                  
+                  {/* Display uploaded images after text */}
+                  {postData.images.length > 0 && (
+                    <div className={`grid gap-2 ${
+                      postData.images.length === 1 ? 'grid-cols-1' : 
+                      postData.images.length === 2 ? 'grid-cols-2' : 
+                      'grid-cols-2'
+                    }`}>
+                      {postData.images.map((image, index) => (
+                        <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Post image ${index + 1}`}
+                            className="w-full aspect-square object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 
-                {/* Display uploaded images after text */}
-                {postData.images.length > 0 && (
-                  <div className={`grid gap-2 ${
-                    postData.images.length === 1 ? 'grid-cols-1' : 
-                    postData.images.length === 2 ? 'grid-cols-2' : 
-                    'grid-cols-2'
-                  }`}>
-                    {postData.images.map((image, index) => (
-                      <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={`Post image ${index + 1}`}
-                          className="w-full aspect-square object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
-              {/* Blue globe icon and reply setting */}
-              <div className="flex items-center space-x-2 mb-4">
-                <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                <span className="text-primary text-sm font-normal">Everyone can reply</span>
-              </div>
-              
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-6 text-muted-foreground">
-                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
-                    <Eye className="h-4 w-4" />
-                    <span className="text-sm font-medium">89.1K</span>
-                  </div>
-                  <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
-                    <Users className="h-4 w-4" />
-                    <span className="text-sm font-medium">3.2K</span>
-                  </div>
-                  <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
-                    <TrendingUp className="h-4 w-4" />
-                    <span className="text-sm font-medium">+15.7%</span>
+                {/* Blue globe icon and reply setting */}
+                <div className="flex items-center space-x-2 mb-4 mt-4">
+                  <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  <span className="text-primary text-sm font-normal">Everyone can reply</span>
+                </div>
+                
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-6 text-muted-foreground">
+                    <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
+                      <Eye className="h-4 w-4" />
+                      <span className="text-sm font-medium">89.1K</span>
+                    </div>
+                    <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
+                      <Users className="h-4 w-4" />
+                      <span className="text-sm font-medium">3.2K</span>
+                    </div>
+                    <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
+                      <TrendingUp className="h-4 w-4" />
+                      <span className="text-sm font-medium">+15.7%</span>
+                    </div>
                   </div>
                 </div>
               </div>
