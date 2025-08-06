@@ -361,31 +361,34 @@ export const TwitterCompose = ({
                     </div>
                   )}
                 </div>
-                
-                {/* Blue globe icon and reply setting */}
-                <div className="flex items-center space-x-2 mb-4 mt-4">
-                  <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer">
-                    <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    <span className="text-primary text-sm font-normal">Everyone can reply</span>
-                  </div>
+              </div>
+            </div>
+            
+            {/* Bottom sections - Everyone can reply and engagement metrics */}
+            <div className="px-6 pb-4 space-y-3">
+              {/* Blue globe icon and reply setting */}
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer">
+                  <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  <span className="text-primary text-sm font-normal">Everyone can reply</span>
                 </div>
-                
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-6 text-muted-foreground">
-                    <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
-                      <Eye className="h-4 w-4" />
-                      <span className="text-sm font-medium">89.1K</span>
-                    </div>
-                    <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
-                      <Users className="h-4 w-4" />
-                      <span className="text-sm font-medium">3.2K</span>
-                    </div>
-                    <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
-                      <TrendingUp className="h-4 w-4" />
-                      <span className="text-sm font-medium">+15.7%</span>
-                    </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-6 text-muted-foreground">
+                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
+                    <Eye className="h-4 w-4" />
+                    <span className="text-sm font-medium">89.1K</span>
+                  </div>
+                  <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
+                    <Users className="h-4 w-4" />
+                    <span className="text-sm font-medium">3.2K</span>
+                  </div>
+                  <div className="flex items-center space-x-2 hover:text-purple-500 transition-colors cursor-pointer">
+                    <TrendingUp className="h-4 w-4" />
+                    <span className="text-sm font-medium">+15.7%</span>
                   </div>
                 </div>
               </div>
