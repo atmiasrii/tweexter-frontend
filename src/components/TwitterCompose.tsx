@@ -336,7 +336,7 @@ export const TwitterCompose = ({
           </div>
           
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto px-6 sm:px-8">
+          <div className="flex-1 overflow-y-auto px-6 sm:px-8 -mt-2">
             <div className="pb-3">
               <div className="ml-[60px] text-foreground space-y-3">
                 {renderContent()}
