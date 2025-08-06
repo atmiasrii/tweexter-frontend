@@ -377,7 +377,7 @@ export const TwitterCompose = ({
               </div>
               
               <div className="flex items-center justify-center">
-                <div className="flex items-center space-x-8 text-muted-foreground">
+                <div className="flex items-center justify-between w-full text-muted-foreground px-8">
                   <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
                     <MessageCircle className="h-4 w-4" />
                     <span className="text-sm font-medium">17</span>
