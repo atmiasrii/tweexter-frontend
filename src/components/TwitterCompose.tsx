@@ -318,14 +318,6 @@ export const TwitterCompose = ({
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col relative">
-        {/* Edit button in top right corner */}
-        <button
-          onClick={handleEditClick}
-          className="absolute top-4 right-4 z-10 p-3 hover:bg-muted rounded-full transition-colors text-foreground hover:text-primary border border-border hover:border-primary bg-background/80 backdrop-blur-sm shadow-sm"
-          title="Edit post"
-        >
-          <Edit3 className="h-5 w-5" />
-        </button>
 
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Main content area with photo and text side by side */}
