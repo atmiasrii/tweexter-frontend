@@ -320,28 +320,18 @@ export const TwitterCompose = ({
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col">
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 flex-shrink-0">
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start justify-between">
               <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
                 <AvatarFallback className="bg-primary text-primary-foreground text-lg font-medium">DA</AvatarFallback>
               </Avatar>
-              <div className="flex-1 min-w-0 relative">
-                {/* Edit button positioned at top right - bigger and clearer */}
-                <button
-                  onClick={handleEditClick}
-                  className="absolute -top-1 -right-1 p-3 hover:bg-muted rounded-full transition-colors text-foreground hover:text-primary border border-border hover:border-primary bg-background/80 backdrop-blur-sm shadow-sm"
-                  title="Edit post"
-                >
-                  <Edit3 className="h-5 w-5" />
-                </button>
-                
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-foreground font-semibold">Data Analytics</span>
-                  <span className="text-muted-foreground text-sm">@dataanalytics</span>
-                  <span className="text-muted-foreground text-sm">·</span>
-                  <span className="text-muted-foreground text-sm">2m</span>
-                </div>
-              </div>
+              <button
+                onClick={handleEditClick}
+                className="p-3 hover:bg-muted rounded-full transition-colors text-foreground hover:text-primary border border-border hover:border-primary bg-background/80 backdrop-blur-sm shadow-sm"
+                title="Edit post"
+              >
+                <Edit3 className="h-5 w-5" />
+              </button>
             </div>
           </div>
           
