@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 
 const metricsData = [
-  { label: 'Likes', value: 56, trend: '+12.5%', description: 'Hearts on your post' },
-  { label: 'Retweets', value: 4, trend: '+25.0%', description: 'Shares of your post' },
-  { label: 'Replies', value: 17, trend: '+8.3%', description: 'Comments on your post' },
+  { label: 'Likes', value: 56, trend: '+12.5%' },
+  { label: 'Retweets', value: 4, trend: '+25.0%' },
+  { label: 'Replies', value: 17, trend: '+8.3%' },
 ];
 
 const formatNumber = (num: number): string => {
@@ -56,14 +56,11 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
           {metric.trend}
         </span>
       </div>
-      <div className="mb-2">
+      <div>
         <span className="text-2xl font-bold text-foreground tracking-tight">
           {formatNumber(currentValue)}
         </span>
       </div>
-      <p className="text-xs text-muted-foreground leading-relaxed">
-        {metric.description}
-      </p>
     </div>
   );
 };
@@ -81,7 +78,7 @@ export const TwitterMetrics = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {metricsData.map((metric, index) => (
               <AnimatedMetric 
                 key={index} 
