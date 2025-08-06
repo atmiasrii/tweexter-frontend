@@ -6,15 +6,16 @@ interface PostData {
 }
 
 interface HomeProps {
-  postData?: PostData;
+  postData: PostData;
+  hasPost: boolean;
   onPostUpdate?: (updatedContent: string) => void;
 }
 
-export const Home = ({ postData, onPostUpdate }: HomeProps) => {
+export const Home = ({ postData, hasPost, onPostUpdate }: HomeProps) => {
   return (
     <TwitterDashboard 
-      hasPosted={!!postData?.content} 
-      postData={postData || { content: "", images: [] }}
+      hasPosted={hasPost} 
+      postData={postData}
       onPostUpdate={onPostUpdate}
     />
   );

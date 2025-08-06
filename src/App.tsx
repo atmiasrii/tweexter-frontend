@@ -11,6 +11,7 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Pay } from "./pages/Pay";
 import NotFound from "./pages/NotFound";
+import { usePost } from "./hooks/usePost";
 
 const App = () => {
   // Create QueryClient inside the component to ensure proper React context
@@ -23,6 +24,8 @@ const App = () => {
     },
   }));
 
+  const { postData, hasPost, updatePost, updatePostContent } = usePost();
+
   console.log("App component rendering", { queryClient });
 
   return (
@@ -33,8 +36,8 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/landing" element={<Landing />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/landing" element={<Landing onPost={updatePost} />} />
+            <Route path="/home" element={<Home postData={postData} hasPost={hasPost} onPostUpdate={updatePostContent} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/pay" element={<Pay />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

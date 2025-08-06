@@ -39,7 +39,7 @@ const Index = () => {
   }
 
   return user ? (
-    <Home postData={postData} onPostUpdate={handlePostUpdate} />
+    <Home postData={postData} hasPost={!!postData.content} onPostUpdate={handlePostUpdate} />
   ) : (
     <Landing onPost={handlePost} />
   );

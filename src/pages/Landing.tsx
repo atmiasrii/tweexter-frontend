@@ -11,7 +11,7 @@ interface PostData {
 }
 
 interface LandingProps {
-  onPost?: (data: PostData) => void;
+  onPost: (data: PostData) => void;
 }
 
 export const Landing = ({ onPost }: LandingProps) => {
@@ -26,7 +26,7 @@ export const Landing = ({ onPost }: LandingProps) => {
       setIsPosting(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
       const postData = { content: postText, images: selectedImages };
-      onPost?.(postData);
+      onPost(postData);
       navigate('/login');
       setIsPosting(false);
     }
