@@ -395,8 +395,8 @@ export const TwitterCompose = ({
         
         {/* Fixed buttons at the bottom */}
         {!isEditing && (
-          <div className="flex-shrink-0 px-6 sm:px-8 pb-6 sm:pb-8 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
-            <div className="flex items-center justify-center space-x-3 pt-4">
+          <div className="flex-shrink-0 px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
+            <div className="flex items-center justify-center space-x-3 pt-2">
               <Button 
                 onClick={handleImproveClick}
                 disabled={isImproving}
