@@ -11,22 +11,15 @@ const Index = () => {
   const { postData, hasPost, updatePost, updatePostContent } = usePost();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && user && hasPost) {
-      // User is authenticated and has a post, go to home
-      navigate('/home');
-    }
-  }, [user, loading, hasPost, navigate]);
+  // No need to navigate to /home since Index handles both states
 
   const handlePost = (data: { content: string; images: File[] }) => {
     updatePost(data);
-    // After posting, if user is authenticated, go to home
-    if (user) {
-      navigate('/home');
-    } else {
-      // If not authenticated, go to login
+    // After posting, if not authenticated, go to login
+    if (!user) {
       navigate('/login');
     }
+    // If authenticated, the component will re-render and show Home automatically
   };
 
   if (loading) {
