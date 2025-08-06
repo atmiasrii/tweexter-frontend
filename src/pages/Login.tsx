@@ -38,7 +38,7 @@ export const Login = () => {
 
   const handleSignUp = async () => {
     setIsLoading(true);
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, name);
     
     if (error) {
       toast({
