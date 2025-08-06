@@ -31,7 +31,7 @@ export const Login = () => {
         title: "Welcome back!",
         description: "You've been successfully logged in.",
       });
-      navigate('/home');
+      navigate('/');
     }
     setIsLoading(false);
   };

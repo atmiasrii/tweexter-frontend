@@ -27,7 +27,6 @@ export const Landing = ({ onPost }: LandingProps) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       const postData = { content: postText, images: selectedImages };
       onPost(postData);
-      navigate('/login');
       setIsPosting(false);
     }
   };

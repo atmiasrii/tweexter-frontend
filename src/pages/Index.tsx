@@ -4,30 +4,29 @@ import { useNavigate } from "react-router-dom";
 import { Landing } from "./Landing";
 import { Home } from "./Home";
 import { useAuth } from "@/hooks/useAuth";
-
-interface PostData {
-  content: string;
-  images: File[];
-}
+import { usePost } from "@/hooks/usePost";
 
 const Index = () => {
-  const [postData, setPostData] = useState<PostData>({ content: "", images: [] });
   const { user, loading } = useAuth();
+  const { postData, hasPost, updatePost, updatePostContent } = usePost();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && hasPost) {
+      // User is authenticated and has a post, go to home
       navigate('/home');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, hasPost, navigate]);
 
-  const handlePost = (data: PostData) => {
-    setPostData(data);
-    // Navigation to login is handled in Landing component
-  };
-
-  const handlePostUpdate = (updatedContent: string) => {
-    setPostData(prev => ({ ...prev, content: updatedContent }));
+  const handlePost = (data: { content: string; images: File[] }) => {
+    updatePost(data);
+    // After posting, if user is authenticated, go to home
+    if (user) {
+      navigate('/home');
+    } else {
+      // If not authenticated, go to login
+      navigate('/login');
+    }
   };
 
   if (loading) {
@@ -38,10 +37,20 @@ const Index = () => {
     );
   }
 
-  return user ? (
-    <Home postData={postData} hasPost={!!postData.content} onPostUpdate={handlePostUpdate} />
-  ) : (
-    <Landing onPost={handlePost} />
+  // Show landing page for:
+  // 1. Unauthenticated users (for signup flow)
+  // 2. Authenticated users without a post (for first tweet)
+  if (!user || !hasPost) {
+    return <Landing onPost={handlePost} />;
+  }
+
+  // Authenticated user with a post - show home
+  return (
+    <Home 
+      postData={postData} 
+      hasPost={hasPost} 
+      onPostUpdate={updatePostContent} 
+    />
   );
 };
 
