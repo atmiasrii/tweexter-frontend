@@ -3,7 +3,10 @@ import { useState } from "react";
 import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
+import { TwitterComposeModal } from "@/components/TwitterComposeModal";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface PostData {
   content: string;
@@ -14,22 +17,44 @@ interface TwitterDashboardProps {
   hasPosted?: boolean;
   postData?: PostData;
   onPostUpdate?: (updatedContent: string) => void;
+  onNewPost?: (data: PostData) => void;
 }
 
 export const TwitterDashboard = ({ 
   hasPosted = false, 
   postData = { content: "", images: [] },
-  onPostUpdate
+  onPostUpdate,
+  onNewPost
 }: TwitterDashboardProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isComposeModalOpen, setIsComposeModalOpen] = useState(false);
 
   const handleAnalyticsRefresh = () => {
     setRefreshKey(prev => prev + 1);
   };
 
+  const handleNewPost = (data: PostData) => {
+    if (onNewPost) {
+      onNewPost(data);
+      handleAnalyticsRefresh();
+    }
+  };
+
   return (
     <div className="h-screen bg-background overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* New Post Button */}
+        <div className="absolute top-6 left-6 z-10">
+          <Button
+            onClick={() => setIsComposeModalOpen(true)}
+            size="sm"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-4 py-2 shadow-lg h-9 text-sm font-medium"
+          >
+            <Plus className="w-4 h-4 mr-1" />
+            New Post
+          </Button>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-6 py-6 h-full">
           {/* Left side - Twitter Compose - Centered vertically */}
           <div className="w-full lg:w-1/2 xl:w-2/5 h-full flex items-center">
@@ -69,6 +94,13 @@ export const TwitterDashboard = ({
           </div>
         </div>
       </div>
+
+      {/* Compose Modal */}
+      <TwitterComposeModal
+        isOpen={isComposeModalOpen}
+        onClose={() => setIsComposeModalOpen(false)}
+        onPost={handleNewPost}
+      />
     </div>
   );
 };

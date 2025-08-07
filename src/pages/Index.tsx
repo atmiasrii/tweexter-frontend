@@ -42,7 +42,8 @@ const Index = () => {
     <Home 
       postData={postData} 
       hasPost={hasPost} 
-      onPostUpdate={updatePostContent} 
+      onPostUpdate={updatePostContent}
+      onNewPost={updatePost}
     />
   );
 };

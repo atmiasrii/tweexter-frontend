@@ -1,13 +1,21 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { X, ImageIcon, Smile, MapPin, Calendar, BarChart3, Gift, Hash } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { X, ImageIcon, Smile, MapPin, Calendar, Gift, Hash } from "lucide-react";
 
-interface TwitterComposeModalProps {
-  onPost: (content: string, images: File[]) => void;
+interface PostData {
+  content: string;
+  images: File[];
 }
 
-export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost }) => {
+interface TwitterComposeModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onPost: (data: PostData) => void;
+}
+
+export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen, onClose, onPost }) => {
   const [postText, setPostText] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -17,9 +25,18 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
     if (postText.trim() && !isPosting) {
       setIsPosting(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      onPost(postText, selectedImages);
+      const postData = { content: postText, images: selectedImages };
+      onPost(postData);
       setIsPosting(false);
+      handleClose();
     }
+  };
+
+  const handleClose = () => {
+    setPostText("");
+    setSelectedImages([]);
+    setIsPosting(false);
+    onClose();
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,11 +51,14 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-start justify-center pt-12 z-50">
-      <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl max-h-[85vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <button className="p-2 hover:bg-secondary rounded-full transition-colors">
+          <button 
+            onClick={handleClose}
+            className="p-2 hover:bg-secondary rounded-full transition-colors"
+          >
             <X className="w-5 h-5 text-foreground" />
           </button>
           <Button
@@ -50,7 +70,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
         </div>
 
         {/* Main compose area */}
-        <div className="p-4">
+        <div className="p-4 max-h-[70vh] overflow-y-auto">
           <div className="flex gap-3">
             {/* Avatar */}
             <Avatar className="w-10 h-10 flex-shrink-0">
@@ -68,6 +88,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                 }}
+                autoFocus
               />
 
               {/* Image previews */}
@@ -180,7 +201,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ onPost
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
