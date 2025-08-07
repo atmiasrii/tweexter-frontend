@@ -56,7 +56,7 @@ export const TwitterDashboard = ({
                 </div>
                 
                 {/* Performance Metrics - Very Compact */}
-                <div className="h-[35%] mb-4">
+                <div className="h-[35%]">
                   <TwitterMetrics key={`metrics-${refreshKey}`} />
                 </div>
                 
