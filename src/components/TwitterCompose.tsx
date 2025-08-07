@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Repeat2, Heart, Bookmark, Edit3 } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
+import { formatTextWithMarkdown } from "@/utils/formatText";
 
 interface PostData {
   content: string;
@@ -278,19 +279,21 @@ export const TwitterCompose = ({
 
     const displayText = shouldTruncateText() ? getTruncatedText() : currentContent;
     
-    const content = !hasBeenImproved ? displayText : textSegments.map((segment, index) => {
-      if (segment.isImproved && segment.originalText) {
-        return (
-          <HighlightedText
-            key={index}
-            originalText={segment.originalText}
-            improvedText={segment.text}
-            onRevert={(originalText) => handleRevertText(originalText, index)}
-          />
-        );
-      }
-      return <span key={index}>{segment.text}</span>;
-    });
+    const content = !hasBeenImproved ? 
+      formatTextWithMarkdown(displayText) : 
+      textSegments.map((segment, index) => {
+        if (segment.isImproved && segment.originalText) {
+          return (
+            <HighlightedText
+              key={index}
+              originalText={segment.originalText}
+              improvedText={segment.text}
+              onRevert={(originalText) => handleRevertText(originalText, index)}
+            />
+          );
+        }
+        return <span key={index}>{formatTextWithMarkdown(segment.text)}</span>;
+      });
 
     return (
       <div className="text-[15px] leading-5 font-normal">
