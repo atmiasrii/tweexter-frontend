@@ -30,7 +30,19 @@ export const TwitterDashboard = ({
     <div className="h-screen bg-background overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-6 py-6 h-full">
-          {/* Left side - Performance Metrics and Chart */}
+          {/* Left side - Twitter Compose - Centered vertically */}
+          <div className="w-full lg:w-1/2 xl:w-2/5 h-full flex items-center">
+            <div className="w-full">
+              <TwitterCompose 
+                hasPosted={hasPosted} 
+                postData={postData}
+                onPostUpdate={onPostUpdate}
+                onAnalyticsRefresh={handleAnalyticsRefresh}
+              />
+            </div>
+          </div>
+          
+          {/* Right side - Performance Metrics and Chart */}
           <div className="w-full lg:w-1/2 xl:w-3/5 space-y-6 overflow-y-auto">
             {/* Performance Metrics - Compact */}
             <div className="h-[45%]">
@@ -40,18 +52,6 @@ export const TwitterDashboard = ({
             {/* Engagement Chart - Compact */}
             <div className="h-[50%]">
               <TwitterEngagementChart key={`chart-${refreshKey}`} />
-            </div>
-          </div>
-          
-          {/* Right side - Twitter Compose - Centered vertically */}
-          <div className="w-full lg:w-1/2 xl:w-2/5 h-full flex items-center">
-            <div className="w-full">
-              <TwitterCompose 
-                hasPosted={hasPosted} 
-                postData={postData}
-                onPostUpdate={onPostUpdate}
-                onAnalyticsRefresh={handleAnalyticsRefresh}
-              />
             </div>
           </div>
         </div>
