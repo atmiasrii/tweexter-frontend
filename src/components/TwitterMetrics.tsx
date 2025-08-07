@@ -49,7 +49,7 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
   }, [metric.value, delay]);
 
   return (
-    <div className="bg-card border border-border/40 rounded-xl p-2 hover:bg-accent/50 transition-all duration-300 hover:shadow-md hover:border-border/70">
+    <div className="bg-card border border-black rounded-xl p-1 hover:bg-accent/50 transition-all duration-300 hover:shadow-md">
       <div className="flex justify-between items-start mb-1">
         <h4 className="text-muted-foreground font-medium text-sm">{metric.label}</h4>
         <span className="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full border border-green-200">
@@ -69,8 +69,8 @@ export const TwitterMetrics = () => {
   return (
     <div className="w-full h-full">
       <Card className="bg-card border-border h-full shadow-lg rounded-3xl">
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
+        <div className="p-2">
+          <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-bold text-foreground">Post performance</h3>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
