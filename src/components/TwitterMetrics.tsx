@@ -72,10 +72,6 @@ export const TwitterMetrics = () => {
         <div className="p-2">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-bold text-foreground">Post performance</h3>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-muted-foreground">Live</span>
-            </div>
           </div>
           
           <div className="grid grid-cols-3 gap-4 w-full">
