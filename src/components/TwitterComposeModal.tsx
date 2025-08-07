@@ -52,9 +52,9 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border">
+      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center justify-between p-3 border-b border-border">
           <button 
             onClick={handleClose}
             className="p-2 hover:bg-secondary rounded-full transition-colors"
