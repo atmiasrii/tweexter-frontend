@@ -3,6 +3,7 @@ import { useState } from "react";
 import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
+import { Card } from "@/components/ui/card";
 
 interface PostData {
   content: string;
@@ -42,17 +43,29 @@ export const TwitterDashboard = ({
             </div>
           </div>
           
-          {/* Right side - Performance Metrics and Chart */}
-          <div className="w-full lg:w-1/2 xl:w-3/5 space-y-6 overflow-y-auto">
-            {/* Performance Metrics - Compact */}
-            <div className="h-[45%]">
-              <TwitterMetrics key={`metrics-${refreshKey}`} />
-            </div>
-            
-            {/* Engagement Chart - Compact */}
-            <div className="h-[50%]">
-              <TwitterEngagementChart key={`chart-${refreshKey}`} />
-            </div>
+          {/* Right side - Analytics Container */}
+          <div className="w-full lg:w-1/2 xl:w-3/5 h-full flex items-center">
+            <Card className="w-full h-[90%] bg-card border-border shadow-lg rounded-3xl overflow-hidden">
+              <div className="p-6 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-foreground">Analytics</h2>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-muted-foreground">Live</span>
+                  </div>
+                </div>
+                
+                {/* Performance Metrics - Very Compact */}
+                <div className="h-[35%] mb-4">
+                  <TwitterMetrics key={`metrics-${refreshKey}`} />
+                </div>
+                
+                {/* Engagement Chart - Larger */}
+                <div className="h-[60%]">
+                  <TwitterEngagementChart key={`chart-${refreshKey}`} />
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </div>
