@@ -19,6 +19,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
   const [postText, setPostText] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePost = async () => {
@@ -37,6 +38,48 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
     setSelectedImages([]);
     setIsPosting(false);
     onClose();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+      e.preventDefault();
+      formatText('**');
+    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'i' || e.key === 'I')) {
+      e.preventDefault();
+      formatText('*');
+    }
+  };
+
+  const formatText = (wrapper: string) => {
+    if (!textareaRef.current) return;
+    
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = postText.substring(start, end);
+    
+    let newText: string;
+    let newCursorPos: number;
+    
+    if (selectedText) {
+      // Wrap selected text
+      newText = postText.substring(0, start) + wrapper + selectedText + wrapper + postText.substring(end);
+      newCursorPos = end + wrapper.length * 2;
+    } else {
+      // Insert wrapper at cursor position
+      newText = postText.substring(0, start) + wrapper + wrapper + postText.substring(start);
+      newCursorPos = start + wrapper.length;
+    }
+    
+    setPostText(newText);
+    
+    // Restore cursor position after state update
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }, 0);
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,12 +124,14 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
             {/* Text area and content */}
             <div className="flex-1 min-h-0">
               <textarea
+                ref={textareaRef}
                 value={postText}
                 onChange={(e) => setPostText(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="What's happening?"
                 className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
                 style={{
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
                 }}
                 autoFocus
               />
