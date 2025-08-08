@@ -46,6 +46,16 @@ export const TwitterCompose = ({
   // they show more and truncate around 3-4 lines which is roughly 200-250 characters
   const TRUNCATE_LENGTH = 240;
 
+  // Sync component state when postData.content changes (for new posts)
+  useEffect(() => {
+    if (postData.content !== currentContent) {
+      setCurrentContent(postData.content);
+      setTextSegments([{ text: postData.content, isImproved: false }]);
+      setHasBeenImproved(false);
+      setShowFullText(false);
+    }
+  }, [postData.content, currentContent]);
+
   useEffect(() => {
     if (isEditing && editableRef.current) {
       editableRef.current.focus();
