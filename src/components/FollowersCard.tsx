@@ -87,7 +87,7 @@ export const FollowersCard = ({ followerCount, onUpdate }: FollowersCardProps) =
 
   return (
     <Card 
-      className={`px-2 py-1.5 cursor-pointer transition-all duration-200 hover:bg-muted/50 border-border rounded-lg ${
+      className={`px-2 py-1.5 cursor-pointer transition-all duration-200 hover:bg-muted/50 border-border rounded-lg overflow-hidden ${
         isEditing ? 'bg-muted/30' : 'bg-card'
       }`}
       onClick={handleClick}
