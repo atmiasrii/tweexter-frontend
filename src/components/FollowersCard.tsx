@@ -87,19 +87,19 @@ export const FollowersCard = ({ followerCount, onUpdate }: FollowersCardProps) =
 
   return (
     <Card 
-      className={`px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-muted/50 border-border ${
+      className={`px-2 py-1.5 cursor-pointer transition-all duration-200 hover:bg-muted/50 border-border rounded-lg ${
         isEditing ? 'bg-muted/30' : 'bg-card'
       }`}
       onClick={handleClick}
     >
       {isEditing ? (
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center gap-1">
           <Input
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            className="w-16 h-6 px-2 text-xs bg-background border-border focus:border-primary"
+            className="w-12 h-5 px-1 text-xs bg-background border-border focus:border-primary text-center"
             autoFocus
             disabled={isLoading}
             type="number"
@@ -110,11 +110,11 @@ export const FollowersCard = ({ followerCount, onUpdate }: FollowersCardProps) =
           </span>
         </div>
       ) : (
-        <div className="flex items-center space-x-1">
-          <span className="text-sm font-medium text-foreground">
+        <div className="flex items-center gap-1">
+          <span className="text-base font-semibold text-foreground tabular-nums">
             {formatNumber(followerCount)}
           </span>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             followers
           </span>
         </div>
