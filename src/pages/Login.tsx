@@ -10,6 +10,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [followerCount, setFollowerCount] = useState("");
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp } = useAuth();
@@ -38,7 +39,8 @@ export const Login = () => {
 
   const handleSignUp = async () => {
     setIsLoading(true);
-    const { error } = await signUp(email, password, name);
+    const followerCountNum = parseInt(followerCount) || 0;
+    const { error } = await signUp(email, password, name, followerCountNum);
     
     if (error) {
       toast({
@@ -75,16 +77,29 @@ export const Login = () => {
 
             <div className="space-y-4">
               {!isLogin && (
-                <div className="space-y-1">
-                  <label className="text-foreground text-sm font-normal">Full Name</label>
-                  <Input
-                    type="text"
-                    placeholder="Enter Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-background border-border text-foreground placeholder:text-muted-foreground rounded-xl h-12 focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
-                </div>
+                <>
+                  <div className="space-y-1">
+                    <label className="text-foreground text-sm font-normal">Full Name</label>
+                    <Input
+                      type="text"
+                      placeholder="Enter Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="bg-background border-border text-foreground placeholder:text-muted-foreground rounded-xl h-12 focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-foreground text-sm font-normal">Follower Count</label>
+                    <Input
+                      type="number"
+                      placeholder="Enter your current follower count"
+                      value={followerCount}
+                      onChange={(e) => setFollowerCount(e.target.value)}
+                      min="0"
+                      className="bg-background border-border text-foreground placeholder:text-muted-foreground rounded-xl h-12 focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                </>
               )}
 
               <div className="space-y-1">

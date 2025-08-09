@@ -4,9 +4,11 @@ import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
 import { TwitterComposeModal } from "@/components/TwitterComposeModal";
+import { FollowersCard } from "@/components/FollowersCard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { useProfile } from "@/hooks/useProfile";
 
 interface PostData {
   content: string;
@@ -28,6 +30,7 @@ export const TwitterDashboard = ({
 }: TwitterDashboardProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isComposeModalOpen, setIsComposeModalOpen] = useState(false);
+  const { profile, updateFollowerCount } = useProfile();
 
   const handleAnalyticsRefresh = () => {
     setRefreshKey(prev => prev + 1);
@@ -74,9 +77,17 @@ export const TwitterDashboard = ({
               <div className="p-6 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-foreground">Analytics</h2>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-muted-foreground">Live</span>
+                  <div className="flex items-center space-x-3">
+                    {profile && (
+                      <FollowersCard
+                        followerCount={profile.follower_count}
+                        onUpdate={updateFollowerCount}
+                      />
+                    )}
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-muted-foreground">Live</span>
+                    </div>
                   </div>
                 </div>
                 
