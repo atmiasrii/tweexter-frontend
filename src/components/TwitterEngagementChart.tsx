@@ -18,8 +18,16 @@ const data = [
   { time: '10 PM', engagement: 470 },
 ];
 
-export const TwitterEngagementChart = () => {
-  const [animatedData, setAnimatedData] = useState(data.map(item => ({ ...item, engagement: 0 })));
+export const TwitterEngagementChart = ({ scalingFactor }: { scalingFactor?: number }) => {
+  const baseData = data;
+  const targetData = baseData.map(item => ({
+    ...item,
+    adjusted: typeof scalingFactor === 'number' ? Math.max(0, Math.round(item.engagement * scalingFactor)) : undefined,
+  }));
+
+  const [animatedData, setAnimatedData] = useState(
+    baseData.map(item => ({ ...item, engagement: 0, adjusted: typeof scalingFactor === 'number' ? 0 : undefined })) as any
+  );
 
   useEffect(() => {
     const duration = 2000;
@@ -32,10 +40,15 @@ export const TwitterEngagementChart = () => {
       const progress = currentStep / steps;
       const easeProgress = 1 - Math.pow(1 - progress, 3);
 
-      setAnimatedData(data.map(item => ({
-        ...item,
-        engagement: Math.round(item.engagement * easeProgress)
-      })));
+      setAnimatedData(
+        targetData.map(item => ({
+          ...item,
+          engagement: Math.round((baseData.find(d => d.time === item.time)?.engagement || 0) * easeProgress),
+          adjusted: typeof scalingFactor === 'number'
+            ? Math.round(((baseData.find(d => d.time === item.time)?.engagement || 0) * scalingFactor) * easeProgress)
+            : undefined,
+        })) as any
+      );
 
       if (currentStep >= steps) {
         clearInterval(timer);
@@ -43,7 +56,7 @@ export const TwitterEngagementChart = () => {
     }, stepDuration);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [scalingFactor]);
 
   return (
     <div className="w-full h-full">
@@ -59,7 +72,7 @@ export const TwitterEngagementChart = () => {
           
           <div className="flex-1 bg-accent/20 rounded-2xl p-4 border border-border/30">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={animatedData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+              <LineChart data={animatedData as any} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
                 <XAxis 
                   dataKey="time" 
@@ -88,11 +101,23 @@ export const TwitterEngagementChart = () => {
                 <Line 
                   type="monotone" 
                   dataKey="engagement" 
-                  stroke="hsl(var(--primary))"
+                  stroke="hsl(var(--muted-foreground))"
                   strokeWidth={3}
-                  dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: 'hsl(var(--primary))', stroke: 'hsl(var(--background))', strokeWidth: 3 }}
+                  dot={{ fill: 'hsl(var(--muted-foreground))', strokeWidth: 2, r: 3 }}
+                  activeDot={{ r: 5, fill: 'hsl(var(--muted-foreground))', stroke: 'hsl(var(--background))', strokeWidth: 3 }}
+                  name="Baseline"
                 />
+                {typeof scalingFactor === 'number' && (
+                  <Line 
+                    type="monotone" 
+                    dataKey="adjusted" 
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={3}
+                    dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, fill: 'hsl(var(--primary))', stroke: 'hsl(var(--background))', strokeWidth: 3 }}
+                    name="Followers-adjusted"
+                  />
+                )}
               </LineChart>
             </ResponsiveContainer>
           </div>

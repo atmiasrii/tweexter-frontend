@@ -30,15 +30,28 @@ export const TwitterDashboard = ({
 }: TwitterDashboardProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isComposeModalOpen, setIsComposeModalOpen] = useState(false);
+  const [metrics, setMetrics] = useState<{ likes: number; retweets: number; replies: number } | null>(null);
+  const [details, setDetails] = useState<any | null>(null);
   const { profile, updateFollowerCount } = useProfile();
 
   const handleAnalyticsRefresh = () => {
     setRefreshKey(prev => prev + 1);
   };
 
-  const handleNewPost = (data: PostData) => {
+  const handleNewPost = async (data: PostData) => {
     if (onNewPost) {
       onNewPost(data);
+    }
+
+    try {
+      const followers = profile?.follower_count ?? 0;
+      const { predict } = await import("@/lib/api");
+      const res = await predict({ text: data.content, followers, return_details: true });
+      setMetrics({ likes: Math.round(res.likes), retweets: Math.round(res.retweets), replies: Math.round(res.replies) });
+      setDetails(res.details ?? null);
+    } catch (e) {
+      console.error("Prediction failed", e);
+    } finally {
       handleAnalyticsRefresh();
     }
   };
@@ -93,12 +106,12 @@ export const TwitterDashboard = ({
                 
                 {/* Performance Metrics - Very Compact */}
                 <div className="h-[35%]">
-                  <TwitterMetrics key={`metrics-${refreshKey}`} />
+                  <TwitterMetrics key={`metrics-${refreshKey}`} likes={metrics?.likes} retweets={metrics?.retweets} replies={metrics?.replies} />
                 </div>
                 
                 {/* Engagement Chart - Larger */}
                 <div className="h-[60%]">
-                  <TwitterEngagementChart key={`chart-${refreshKey}`} />
+                  <TwitterEngagementChart key={`chart-${refreshKey}`} scalingFactor={details?.scaling_factors?.overall ?? undefined} />
                 </div>
               </div>
             </Card>

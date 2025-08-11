@@ -65,7 +65,13 @@ const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], dela
   );
 };
 
-export const TwitterMetrics = () => {
+export const TwitterMetrics = ({ likes, retweets, replies }: { likes?: number; retweets?: number; replies?: number }) => {
+  const computedMetrics = [
+    { label: 'Likes', value: Math.round(likes ?? 56), trend: '+12.5%' },
+    { label: 'Retweets', value: Math.round(retweets ?? 4), trend: '+25.0%' },
+    { label: 'Replies', value: Math.round(replies ?? 17), trend: '+8.3%' },
+  ];
+
   return (
     <div className="w-full h-full">
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full">
@@ -75,10 +81,10 @@ export const TwitterMetrics = () => {
           </div>
           
           <div className="grid grid-cols-3 gap-4 w-full">
-            {metricsData.map((metric, index) => (
+            {computedMetrics.map((metric, index) => (
               <AnimatedMetric 
                 key={index} 
-                metric={metric} 
+                metric={metric as any} 
                 delay={index * 200}
               />
             ))}
