@@ -111,7 +111,7 @@ export const TwitterDashboard = ({
                 
                 {/* Engagement Chart - Larger */}
                 <div className="h-[60%]">
-                  <TwitterEngagementChart key={`chart-${refreshKey}`} scalingFactor={details?.scaling_factors?.overall ?? undefined} />
+                  <TwitterEngagementChart key={`chart-${refreshKey}`} likes={metrics?.likes} scalingFactor={details?.scaling_factors?.overall ?? undefined} />
                 </div>
               </div>
             </Card>

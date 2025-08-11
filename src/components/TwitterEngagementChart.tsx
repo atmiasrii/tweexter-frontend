@@ -18,11 +18,14 @@ const data = [
   { time: '10 PM', engagement: 470 },
 ];
 
-export const TwitterEngagementChart = ({ scalingFactor }: { scalingFactor?: number }) => {
+export const TwitterEngagementChart = ({ likes, scalingFactor }: { likes?: number; scalingFactor?: number }) => {
   const baseData = data;
+  const lastBase = baseData[baseData.length - 1].engagement;
+  const likesValue = typeof likes === 'number' ? likes : lastBase;
+  const ratio = lastBase > 0 ? likesValue / lastBase : 1;
   const targetData = baseData.map(item => ({
     ...item,
-    adjusted: typeof scalingFactor === 'number' ? Math.max(0, Math.round(item.engagement * scalingFactor)) : undefined,
+    adjusted: typeof scalingFactor === 'number' ? Math.max(0, Math.round(item.engagement * scalingFactor * ratio)) : undefined,
   }));
 
   const [animatedData, setAnimatedData] = useState(
@@ -41,13 +44,16 @@ export const TwitterEngagementChart = ({ scalingFactor }: { scalingFactor?: numb
       const easeProgress = 1 - Math.pow(1 - progress, 3);
 
       setAnimatedData(
-        targetData.map(item => ({
-          ...item,
-          engagement: Math.round((baseData.find(d => d.time === item.time)?.engagement || 0) * easeProgress),
-          adjusted: typeof scalingFactor === 'number'
-            ? Math.round(((baseData.find(d => d.time === item.time)?.engagement || 0) * scalingFactor) * easeProgress)
-            : undefined,
-        })) as any
+        targetData.map(item => {
+          const baseVal = baseData.find(d => d.time === item.time)?.engagement || 0;
+          return {
+            ...item,
+            engagement: Math.round(baseVal * ratio * easeProgress),
+            adjusted: typeof scalingFactor === 'number'
+              ? Math.round(baseVal * scalingFactor * ratio * easeProgress)
+              : undefined,
+          };
+        }) as any
       );
 
       if (currentStep >= steps) {
@@ -56,14 +62,14 @@ export const TwitterEngagementChart = ({ scalingFactor }: { scalingFactor?: numb
     }, stepDuration);
 
     return () => clearInterval(timer);
-  }, [scalingFactor]);
+  }, [scalingFactor, likes]);
 
   return (
     <div className="w-full h-full">
       <Card className="bg-card border-border h-full shadow-lg rounded-3xl">
         <div className="p-6 h-full flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-foreground">Engagement timeline</h3>
+            <h3 className="text-xl font-bold text-foreground">Likes timeline</h3>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
               <span className="text-xs text-muted-foreground">Real-time</span>
@@ -105,7 +111,7 @@ export const TwitterEngagementChart = ({ scalingFactor }: { scalingFactor?: numb
                   strokeWidth={3}
                   dot={{ fill: 'hsl(var(--muted-foreground))', strokeWidth: 2, r: 3 }}
                   activeDot={{ r: 5, fill: 'hsl(var(--muted-foreground))', stroke: 'hsl(var(--background))', strokeWidth: 3 }}
-                  name="Baseline"
+                  name="Likes"
                 />
                 {typeof scalingFactor === 'number' && (
                   <Line 
