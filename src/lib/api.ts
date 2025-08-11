@@ -12,10 +12,12 @@ export type PredictResponse = {
 };
 
 export async function predict(body: PredictRequest): Promise<PredictResponse> {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  if (!baseUrl) throw new Error("VITE_API_BASE_URL is not set");
+  const baseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
 
-  const res = await fetch(`${baseUrl}/predict`, {
+  // Prefer relative path when base URL isn't provided (works with Vite dev proxy)
+  const url = baseUrl ? `${baseUrl}/predict` : `/predict`;
+
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
