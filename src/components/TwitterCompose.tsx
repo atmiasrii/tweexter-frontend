@@ -405,18 +405,7 @@ export const TwitterCompose = ({
                   <span className="text-primary text-sm font-normal">Everyone can reply</span>
                 </div>
                 
-                {/* Followers input */}
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-muted-foreground">Followers:</span>
-                  <input
-                    type="number"
-                    value={followers}
-                    onChange={(e) => onFollowersChange?.(parseInt(e.target.value) || 1000)}
-                    className="w-20 px-2 py-1 text-xs border border-border rounded-md bg-background text-foreground"
-                    min={1}
-                    max={10000000}
-                  />
-                </div>
+                
               </div>
               
               <div className="flex items-center justify-center">
