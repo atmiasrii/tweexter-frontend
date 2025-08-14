@@ -17,7 +17,14 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
     [lowTotal, highTotal]
   );
 
-  // minimal tooltip with just Low/High (cumulative)
+  // Calculate domain with headroom
+  const maxValue = useMemo(() => {
+    if (!data.length) return 100;
+    const dataMax = Math.max(...data.map(d => d.low + d.delta));
+    return Math.ceil(dataMax * 1.05);
+  }, [data]);
+
+  // Minimal tooltip with just Low/High (cumulative)
   const Tip = ({ active, payload, label }) => {
     if (!active || !payload || !payload.length) return null;
     const row = payload.reduce(
@@ -44,24 +51,35 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={260}>
-      <ComposedChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
-        <XAxis 
-          dataKey="t" 
-          axisLine={false}
-          tickLine={false}
-          tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-          tickMargin={8}
-        />
-        <YAxis 
-          tickFormatter={abbr} 
-          axisLine={false}
-          tickLine={false}
-          tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-          tickMargin={8}
-          width={48} 
-        />
-        <Tooltip content={<Tip />} />
+    <div className="w-full h-full min-h-0">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart 
+          data={data} 
+          margin={{ top: 10, right: 60, left: 10, bottom: 20 }}
+        >
+          <defs>
+            <pattern id="grid" patternUnits="userSpaceOnUse" width="1" height="1">
+              <path d="M 1 0 L 0 0 0 1" fill="none" stroke="hsl(var(--border))" strokeWidth="0.5" strokeDasharray="2,2" opacity="0.3"/>
+            </pattern>
+          </defs>
+          <XAxis 
+            dataKey="t" 
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+            tickMargin={8}
+          />
+          <YAxis 
+            orientation="right"
+            tickFormatter={abbr} 
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+            tickMargin={8}
+            width={50}
+            domain={[0, maxValue]}
+          />
+          <Tooltip content={<Tip />} />
 
         {/* --- shaded band between low & high via stacked areas --- */}
         <Area
@@ -100,5 +118,6 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
         />
       </ComposedChart>
     </ResponsiveContainer>
+    </div>
   );
 }

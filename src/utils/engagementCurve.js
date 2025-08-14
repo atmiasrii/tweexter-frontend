@@ -1,14 +1,12 @@
 // src/utils/engagementCurve.js
-// 12 time buckets: 12 AM → 10 PM (matches your UI ticks)
+// 7 time buckets: 12 PM → 12 AM (noon to midnight)
 export const TIME_LABELS = [
-  "12 AM","2 AM","4 AM","6 AM","8 AM","10 AM",
-  "12 PM","2 PM","4 PM","6 PM","8 PM","10 PM"
+  "12 PM", "2 PM", "4 PM", "6 PM", "8 PM", "10 PM", "12 AM"
 ];
 
-// A reasonable, evening-tilted curve that sums to 1.0
+// Evening-tilted curve that peaks around 6-8 PM, sums to 1.0
 export const ENGAGEMENT_WEIGHTS = [
-  0.02, 0.02, 0.02, 0.03, 0.05, 0.08,
-  0.10, 0.12, 0.15, 0.17, 0.12, 0.12
+  0.08, 0.12, 0.18, 0.25, 0.20, 0.12, 0.05
 ];
 
 // Guard against rounding drift; ensures ~1.0
@@ -21,7 +19,7 @@ const normalize = (arr) => {
  * Build cumulative band data for Recharts.
  * @param {number} lowTotal  - ranges.likes.low from backend
  * @param {number} highTotal - ranges.likes.high from backend
- * @param {string[]} labels  - x-axis labels (length 12)
+ * @param {string[]} labels  - x-axis labels (length 7)
  * @returns {{t:string, low:number, high:number, delta:number}[]}
  */
 export function buildLikesBandData(lowTotal, highTotal, labels = TIME_LABELS) {
