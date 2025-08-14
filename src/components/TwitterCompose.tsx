@@ -418,27 +418,6 @@ export const TwitterCompose = ({
                   />
                 </div>
               </div>
-              
-              <div className="flex items-center justify-center">
-                <div className="flex items-center justify-between w-full text-muted-foreground px-8">
-                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
-                    <MessageCircle className="h-4 w-4" />
-                    <span className="text-sm font-medium">17</span>
-                  </div>
-                  <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
-                    <Repeat2 className="h-4 w-4" />
-                    <span className="text-sm font-medium">4</span>
-                  </div>
-                  <div className="flex items-center space-x-2 hover:text-red-500 transition-colors cursor-pointer">
-                    <Heart className="h-4 w-4" />
-                    <span className="text-sm font-medium">56</span>
-                  </div>
-                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
-                    <Bookmark className="h-4 w-4" />
-                    <span className="text-sm font-medium">56</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -450,7 +429,7 @@ export const TwitterCompose = ({
               <Button 
                 onClick={onPredict || handleImproveClick}
                 disabled={loading || isImproving}
-                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-2 text-[15px] font-bold flex-1 h-10 transition-all duration-200"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
@@ -458,9 +437,19 @@ export const TwitterCompose = ({
                 {loading ? "Predicting..." : isImproving ? "Improving..." : "Predict"}
               </Button>
               <Button
+                onClick={handleImproveClick}
+                disabled={loading || isImproving}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-2 text-[15px] font-bold flex-1 h-10 transition-all duration-200"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                }}
+              >
+                {loading || isImproving ? "Improving..." : "Improve"}
+              </Button>
+              <Button
                 onClick={handleEditClick}
                 disabled={false}
-                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-2 text-[15px] font-bold flex-1 h-10 transition-all duration-200"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
