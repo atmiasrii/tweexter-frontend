@@ -307,7 +307,31 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
                   </button>
                   
                   <button className="w-7 h-7 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <div className="w-4 h-4 relative">
+                      <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 16 16">
+                        <circle
+                          cx="8"
+                          cy="8"
+                          r="6"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          fill="none"
+                          className="opacity-20"
+                        />
+                        <circle
+                          cx="8"
+                          cy="8"
+                          r="6"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          fill="none"
+                          strokeDasharray="37.7"
+                          strokeDashoffset="25"
+                          strokeLinecap="round"
+                          className="text-primary"
+                        />
+                      </svg>
+                    </div>
                   </button>
                 </div>
 
