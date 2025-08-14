@@ -153,7 +153,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden">
+      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-3 border-b border-border">
           <button 
@@ -245,7 +245,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
 
               {/* Bottom toolbar */}
               <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 flex-1">
                   {/* Existing media buttons */}
                   <input
                     type="file"
