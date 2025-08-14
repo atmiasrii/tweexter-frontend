@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TwitterCompose } from "@/components/TwitterCompose";
 import { TwitterEngagementChart } from "@/components/TwitterEngagementChart";
 import { TwitterMetrics } from "@/components/TwitterMetrics";
@@ -9,7 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
-import { usePrediction } from "@/hooks/usePrediction";
+import { usePredictionStore } from "@/store/prediction";
+import { useToast } from "@/hooks/use-toast";
 
 interface PostData {
   content: string;
@@ -31,15 +32,39 @@ export const TwitterDashboard = ({
 }: TwitterDashboardProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isComposeModalOpen, setIsComposeModalOpen] = useState(false);
-  const [predictionText, setPredictionText] = useState("");
-  const [enablePrediction, setEnablePrediction] = useState(false);
   const { profile, updateFollowerCount } = useProfile();
+  const { toast } = useToast();
   
-  const { data: predictionData } = usePrediction(
-    predictionText, 
-    profile?.follower_count ?? 0, 
-    { enabled: enablePrediction && !!predictionText && (profile?.follower_count ?? 0) > 0 }
-  );
+  const {
+    tweetText,
+    followers,
+    setTweetText,
+    setFollowers,
+    fetchPrediction,
+    loading,
+    error,
+    ranges,
+    clearError,
+  } = usePredictionStore();
+
+  // Initialize followers from profile
+  useEffect(() => {
+    if (profile?.follower_count && followers !== profile.follower_count) {
+      setFollowers(profile.follower_count);
+    }
+  }, [profile?.follower_count, followers, setFollowers]);
+
+  // Show error toast
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Prediction Error",
+        description: error,
+        variant: "destructive",
+      });
+      clearError();
+    }
+  }, [error, toast, clearError]);
 
   const handleAnalyticsRefresh = () => {
     setRefreshKey(prev => prev + 1);
@@ -50,9 +75,14 @@ export const TwitterDashboard = ({
       onNewPost(data);
     }
 
-    // Trigger prediction for new post
-    setPredictionText(data.content);
-    setEnablePrediction(true);
+    // Update store and trigger prediction
+    setTweetText(data.content);
+    await fetchPrediction();
+    handleAnalyticsRefresh();
+  };
+
+  const handlePredict = async () => {
+    await fetchPrediction();
     handleAnalyticsRefresh();
   };
 
@@ -78,11 +108,16 @@ export const TwitterDashboard = ({
               <TwitterCompose 
                 hasPosted={hasPosted} 
                 postData={postData}
+                tweetText={tweetText}
+                followers={followers}
+                loading={loading}
+                onTweetTextChange={setTweetText}
+                onFollowersChange={setFollowers}
                 onPostUpdate={(content) => {
                   if (onPostUpdate) onPostUpdate(content);
-                  setPredictionText(content);
-                  setEnablePrediction(true);
+                  setTweetText(content);
                 }}
+                onPredict={handlePredict}
                 onAnalyticsRefresh={handleAnalyticsRefresh}
               />
             </div>
@@ -110,14 +145,14 @@ export const TwitterDashboard = ({
                 
                 {/* Performance Metrics - Very Compact */}
                 <div className="h-[35%]">
-                  <TwitterMetrics key={`metrics-${refreshKey}`} ranges={predictionData?.ranges} />
+                  <TwitterMetrics key={`metrics-${refreshKey}`} ranges={ranges} />
                 </div>
                 
                 {/* Engagement Chart - Larger */}
                 <div className="h-[60%]">
                   <TwitterEngagementChart 
                     key={`chart-${refreshKey}`} 
-                    likesRange={predictionData?.ranges?.likes} 
+                    likesRange={ranges?.likes} 
                   />
                 </div>
               </div>

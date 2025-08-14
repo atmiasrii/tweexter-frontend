@@ -14,7 +14,13 @@ interface PostData {
 interface TwitterComposeProps {
   hasPosted?: boolean;
   postData?: PostData;
+  tweetText?: string;
+  followers?: number;
+  loading?: boolean;
+  onTweetTextChange?: (text: string) => void;
+  onFollowersChange?: (followers: number) => void;
   onPostUpdate?: (updatedContent: string) => void;
+  onPredict?: () => void;
   onAnalyticsRefresh?: () => void;
 }
 
@@ -27,7 +33,13 @@ interface TextSegment {
 export const TwitterCompose = ({ 
   hasPosted = false, 
   postData = { content: "", images: [] },
+  tweetText = "",
+  followers = 1000,
+  loading = false,
+  onTweetTextChange,
+  onFollowersChange,
   onPostUpdate,
+  onPredict,
   onAnalyticsRefresh
 }: TwitterComposeProps) => {
   const [currentContent, setCurrentContent] = useState(postData.content);
@@ -55,6 +67,15 @@ export const TwitterCompose = ({
       setShowFullText(false);
     }
   }, [postData.content, currentContent]);
+
+  // Sync with store's tweetText when editing directly
+  useEffect(() => {
+    if (tweetText && tweetText !== currentContent && !isEditing) {
+      setCurrentContent(tweetText);
+      setTextSegments([{ text: tweetText, isImproved: false }]);
+      setHasBeenImproved(false);
+    }
+  }, [tweetText, currentContent, isEditing]);
 
   useEffect(() => {
     if (isEditing && editableRef.current) {
@@ -239,8 +260,12 @@ export const TwitterCompose = ({
       setTextSegments([{ text: newContent, isImproved: false }]);
       setHasBeenImproved(false);
       
+      // Update both callbacks
       if (onPostUpdate) {
         onPostUpdate(newContent);
+      }
+      if (onTweetTextChange) {
+        onTweetTextChange(newContent);
       }
     }
   };
@@ -372,12 +397,25 @@ export const TwitterCompose = ({
             {/* Bottom sections - Everyone can reply and engagement metrics */}
             <div className="mt-6 space-y-3">
               {/* Blue globe icon and reply setting */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer">
                   <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                   </svg>
                   <span className="text-primary text-sm font-normal">Everyone can reply</span>
+                </div>
+                
+                {/* Followers input */}
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-muted-foreground">Followers:</span>
+                  <input
+                    type="number"
+                    value={followers}
+                    onChange={(e) => onFollowersChange?.(parseInt(e.target.value) || 1000)}
+                    className="w-20 px-2 py-1 text-xs border border-border rounded-md bg-background text-foreground"
+                    min={1}
+                    max={10000000}
+                  />
                 </div>
               </div>
               
@@ -410,14 +448,14 @@ export const TwitterCompose = ({
           <div className="flex-shrink-0 px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
             <div className="flex items-center justify-center space-x-3 pt-2">
               <Button 
-                onClick={handleImproveClick}
-                disabled={isImproving}
+                onClick={onPredict || handleImproveClick}
+                disabled={loading || isImproving}
                 className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
               >
-                {isImproving ? "Improving..." : "Improve"}
+                {loading ? "Predicting..." : isImproving ? "Improving..." : "Predict"}
               </Button>
               <Button
                 onClick={handleEditClick}
