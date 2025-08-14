@@ -35,6 +35,18 @@ export async function predict(body: PredictRequest): Promise<PredictResponse> {
   }
 
   const raw = await res.json();
+  
+  // Swap replies and retweets due to backend naming mistake
+  const temp = raw.replies;
+  raw.replies = raw.retweets;
+  raw.retweets = temp;
+  
+  if (raw.ranges) {
+    const tempRange = raw.ranges.replies;
+    raw.ranges.replies = raw.ranges.retweets;
+    raw.ranges.retweets = tempRange;
+  }
+  
   const normalized = normalizeRanges(raw, body.followers);
   return normalized as PredictResponse;
 }
@@ -70,6 +82,18 @@ export async function predictEngagement(params: { text: string; followers: numbe
   }
 
   const raw = await res.json();
+  
+  // Swap replies and retweets due to backend naming mistake
+  const temp = raw.replies;
+  raw.replies = raw.retweets;
+  raw.retweets = temp;
+  
+  if (raw.ranges) {
+    const tempRange = raw.ranges.replies;
+    raw.ranges.replies = raw.ranges.retweets;
+    raw.ranges.retweets = tempRange;
+  }
+  
   const normalized = normalizeRanges(raw, params.followers);
 
   // After normalization, ranges are guaranteed to exist
