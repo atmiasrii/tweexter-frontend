@@ -17,12 +17,20 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
     [lowTotal, highTotal]
   );
 
-  // Calculate domain with headroom
+  // Calculate custom Y-axis ticks: [0, low, high]
+  const customTicks = useMemo(() => {
+    if (!data.length || (lowTotal === 0 && highTotal === 0)) return [0];
+    const ticks = [0];
+    if (lowTotal > 0) ticks.push(lowTotal);
+    if (highTotal > lowTotal) ticks.push(highTotal);
+    return ticks;
+  }, [data, lowTotal, highTotal]);
+
+  // Calculate domain with small headroom
   const maxValue = useMemo(() => {
     if (!data.length) return 100;
-    const dataMax = Math.max(...data.map(d => d.low + d.delta));
-    return Math.ceil(dataMax * 1.05);
-  }, [data]);
+    return Math.max(highTotal * 1.05, 10);
+  }, [data, highTotal]);
 
   // Minimal tooltip with just Low/High (cumulative)
   const Tip = ({ active, payload, label }) => {
@@ -78,6 +86,7 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
             tickMargin={8}
             width={50}
             domain={[0, maxValue]}
+            ticks={customTicks}
           />
           <Tooltip content={<Tip />} />
 
@@ -88,7 +97,8 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
           stackId="band"
           stroke="transparent"
           fill="transparent"
-          isAnimationActive={false}
+          animationDuration={800}
+          animationBegin={0}
         />
         <Area
           type="monotone"
@@ -96,7 +106,8 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
           stackId="band"
           stroke="transparent"
           fill="hsl(var(--primary) / 0.18)"
-          isAnimationActive={false}
+          animationDuration={800}
+          animationBegin={200}
         />
 
         {/* --- crisp edges: two lines --- */}
@@ -106,7 +117,8 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
           stroke="hsl(var(--primary))"
           strokeWidth={2}
           dot={false}
-          isAnimationActive={false}
+          animationDuration={800}
+          animationBegin={400}
         />
         <Line
           type="monotone"
@@ -114,7 +126,8 @@ export default function LikesBandChart({ lowTotal = 0, highTotal = 0 }) {
           stroke="hsl(var(--primary))"
           strokeWidth={2}
           dot={false}
-          isAnimationActive={false}
+          animationDuration={800}
+          animationBegin={400}
         />
       </ComposedChart>
     </ResponsiveContainer>
