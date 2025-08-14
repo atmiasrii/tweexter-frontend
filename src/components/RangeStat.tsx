@@ -14,10 +14,18 @@ export default function RangeStat({ label, range }: Props) {
   const high = hasRange ? formatCompact(Math.max(0, Math.floor(range!.high))) : "—";
 
   return (
-    <div className="rounded-2xl border bg-card p-4 shadow-sm">
+    <div className="rounded-2xl border bg-card p-4 shadow-sm h-full">
       <div className="text-sm text-muted-foreground">{label}</div>
-      <div className="mt-1 text-3xl font-semibold tracking-tight text-foreground">
-        {hasRange ? `${low}–${high}` : "—"}
+      <div className="mt-1 text-3xl font-semibold tracking-tight text-foreground tabular-nums font-mono whitespace-nowrap overflow-hidden text-ellipsis min-h-[2.5rem] flex items-baseline">
+        {hasRange ? (
+          <>
+            <span>{low}</span>
+            <span className="mx-1 text-muted-foreground text-xl leading-none align-baseline">–</span>
+            <span>{high}</span>
+          </>
+        ) : (
+          <span className="text-2xl">—</span>
+        )}
       </div>
     </div>
   );
