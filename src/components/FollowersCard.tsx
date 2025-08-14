@@ -27,7 +27,10 @@ export const FollowersCard = ({ followerCount, onUpdate }: FollowersCardProps) =
   const handleSave = async () => {
     if (!user) return;
 
-    const newCount = parseInt(editValue);
+    // Remove any non-numeric characters and parse
+    const cleanedValue = editValue.replace(/\D/g, '');
+    const newCount = parseInt(cleanedValue);
+    
     if (isNaN(newCount) || newCount < 0) {
       toast({
         title: "Invalid input",
@@ -93,19 +96,29 @@ export const FollowersCard = ({ followerCount, onUpdate }: FollowersCardProps) =
       onClick={handleClick}
     >
       {isEditing ? (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2 min-w-fit">
           <Input
             value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
+            onChange={(e) => {
+              // Only allow numeric characters
+              const numericValue = e.target.value.replace(/\D/g, '');
+              setEditValue(numericValue);
+            }}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            className="w-12 h-5 px-1 text-xs bg-background border-border focus:border-primary text-center"
+            className="min-w-20 max-w-32 h-7 px-2 text-sm bg-background border border-primary/30 focus:border-primary rounded-md text-center font-medium shadow-sm"
+            style={{ 
+              width: `${Math.max(80, editValue.length * 8 + 24)}px`,
+              appearance: 'textfield',
+              MozAppearance: 'textfield'
+            }}
             autoFocus
             disabled={isLoading}
-            type="number"
-            min="0"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
           />
-          <span className="text-xs text-muted-foreground whitespace-nowrap">
+          <span className="text-sm text-muted-foreground whitespace-nowrap font-medium">
             followers
           </span>
         </div>
