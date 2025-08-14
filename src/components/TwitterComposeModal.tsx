@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X, ImageIcon, Smile, MapPin, Calendar, Gift, Hash } from "lucide-react";
+import { X, ImageIcon, Smile, MapPin, Calendar, Gift, Hash, Bold, Italic, RotateCcw } from "lucide-react";
 
 interface PostData {
   content: string;
@@ -19,6 +19,9 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
   const [postText, setPostText] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const [selectionStart, setSelectionStart] = useState(0);
+  const [selectionEnd, setSelectionEnd] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +53,50 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
     }
   };
 
+  const handleSelectionChange = () => {
+    if (textareaRef.current) {
+      setSelectionStart(textareaRef.current.selectionStart);
+      setSelectionEnd(textareaRef.current.selectionEnd);
+      setCursorPosition(textareaRef.current.selectionStart);
+    }
+  };
+
+  const isTextBold = () => {
+    if (!textareaRef.current) return false;
+    const start = textareaRef.current.selectionStart;
+    const end = textareaRef.current.selectionEnd;
+    const selectedText = postText.substring(start, end);
+    
+    // Check if selection is wrapped with **
+    const beforeText = postText.substring(Math.max(0, start - 2), start);
+    const afterText = postText.substring(end, Math.min(postText.length, end + 2));
+    
+    return beforeText === '**' && afterText === '**' && selectedText.length > 0;
+  };
+
+  const isTextItalic = () => {
+    if (!textareaRef.current) return false;
+    const start = textareaRef.current.selectionStart;
+    const end = textareaRef.current.selectionEnd;
+    const selectedText = postText.substring(start, end);
+    
+    // Check if selection is wrapped with * (but not **)
+    const beforeText = postText.substring(Math.max(0, start - 1), start);
+    const afterText = postText.substring(end, Math.min(postText.length, end + 1));
+    const beforeTwoChars = postText.substring(Math.max(0, start - 2), start);
+    const afterTwoChars = postText.substring(end, Math.min(postText.length, end + 2));
+    
+    return beforeText === '*' && afterText === '*' && selectedText.length > 0 && beforeTwoChars !== '**' && afterTwoChars !== '**';
+  };
+
+  const toggleBold = () => {
+    formatText('**');
+  };
+
+  const toggleItalic = () => {
+    formatText('*');
+  };
+
   const formatText = (wrapper: string) => {
     if (!textareaRef.current) return;
     
@@ -62,9 +109,20 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
     let newCursorPos: number;
     
     if (selectedText) {
-      // Wrap selected text
-      newText = postText.substring(0, start) + wrapper + selectedText + wrapper + postText.substring(end);
-      newCursorPos = end + wrapper.length * 2;
+      // Check if text is already wrapped and remove if so
+      const wrapperLength = wrapper.length;
+      const beforeText = postText.substring(Math.max(0, start - wrapperLength), start);
+      const afterText = postText.substring(end, Math.min(postText.length, end + wrapperLength));
+      
+      if (beforeText === wrapper && afterText === wrapper) {
+        // Remove wrapper
+        newText = postText.substring(0, start - wrapperLength) + selectedText + postText.substring(end + wrapperLength);
+        newCursorPos = start - wrapperLength + selectedText.length;
+      } else {
+        // Add wrapper
+        newText = postText.substring(0, start) + wrapper + selectedText + wrapper + postText.substring(end);
+        newCursorPos = end + wrapper.length * 2;
+      }
     } else {
       // Insert wrapper at cursor position
       newText = postText.substring(0, start) + wrapper + wrapper + postText.substring(start);
@@ -128,6 +186,9 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
                 value={postText}
                 onChange={(e) => setPostText(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onSelect={handleSelectionChange}
+                onClick={handleSelectionChange}
+                onKeyUp={handleSelectionChange}
                 placeholder="What's happening?"
                 className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
                 style={{
@@ -184,7 +245,37 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
 
               {/* Bottom toolbar */}
               <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  {/* Formatting buttons */}
+                  <div className="flex items-center gap-2 pr-2 border-r border-border">
+                    <button
+                      onClick={toggleBold}
+                      className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-sm font-bold ${
+                        isTextBold() 
+                          ? 'bg-primary text-primary-foreground' 
+                          : 'hover:bg-primary/10 text-primary'
+                      }`}
+                    >
+                      B
+                    </button>
+                    
+                    <button
+                      onClick={toggleItalic}
+                      className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-sm font-bold italic ${
+                        isTextItalic() 
+                          ? 'bg-primary text-primary-foreground' 
+                          : 'hover:bg-primary/10 text-primary'
+                      }`}
+                    >
+                      I
+                    </button>
+                    
+                    <button className="w-8 h-8 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
+                      <RotateCcw className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  {/* Existing media buttons */}
                   <input
                     type="file"
                     ref={fileInputRef}
