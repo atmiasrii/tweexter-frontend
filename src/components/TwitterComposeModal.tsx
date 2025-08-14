@@ -245,36 +245,7 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
 
               {/* Bottom toolbar */}
               <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-3">
-                  {/* Formatting buttons */}
-                  <div className="flex items-center gap-2 pr-2 border-r border-border">
-                    <button
-                      onClick={toggleBold}
-                      className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-sm font-bold ${
-                        isTextBold() 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'hover:bg-primary/10 text-primary'
-                      }`}
-                    >
-                      B
-                    </button>
-                    
-                    <button
-                      onClick={toggleItalic}
-                      className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-sm font-bold italic ${
-                        isTextItalic() 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'hover:bg-primary/10 text-primary'
-                      }`}
-                    >
-                      I
-                    </button>
-                    
-                    <button className="w-8 h-8 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
-                      <RotateCcw className="w-4 h-4" />
-                    </button>
-                  </div>
-                  
+                <div className="flex items-center gap-2">
                   {/* Existing media buttons */}
                   <input
                     type="file"
@@ -287,29 +258,56 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
                   
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary"
+                    className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary"
                   >
-                    <ImageIcon className="w-5 h-5" />
+                    <ImageIcon className="w-4 h-4" />
                   </button>
                   
-                  <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Gift className="w-5 h-5" />
+                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                    <Gift className="w-4 h-4" />
                   </button>
                   
-                  <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Hash className="w-5 h-5" />
+                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                    <Hash className="w-4 h-4" />
                   </button>
                   
-                  <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Smile className="w-5 h-5" />
+                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                    <Smile className="w-4 h-4" />
                   </button>
                   
-                  <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Calendar className="w-5 h-5" />
+                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                    <Calendar className="w-4 h-4" />
                   </button>
                   
-                  <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <MapPin className="w-5 h-5" />
+                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                    <MapPin className="w-4 h-4" />
+                  </button>
+                  
+                  {/* Formatting buttons on the right */}
+                  <button
+                    onClick={toggleBold}
+                    className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold ${
+                      isTextBold() 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'hover:bg-primary/10 text-primary'
+                    }`}
+                  >
+                    B
+                  </button>
+                  
+                  <button
+                    onClick={toggleItalic}
+                    className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold italic ${
+                      isTextItalic() 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'hover:bg-primary/10 text-primary'
+                    }`}
+                  >
+                    I
+                  </button>
+                  
+                  <button className="w-7 h-7 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
+                    <RotateCcw className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
