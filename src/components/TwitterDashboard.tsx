@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
+import { usePrediction } from "@/hooks/usePrediction";
 
 interface PostData {
   content: string;
@@ -30,9 +31,15 @@ export const TwitterDashboard = ({
 }: TwitterDashboardProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isComposeModalOpen, setIsComposeModalOpen] = useState(false);
-  const [metrics, setMetrics] = useState<{ likes: number; retweets: number; replies: number } | null>(null);
-  const [details, setDetails] = useState<any | null>(null);
+  const [predictionText, setPredictionText] = useState("");
+  const [enablePrediction, setEnablePrediction] = useState(false);
   const { profile, updateFollowerCount } = useProfile();
+  
+  const { data: predictionData } = usePrediction(
+    predictionText, 
+    profile?.follower_count ?? 0, 
+    { enabled: enablePrediction && !!predictionText && (profile?.follower_count ?? 0) > 0 }
+  );
 
   const handleAnalyticsRefresh = () => {
     setRefreshKey(prev => prev + 1);
@@ -43,17 +50,10 @@ export const TwitterDashboard = ({
       onNewPost(data);
     }
 
-    try {
-      const followers = profile?.follower_count ?? 0;
-      const { predict } = await import("@/lib/api");
-      const res = await predict({ text: data.content, followers, return_details: true });
-      setMetrics({ likes: Math.round(res.likes), retweets: Math.round(res.retweets), replies: Math.round(res.replies) });
-      setDetails(res.details ?? null);
-    } catch (e) {
-      console.error("Prediction failed", e);
-    } finally {
-      handleAnalyticsRefresh();
-    }
+    // Trigger prediction for new post
+    setPredictionText(data.content);
+    setEnablePrediction(true);
+    handleAnalyticsRefresh();
   };
 
   return (
@@ -78,7 +78,11 @@ export const TwitterDashboard = ({
               <TwitterCompose 
                 hasPosted={hasPosted} 
                 postData={postData}
-                onPostUpdate={onPostUpdate}
+                onPostUpdate={(content) => {
+                  if (onPostUpdate) onPostUpdate(content);
+                  setPredictionText(content);
+                  setEnablePrediction(true);
+                }}
                 onAnalyticsRefresh={handleAnalyticsRefresh}
               />
             </div>
@@ -106,12 +110,12 @@ export const TwitterDashboard = ({
                 
                 {/* Performance Metrics - Very Compact */}
                 <div className="h-[35%]">
-                  <TwitterMetrics key={`metrics-${refreshKey}`} likes={metrics?.likes} retweets={metrics?.retweets} replies={metrics?.replies} />
+                  <TwitterMetrics key={`metrics-${refreshKey}`} ranges={predictionData?.ranges} />
                 </div>
                 
                 {/* Engagement Chart - Larger */}
                 <div className="h-[60%]">
-                  <TwitterEngagementChart key={`chart-${refreshKey}`} likes={metrics?.likes} scalingFactor={details?.scaling_factors?.overall ?? undefined} />
+                  <TwitterEngagementChart key={`chart-${refreshKey}`} likes={predictionData?.likes} scalingFactor={undefined} />
                 </div>
               </div>
             </Card>

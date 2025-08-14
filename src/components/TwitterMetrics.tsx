@@ -1,77 +1,9 @@
-
-import { useState, useEffect } from 'react';
+import React from "react";
 import { Card } from "@/components/ui/card";
+import RangeStat from "@/components/RangeStat";
+import { Ranges } from "@/types/prediction";
 
-const metricsData = [
-  { label: 'Likes', value: 56, trend: '+12.5%' },
-  { label: 'Retweets', value: 4, trend: '+25.0%' },
-  { label: 'Replies', value: 17, trend: '+8.3%' },
-];
-
-const formatNumber = (num: number): string => {
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K';
-  }
-  if (num < 10) {
-    return num.toFixed(1) + '%';
-  }
-  return num.toString();
-};
-
-const AnimatedMetric = ({ metric, delay }: { metric: typeof metricsData[0], delay: number }) => {
-  const [currentValue, setCurrentValue] = useState(0);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const duration = 1500;
-      const steps = 60;
-      const stepDuration = duration / steps;
-      const increment = metric.value / steps;
-
-      let currentStep = 0;
-      const counter = setInterval(() => {
-        currentStep++;
-        const progress = currentStep / steps;
-        const easeProgress = 1 - Math.pow(1 - progress, 2);
-        
-        setCurrentValue(Math.round(metric.value * easeProgress));
-
-        if (currentStep >= steps) {
-          clearInterval(counter);
-          setCurrentValue(metric.value);
-        }
-      }, stepDuration);
-
-      return () => clearInterval(counter);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [metric.value, delay]);
-
-  return (
-    <div className="bg-card border border-gray-200 rounded-xl p-1 hover:bg-accent/50 transition-all duration-300 hover:shadow-md">
-      <div className="flex justify-between items-start mb-1">
-        <h4 className="text-muted-foreground font-medium text-sm">{metric.label}</h4>
-        <span className="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full border border-green-200">
-          {metric.trend}
-        </span>
-      </div>
-      <div>
-        <span className="text-2xl font-bold text-foreground tracking-tight">
-          {formatNumber(currentValue)}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-export const TwitterMetrics = ({ likes, retweets, replies }: { likes?: number; retweets?: number; replies?: number }) => {
-  const computedMetrics = [
-    { label: 'Likes', value: Math.round(likes ?? 56), trend: '+12.5%' },
-    { label: 'Retweets', value: Math.round(retweets ?? 4), trend: '+25.0%' },
-    { label: 'Replies', value: Math.round(replies ?? 17), trend: '+8.3%' },
-  ];
-
+export const TwitterMetrics = ({ ranges }: { ranges?: Ranges }) => {
   return (
     <div className="w-full h-full">
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full">
@@ -81,13 +13,9 @@ export const TwitterMetrics = ({ likes, retweets, replies }: { likes?: number; r
           </div>
           
           <div className="grid grid-cols-3 gap-4 w-full">
-            {computedMetrics.map((metric, index) => (
-              <AnimatedMetric 
-                key={index} 
-                metric={metric as any} 
-                delay={index * 200}
-              />
-            ))}
+            <RangeStat label="Likes" range={ranges?.likes} />
+            <RangeStat label="Retweets" range={ranges?.retweets} />
+            <RangeStat label="Replies" range={ranges?.replies} />
           </div>
         </div>
       </Card>
