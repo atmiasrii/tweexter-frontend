@@ -14,8 +14,8 @@ export const TwitterMetrics = ({ ranges }: { ranges?: Ranges }) => {
           
           <div className="grid grid-cols-3 gap-4 w-full">
             <RangeStat label="Likes" range={ranges?.likes} />
-            <RangeStat label="Retweets" range={ranges?.retweets} />
-            <RangeStat label="Replies" range={ranges?.replies} />
+            <RangeStat label="Retweets" range={ranges?.replies} />
+            <RangeStat label="Replies" range={ranges?.retweets} />
           </div>
         </div>
       </Card>
