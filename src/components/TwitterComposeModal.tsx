@@ -171,8 +171,8 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
         </div>
 
         {/* Main compose area */}
-        <div className="p-4 max-h-[70vh] overflow-y-auto">
-          <div className="flex gap-3">
+        <div className="p-4">
+          <div className="flex gap-3 mb-4">
             {/* Avatar */}
             <Avatar className="w-10 h-10 flex-shrink-0">
               <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" />
@@ -234,128 +234,128 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
                   </div>
                 </div>
               )}
+            </div>
+          </div>
 
-              {/* Everyone can reply */}
-              <div className="flex items-center gap-1 mt-4 pb-4 border-b border-border">
-                <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                <span className="text-primary text-[15px] font-normal">Everyone can reply</span>
-              </div>
+          {/* Everyone can reply - aligned with avatar */}
+          <div className="flex items-center gap-1 pb-3 border-b border-border">
+            <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span className="text-primary text-[15px] font-normal">Everyone can reply</span>
+          </div>
 
-              {/* Bottom toolbar */}
-              <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-3 flex-1">
-                  {/* Existing media buttons */}
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                    multiple
-                    className="hidden"
-                  />
-                  
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary"
-                  >
-                    <ImageIcon className="w-4 h-4" />
-                  </button>
-                  
-                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Gift className="w-4 h-4" />
-                  </button>
-                  
-                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Hash className="w-4 h-4" />
-                  </button>
-                  
-                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Smile className="w-4 h-4" />
-                  </button>
-                  
-                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <Calendar className="w-4 h-4" />
-                  </button>
-                  
-                  <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                    <MapPin className="w-4 h-4" />
-                  </button>
-                  
-                  {/* Formatting buttons on the right */}
-                  <button
-                    onClick={toggleBold}
-                    className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold ${
-                      isTextBold() 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'hover:bg-primary/10 text-primary'
-                    }`}
-                  >
-                    B
-                  </button>
-                  
-                  <button
-                    onClick={toggleItalic}
-                    className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold italic ${
-                      isTextItalic() 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'hover:bg-primary/10 text-primary'
-                    }`}
-                  >
-                    I
-                  </button>
-                  
-                  <button className="w-7 h-7 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
-                    <div className="w-4 h-4 relative">
-                      <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 16 16">
-                        <circle
-                          cx="8"
-                          cy="8"
-                          r="6"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          fill="none"
-                          className="opacity-20"
-                        />
-                        <circle
-                          cx="8"
-                          cy="8"
-                          r="6"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          fill="none"
-                          strokeDasharray="37.7"
-                          strokeDashoffset="25"
-                          strokeLinecap="round"
-                          className="text-primary"
-                        />
-                      </svg>
-                    </div>
-                  </button>
+          {/* Bottom toolbar - aligned with avatar */}
+          <div className="flex items-center justify-between pt-3">
+            <div className="flex items-center gap-3 flex-1">
+              {/* Existing media buttons */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                multiple
+                className="hidden"
+              />
+              
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary"
+              >
+                <ImageIcon className="w-4 h-4" />
+              </button>
+              
+              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                <Gift className="w-4 h-4" />
+              </button>
+              
+              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                <Hash className="w-4 h-4" />
+              </button>
+              
+              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                <Smile className="w-4 h-4" />
+              </button>
+              
+              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                <Calendar className="w-4 h-4" />
+              </button>
+              
+              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                <MapPin className="w-4 h-4" />
+              </button>
+              
+              {/* Formatting buttons on the right */}
+              <button
+                onClick={toggleBold}
+                className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold ${
+                  isTextBold() 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'hover:bg-primary/10 text-primary'
+                }`}
+              >
+                B
+              </button>
+              
+              <button
+                onClick={toggleItalic}
+                className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold italic ${
+                  isTextItalic() 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'hover:bg-primary/10 text-primary'
+                }`}
+              >
+                I
+              </button>
+              
+              <button className="w-7 h-7 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
+                <div className="w-4 h-4 relative">
+                  <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 16 16">
+                    <circle
+                      cx="8"
+                      cy="8"
+                      r="6"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      fill="none"
+                      className="opacity-20"
+                    />
+                    <circle
+                      cx="8"
+                      cy="8"
+                      r="6"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      fill="none"
+                      strokeDasharray="37.7"
+                      strokeDashoffset="25"
+                      strokeLinecap="round"
+                      className="text-primary"
+                    />
+                  </svg>
                 </div>
+              </button>
+            </div>
 
-                <div className="flex items-center gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
-                  >
-                    Promote
-                  </Button>
-                  
-                  <Button
-                    onClick={handlePost}
-                    disabled={isPosting || !postText.trim()}
-                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
-                    style={{
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    }}
-                  >
-                    {isPosting ? "Posting..." : "Post"}
-                  </Button>
-                </div>
-              </div>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
+              >
+                Promote
+              </Button>
+              
+              <Button
+                onClick={handlePost}
+                disabled={isPosting || !postText.trim()}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                }}
+              >
+                {isPosting ? "Posting..." : "Post"}
+              </Button>
             </div>
           </div>
         </div>
