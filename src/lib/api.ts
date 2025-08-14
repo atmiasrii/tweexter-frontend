@@ -1,3 +1,5 @@
+import { normalizeRanges } from "./ranges";
+
 export type PredictRequest = {
   text: string;
   followers: number;
@@ -32,7 +34,9 @@ export async function predict(body: PredictRequest): Promise<PredictResponse> {
     throw new Error(`Predict failed: ${res.status} ${msg}`);
   }
 
-  return (await res.json()) as PredictResponse;
+  const raw = await res.json();
+  const normalized = normalizeRanges(raw, body.followers);
+  return normalized as PredictResponse;
 }
 
 // Support Vite or Next.js env conventions for ranges-aware predictions
@@ -65,13 +69,11 @@ export async function predictEngagement(params: { text: string; followers: numbe
     throw new Error(`/predict failed: ${reason}`);
   }
 
-  const json = (await res.json()) as import("../types/prediction").PredictResponse;
+  const raw = await res.json();
+  const normalized = normalizeRanges(raw, params.followers);
 
-  // Defensive checks in case backend changes:
-  if (!json?.ranges) {
-    throw new Error("Backend did not return ranges field");
-  }
-  return json;
+  // After normalization, ranges are guaranteed to exist
+  return normalized as import("../types/prediction").PredictResponse;
 }
 
 async function safeJson(r: Response) {
