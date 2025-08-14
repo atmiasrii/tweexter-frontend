@@ -106,7 +106,7 @@ export const FollowersCard = ({ followerCount, onUpdate }: FollowersCardProps) =
             }}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            className="min-w-20 max-w-32 h-7 px-2 text-sm bg-background border border-primary/30 focus:border-primary rounded-md text-center font-medium shadow-sm"
+            className="min-w-20 max-w-32 h-7 px-2 text-sm bg-background border border-border/50 focus:border-border rounded-md text-center font-medium focus:outline-none focus:ring-0"
             style={{ 
               width: `${Math.max(80, editValue.length * 8 + 24)}px`,
               appearance: 'textfield',
