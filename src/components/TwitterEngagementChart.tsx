@@ -25,7 +25,7 @@ export const TwitterEngagementChart = ({ likesRange }: { likesRange?: MetricRang
           
           <div className="mt-4 text-center flex-shrink-0">
             <p className="text-xs text-muted-foreground">
-              Peak activity: 6-10 PM • Avg response time: 2.3min
+              Estimates from a model, not a feed. • Simulated crowd; live behavior varies.
             </p>
           </div>
         </div>
