@@ -7,10 +7,11 @@ import { TwitterComposeModal } from "@/components/TwitterComposeModal";
 import { FollowersCard } from "@/components/FollowersCard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, LogOut } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { usePredictionStore } from "@/store/prediction";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface PostData {
   content: string;
@@ -33,6 +34,7 @@ export const TwitterDashboard = ({
   const [refreshKey, setRefreshKey] = useState(0);
   const [isComposeModalOpen, setIsComposeModalOpen] = useState(false);
   const { profile, updateFollowerCount } = useProfile();
+  const { signOut } = useAuth();
   const { toast } = useToast();
   
   const {
@@ -86,6 +88,10 @@ export const TwitterDashboard = ({
     handleAnalyticsRefresh();
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return (
     <div className="h-screen bg-background overflow-hidden animate-fade-in">
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,6 +104,18 @@ export const TwitterDashboard = ({
           >
             <Plus className="w-4 h-4 mr-1" />
             New Post
+          </Button>
+        </div>
+
+        {/* Sign Out Button */}
+        <div className="absolute top-6 right-6 z-10">
+          <Button
+            onClick={handleSignOut}
+            size="sm"
+            className="bg-muted hover:bg-muted/80 text-muted-foreground rounded-full px-4 py-2 shadow-lg h-9 text-sm font-medium"
+          >
+            <LogOut className="w-4 h-4 mr-1" />
+            Sign Out
           </Button>
         </div>
 
