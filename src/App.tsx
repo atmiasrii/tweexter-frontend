@@ -8,6 +8,7 @@ import { useState } from "react";
 import Index from "./pages/Index";
 import { Login } from "./pages/Login";
 import { Pay } from "./pages/Pay";
+import { Waitlist } from "./pages/Waitlist";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="/home" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/pay" element={<Pay />} />
+            <Route path="/waitlist" element={<Waitlist />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
