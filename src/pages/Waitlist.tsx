@@ -140,7 +140,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
       
       {/* Foreground modal */}
       <div className="relative z-10 flex items-start justify-center pt-12 min-h-screen">
-        <div className="bg-background rounded-2xl rounded-b-3xl w-full max-w-[600px] mx-4 shadow-xl border border-border">
+        <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl border border-border">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
             <button 
@@ -158,7 +158,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
           </div>
 
           {/* Main compose area */}
-          <div className="p-4 rounded-b-3xl">
+          <div className="p-4 rounded-b-2xl">
             <div className="flex gap-3">
               {/* Avatar */}
               <Avatar className="w-10 h-10 flex-shrink-0">
@@ -172,7 +172,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                   ref={textareaRef}
                   value={waitlistText}
                   onChange={(e) => setWaitlistText(e.target.value)}
-                  placeholder="Drop in your email and X handle to join the waitlist."
+                  placeholder="Drop in your email and X @handle to join the waitlist."
                   className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
