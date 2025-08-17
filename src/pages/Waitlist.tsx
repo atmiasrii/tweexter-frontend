@@ -38,7 +38,14 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
       try {
         // Parse the input to extract email and X handle
         const text = waitlistText.trim();
-        const parts = text.split(/\s+/); // Split by whitespace
+        
+        // Remove common connective words before parsing
+        const cleanedText = text
+          .replace(/\s+(and|&|plus|\+|with)\s+/gi, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        
+        const parts = cleanedText.split(/\s+/); // Split by whitespace
         
         let email = "";
         let xHandle = "";
