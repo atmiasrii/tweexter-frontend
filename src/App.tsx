@@ -32,14 +32,14 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Navigate to="/waitlist" replace />} />
-            <Route path="/home" element={<Index />} />
-            <Route path="/landing" element={<Landing onPost={(data) => console.log('Posted:', data)} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/pay" element={<Pay />} />
             <Route path="/waitlist" element={<Waitlist />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+            {/* Redirect all other routes to waitlist */}
+            <Route path="/" element={<Navigate to="/waitlist" replace />} />
+            <Route path="/home" element={<Navigate to="/waitlist" replace />} />
+            <Route path="/landing" element={<Navigate to="/waitlist" replace />} />
+            <Route path="/login" element={<Navigate to="/waitlist" replace />} />
+            <Route path="/pay" element={<Navigate to="/waitlist" replace />} />
+            <Route path="*" element={<Navigate to="/waitlist" replace />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
