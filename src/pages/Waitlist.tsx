@@ -15,18 +15,17 @@ interface WaitlistProps {
 }
 
 export const Waitlist = ({ onSignup }: WaitlistProps) => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [waitlistText, setWaitlistText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    if (email.trim() && name.trim() && !isSubmitting) {
+    if (waitlistText.trim() && !isSubmitting) {
       setIsSubmitting(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const waitlistData = { email: email.trim(), name: name.trim() };
+      const waitlistData = { email: "", name: waitlistText.trim() };
       if (onSignup) {
         onSignup(waitlistData);
       }
@@ -81,28 +80,12 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
               </Avatar>
 
               {/* Text area and content */}
-              <div className="flex-1 min-h-0 space-y-4">
-                <div className="text-xl text-foreground font-normal mb-4">
-                  Join our waitlist to be among the first to experience our new platform!
-                </div>
-                
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  className="w-full text-lg placeholder:text-muted-foreground bg-transparent border border-border rounded-lg outline-none px-3 py-2 font-normal text-foreground focus:border-primary transition-colors"
-                  style={{
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                  }}
-                />
-
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  className="w-full text-lg placeholder:text-muted-foreground bg-transparent border border-border rounded-lg outline-none px-3 py-2 font-normal text-foreground focus:border-primary transition-colors"
+              <div className="flex-1 min-h-0">
+                <textarea
+                  value={waitlistText}
+                  onChange={(e) => setWaitlistText(e.target.value)}
+                  placeholder="Drop your email and X handle to join the waitlist."
+                  className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   }}
@@ -207,7 +190,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                 
                 <Button
                   onClick={handleSignup}
-                  disabled={isSubmitting || !email.trim() || !name.trim()}
+                  disabled={isSubmitting || !waitlistText.trim()}
                   className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
