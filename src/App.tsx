@@ -35,7 +35,7 @@ const App = () => {
             <Route path="/waitlist" element={<Waitlist />} />
             {/* Redirect all other routes to waitlist */}
             <Route path="/" element={<Navigate to="/waitlist" replace />} />
-            <Route path="/home" element={<Navigate to="/waitlist" replace />} />
+            <Route path="/home" element={<Index />} />
             <Route path="/landing" element={<Navigate to="/waitlist" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/pay" element={<Navigate to="/waitlist" replace />} />
