@@ -51,19 +51,14 @@ export async function predict(body: PredictRequest): Promise<PredictResponse> {
   return normalized as PredictResponse;
 }
 
-// Support Vite or Next.js env conventions for ranges-aware predictions
-const fromEnv =
-  // Vite style
-  (typeof import.meta !== "undefined" && (import.meta as any).env && (import.meta as any).env.VITE_API_BASE_URL) ||
-  // Next.js style
-  (typeof process !== "undefined" && (process as any).env?.NEXT_PUBLIC_API_BASE_URL) ||
-  // Fallback for local dev
-  "http://localhost:8000";
-
-const API_BASE = String(fromEnv).replace(/\/+$/, ""); // trim trailing slash
-
 export async function predictEngagement(params: { text: string; followers: number }): Promise<import("../types/prediction").PredictResponse> {
-  const res = await fetch(`${API_BASE}/predict`, {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  
+  // Use relative path when base URL isn't provided (works with Vite dev proxy)
+  // This ensures consistency between local dev and production deployment
+  const url = baseUrl ? `${baseUrl}/predict` : `/predict`;
+
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
