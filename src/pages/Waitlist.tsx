@@ -71,7 +71,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
           </div>
 
           {/* Main compose area */}
-          <div className="p-4">
+          <div className="p-4 rounded-b-3xl">
             <div className="flex gap-3">
               {/* Avatar */}
               <Avatar className="w-10 h-10 flex-shrink-0">
@@ -81,26 +81,15 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
 
               {/* Text area and content */}
               <div className="flex-1 min-h-0">
-                <div className="relative">
-                  {waitlistText === "" && (
-                    <div className="absolute top-0 left-0 text-xl text-muted-foreground pointer-events-none">
-                      <span className="relative">
-                        <span className="animate-pulse bg-foreground w-0.5 h-6 absolute -left-1 top-0 opacity-75"></span>
-                        D
-                      </span>
-                      rop in your email and X handle to join the waitlist.
-                    </div>
-                  )}
-                  <textarea
-                    value={waitlistText}
-                    onChange={(e) => setWaitlistText(e.target.value)}
-                    placeholder=""
-                    className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
-                    style={{
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    }}
-                  />
-                </div>
+                <textarea
+                  value={waitlistText}
+                  onChange={(e) => setWaitlistText(e.target.value)}
+                  placeholder="Drop in your email and X handle to join the waitlist."
+                  className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
+                  style={{
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  }}
+                />
 
                 {/* Image previews - keeping same functionality */}
                 {selectedImages.length > 0 && (
