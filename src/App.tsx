@@ -37,7 +37,7 @@ const App = () => {
             <Route path="/" element={<Navigate to="/waitlist" replace />} />
             <Route path="/home" element={<Navigate to="/waitlist" replace />} />
             <Route path="/landing" element={<Navigate to="/waitlist" replace />} />
-            <Route path="/login" element={<Navigate to="/waitlist" replace />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/pay" element={<Navigate to="/waitlist" replace />} />
             <Route path="*" element={<Navigate to="/waitlist" replace />} />
           </Routes>
