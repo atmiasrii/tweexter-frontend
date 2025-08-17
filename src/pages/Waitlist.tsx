@@ -53,7 +53,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
       
       {/* Foreground modal */}
       <div className="relative z-10 flex items-start justify-center pt-12 min-h-screen">
-        <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl max-h-[85vh] overflow-y-auto border border-border">
+        <div className="bg-background rounded-2xl rounded-b-3xl w-full max-w-[600px] mx-4 shadow-xl border border-border">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
             <button 
@@ -81,15 +81,26 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
 
               {/* Text area and content */}
               <div className="flex-1 min-h-0">
-                <textarea
-                  value={waitlistText}
-                  onChange={(e) => setWaitlistText(e.target.value)}
-                  placeholder="Drop your email and X handle to join the waitlist."
-                  className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
-                  style={{
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                  }}
-                />
+                <div className="relative">
+                  {waitlistText === "" && (
+                    <div className="absolute top-0 left-0 text-xl text-muted-foreground pointer-events-none">
+                      <span className="relative">
+                        <span className="animate-pulse bg-foreground w-0.5 h-6 absolute -left-1 top-0 opacity-75"></span>
+                        D
+                      </span>
+                      rop in your email and X handle to join the waitlist.
+                    </div>
+                  )}
+                  <textarea
+                    value={waitlistText}
+                    onChange={(e) => setWaitlistText(e.target.value)}
+                    placeholder=""
+                    className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
+                    style={{
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    }}
+                  />
+                </div>
 
                 {/* Image previews - keeping same functionality */}
                 {selectedImages.length > 0 && (
@@ -185,7 +196,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                   size="sm"
                   className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
                 >
-                  Notify Friends
+                  Share on X
                 </Button>
                 
                 <Button
@@ -196,7 +207,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   }}
                 >
-                  {isSubmitting ? "Joining..." : "Join Waitlist"}
+                  {isSubmitting ? "Posting..." : "Post"}
                 </Button>
               </div>
             </div>
