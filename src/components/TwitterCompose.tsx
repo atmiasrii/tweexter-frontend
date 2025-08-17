@@ -433,14 +433,14 @@ export const TwitterCompose = ({
           <div className="flex-shrink-0 px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
             <div className="flex items-center justify-center space-x-3 pt-2">
               <Button 
-                onClick={onPredict || handleImproveClick}
-                disabled={loading || isImproving}
+                onClick={() => {}}
+                disabled={false}
                 className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
               >
-                {loading ? "Predicting..." : isImproving ? "Improving..." : "Predict"}
+                Tweak
               </Button>
               <Button
                 onClick={handleEditClick}
