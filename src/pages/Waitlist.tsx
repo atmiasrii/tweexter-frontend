@@ -1,9 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { X, ImageIcon, Smile, MapPin, Calendar, BarChart3, Gift, Hash } from "lucide-react";
 import { TwitterDashboard } from "@/components/TwitterDashboard";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface WaitlistData {
   email: string;
@@ -19,16 +21,101 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Auto-focus the textarea when the component mounts
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
 
   const handleSignup = async () => {
     if (waitlistText.trim() && !isSubmitting) {
       setIsSubmitting(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const waitlistData = { email: "", name: waitlistText.trim() };
-      if (onSignup) {
-        onSignup(waitlistData);
+      
+      try {
+        // Parse the input to extract email and X handle
+        const text = waitlistText.trim();
+        const parts = text.split(/\s+/); // Split by whitespace
+        
+        let email = "";
+        let xHandle = "";
+        
+        // Find email (contains @something.com pattern) and handle
+        for (const part of parts) {
+          if (part.includes("@") && part.includes(".")) {
+            // This looks like an email
+            email = part;
+          } else if (part.startsWith("@") || (!email && !part.includes("@"))) {
+            // This looks like a handle (starts with @ or is the other non-email part)
+            xHandle = part.startsWith("@") ? part : `@${part}`;
+          } else if (!email) {
+            // If no email found yet and this doesn't look like email, treat as handle
+            xHandle = part.startsWith("@") ? part : part;
+          }
+        }
+        
+        // If we couldn't find both, try a different approach
+        if (!email || !xHandle) {
+          const emailPattern = /\S+@\S+\.\S+/;
+          const emailMatch = text.match(emailPattern);
+          
+          if (emailMatch) {
+            email = emailMatch[0];
+            // Remove email from text to get handle
+            const remainingText = text.replace(email, "").trim();
+            xHandle = remainingText || text.split(/\s+/)[0] || "";
+          } else {
+            // No clear email pattern, treat first part as handle, second as email
+            const firstPart = parts[0] || "";
+            const secondPart = parts[1] || "";
+            
+            if (firstPart.includes("@") && firstPart.includes(".")) {
+              email = firstPart;
+              xHandle = secondPart;
+            } else {
+              xHandle = firstPart;
+              email = secondPart;
+            }
+          }
+        }
+        
+        // Clean up handle (remove @ if present for storage)
+        const cleanHandle = xHandle.startsWith("@") ? xHandle.slice(1) : xHandle;
+        
+        if (!email || !cleanHandle) {
+          toast.error("Please provide both an email and X handle");
+          setIsSubmitting(false);
+          return;
+        }
+        
+        // Save to database
+        const { error } = await supabase
+          .from('waitlist')
+          .insert({
+            email: email,
+            x_handle: cleanHandle
+          });
+        
+        if (error) {
+          toast.error("Failed to join waitlist. Please try again.");
+          console.error('Error saving to waitlist:', error);
+        } else {
+          toast.success("Successfully joined the waitlist!");
+          setWaitlistText("");
+          
+          // Call onSignup if provided for backwards compatibility
+          if (onSignup) {
+            onSignup({ email, name: cleanHandle });
+          }
+        }
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+        console.error('Error:', error);
       }
+      
       setIsSubmitting(false);
     }
   };
@@ -82,6 +169,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
               {/* Text area and content */}
               <div className="flex-1 min-h-0">
                 <textarea
+                  ref={textareaRef}
                   value={waitlistText}
                   onChange={(e) => setWaitlistText(e.target.value)}
                   placeholder="Drop in your email and X handle to join the waitlist."
