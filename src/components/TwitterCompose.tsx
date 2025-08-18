@@ -96,9 +96,9 @@ export const TwitterCompose = ({
 
   if (!hasPosted || !currentContent) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Card className="bg-card border-border p-8 shadow-lg rounded-3xl max-w-lg w-full">
-          <div className="text-muted-foreground text-lg text-center">No post to display</div>
+      <div className="w-full flex items-center justify-center">
+        <Card className="bg-card border-border p-6 sm:p-8 shadow-lg rounded-3xl w-full">
+          <div className="text-muted-foreground text-base sm:text-lg text-center">No post to display</div>
         </Card>
       </div>
     );
@@ -331,12 +331,12 @@ export const TwitterCompose = ({
       });
 
     return (
-      <div className="text-[15px] leading-5 font-normal">
+      <div className="text-sm sm:text-[15px] leading-5 font-normal">
         {content}
         {shouldTruncateText() && (
           <button
             onClick={() => setShowFullText(true)}
-            className="text-primary hover:underline"
+            className="text-primary hover:underline touch-manipulation p-1 -m-1"
           >
             Show more
           </button>
@@ -344,7 +344,7 @@ export const TwitterCompose = ({
         {showFullText && currentContent.length > TRUNCATE_LENGTH && (
           <button
             onClick={() => setShowFullText(false)}
-            className="text-primary hover:underline ml-1"
+            className="text-primary hover:underline ml-1 touch-manipulation p-1 -m-1"
           >
             Show less
           </button>
@@ -354,17 +354,16 @@ export const TwitterCompose = ({
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-4">
-      <Card className="bg-card border-border shadow-lg rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col relative">
-
+    <div className="w-full">
+      <Card className="bg-card border-border shadow-lg rounded-3xl w-full flex flex-col relative">
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Main content area with photo and text side by side */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="flex items-start space-x-4">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            <div className="flex items-start space-x-3 sm:space-x-4">
               {/* Avatar */}
-              <Avatar className="w-12 h-12 flex-shrink-0 ring-2 ring-border">
+              <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 ring-2 ring-border">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
-                <AvatarFallback className="bg-primary text-primary-foreground text-lg font-medium">DA</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground text-base sm:text-lg font-medium">DA</AvatarFallback>
               </Avatar>
               
               {/* Text content */}
@@ -395,32 +394,30 @@ export const TwitterCompose = ({
             </div>
             
             {/* Bottom sections - Everyone can reply and engagement metrics */}
-            <div className="mt-6 space-y-3">
+            <div className="mt-4 sm:mt-6 space-y-3">
               {/* Blue globe icon and reply setting */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer">
+                <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer touch-manipulation">
                   <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                   </svg>
-                  <span className="text-primary text-sm font-normal">Everyone can reply</span>
+                  <span className="text-primary text-xs sm:text-sm font-normal">Everyone can reply</span>
                 </div>
-                
-                
               </div>
               
               <div className="flex items-center justify-center">
-                <div className="flex items-center justify-between w-full text-muted-foreground px-8">
-                  <div className="flex items-center space-x-2 hover:text-primary transition-colors cursor-pointer">
+                <div className="flex items-center justify-between w-full text-muted-foreground px-4 sm:px-8">
+                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-primary transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
                     <MessageCircle className="h-4 w-4" />
-                    <span className="text-sm font-medium">17</span>
+                    <span className="text-xs sm:text-sm font-medium">17</span>
                   </div>
-                  <div className="flex items-center space-x-2 hover:text-green-500 transition-colors cursor-pointer">
+                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-green-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
                     <Repeat2 className="h-4 w-4" />
-                    <span className="text-sm font-medium">4</span>
+                    <span className="text-xs sm:text-sm font-medium">4</span>
                   </div>
-                  <div className="flex items-center space-x-2 hover:text-red-500 transition-colors cursor-pointer">
+                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-red-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
                     <Heart className="h-4 w-4" />
-                    <span className="text-sm font-medium">56</span>
+                    <span className="text-xs sm:text-sm font-medium">56</span>
                   </div>
                 </div>
               </div>
@@ -430,12 +427,12 @@ export const TwitterCompose = ({
         
         {/* Fixed buttons at the bottom */}
         {!isEditing && (
-          <div className="flex-shrink-0 px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
-            <div className="flex items-center justify-center space-x-3 pt-2">
+          <div className="flex-shrink-0 px-3 sm:px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 pt-2">
               <Button 
                 onClick={() => {}}
                 disabled={false}
-                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
@@ -445,7 +442,7 @@ export const TwitterCompose = ({
               <Button
                 onClick={handleEditClick}
                 disabled={false}
-                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-8 py-2 text-[15px] font-bold min-w-[100px] h-10 transition-all duration-200"
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}

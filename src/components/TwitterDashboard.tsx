@@ -93,36 +93,34 @@ export const TwitterDashboard = ({
   };
 
   return (
-    <div className="h-screen bg-background overflow-hidden animate-fade-in">
-      <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* New Post Button */}
-        <div className="absolute top-6 left-6 z-10">
+    <div className="min-h-screen bg-background animate-fade-in">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        {/* Mobile Header with Buttons */}
+        <div className="flex items-center justify-between py-3 sm:py-4 lg:py-6 relative z-10">
           <Button
             onClick={() => setIsComposeModalOpen(true)}
             size="sm"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-4 py-2 shadow-lg h-9 text-sm font-medium"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-3 sm:px-4 py-2 shadow-lg h-8 sm:h-9 text-xs sm:text-sm font-medium"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            New Post
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+            <span className="hidden sm:inline">New Post</span>
           </Button>
-        </div>
 
-        {/* Sign Out Button */}
-        <div className="absolute top-6 right-6 z-10">
           <Button
             onClick={handleSignOut}
             size="sm"
-            className="bg-muted hover:bg-muted/80 text-muted-foreground rounded-full px-4 py-2 shadow-lg h-9 text-sm font-medium"
+            className="bg-muted hover:bg-muted/80 text-muted-foreground rounded-full px-3 sm:px-4 py-2 shadow-lg h-8 sm:h-9 text-xs sm:text-sm font-medium"
           >
-            <LogOut className="w-4 h-4 mr-1" />
-            Sign Out
+            <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+            <span className="hidden sm:inline">Sign Out</span>
           </Button>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 py-6 h-full">
-          {/* Left side - Twitter Compose - Centered vertically */}
-          <div className="w-full lg:w-1/2 xl:w-2/5 h-full flex items-center">
-            <div className="w-full">
+        {/* Main Content */}
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 pb-4 sm:pb-6 lg:pb-8">
+          {/* Left side - Twitter Compose */}
+          <div className="w-full lg:w-1/2 xl:w-2/5 flex justify-center">
+            <div className="w-full max-w-lg">
               <TwitterCompose 
                 hasPosted={hasPosted} 
                 postData={postData}
@@ -142,27 +140,27 @@ export const TwitterDashboard = ({
           </div>
           
           {/* Right side - Analytics Container */}
-          <div className="w-full lg:w-1/2 xl:w-3/5 h-full flex items-center">
-            <Card className="w-full h-[90%] bg-card border-border shadow-lg rounded-3xl overflow-hidden">
-              <div className="p-6 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-foreground">Analytics</h2>
-                  <div className="flex items-center space-x-3">
+          <div className="w-full lg:w-1/2 xl:w-3/5 flex justify-center">
+            <Card className="w-full max-w-2xl h-[500px] sm:h-[600px] lg:h-[700px] bg-card border-border shadow-lg rounded-3xl overflow-hidden">
+              <div className="p-4 sm:p-6 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">Analytics</h2>
+                  <div className="flex items-center space-x-2 sm:space-x-3">
                     {profile && (
                       <FollowersCard
                         followerCount={profile.follower_count}
                         onUpdate={updateFollowerCount}
                       />
                     )}
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1 sm:space-x-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-xs text-muted-foreground">Live</span>
                     </div>
                   </div>
                 </div>
                 
-                {/* Performance Metrics - Very Compact */}
-                <div className="h-[35%]">
+                {/* Performance Metrics - Compact */}
+                <div className="h-[35%] mb-4">
                   <TwitterMetrics key={`metrics-${refreshKey}`} ranges={ranges} />
                 </div>
                 
