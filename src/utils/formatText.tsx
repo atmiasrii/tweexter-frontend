@@ -121,10 +121,10 @@ export const formatTextWithMarkdown = (text: string): React.ReactNode[] => {
     
     // Return line with proper line break
     return (
-      <React.Fragment key={lineIndex}>
+      <span key={lineIndex}>
         {lineContent}
         {lineIndex < lines.length - 1 && <br />}
-      </React.Fragment>
+      </span>
     );
   });
 };
