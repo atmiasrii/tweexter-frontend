@@ -146,29 +146,29 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
       </div>
       
       {/* Foreground modal */}
-      <div className="relative z-10 flex items-start justify-center pt-12 min-h-screen">
-        <div className="bg-background rounded-2xl w-full max-w-[600px] mx-4 shadow-xl border border-border">
+      <div className="relative z-10 flex items-start justify-center pt-4 sm:pt-8 lg:pt-12 min-h-screen px-2 sm:px-4">
+        <div className="bg-background rounded-xl sm:rounded-2xl w-full max-w-[95vw] sm:max-w-[600px] shadow-xl border border-border">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border">
+          <div className="flex items-center justify-between p-3 sm:p-4 border-b border-border">
             <button 
               onClick={() => navigate("/")}
-              className="p-2 hover:bg-secondary rounded-full transition-colors"
+              className="p-2 hover:bg-secondary rounded-full transition-colors touch-manipulation"
             >
               <X className="w-5 h-5 text-foreground" />
             </button>
             <Button
               variant="ghost"
-              className="text-primary hover:text-primary font-normal text-[15px] px-0"
+              className="text-primary hover:text-primary font-normal text-sm sm:text-[15px] px-0"
             >
               Join Waitlist
             </Button>
           </div>
 
           {/* Main compose area */}
-          <div className="p-4 rounded-b-2xl">
-            <div className="flex gap-3">
+          <div className="p-3 sm:p-4 rounded-b-xl sm:rounded-b-2xl">
+            <div className="flex gap-2 sm:gap-3">
               {/* Avatar */}
-              <Avatar className="w-10 h-10 flex-shrink-0">
+              <Avatar className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
@@ -180,7 +180,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                   value={waitlistText}
                   onChange={(e) => setWaitlistText(e.target.value)}
                   placeholder="Drop in your email and X @handle to join the waitlist."
-                  className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
+                  className="w-full text-lg sm:text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[100px] sm:min-h-[120px] font-normal text-foreground touch-manipulation"
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   }}
@@ -191,10 +191,10 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                   <div className="mt-3">
                     <div className={`grid gap-1 ${
                       selectedImages.length === 1 ? 'grid-cols-1' : 
-                      selectedImages.length === 2 ? 'grid-cols-2' : 
-                      selectedImages.length === 3 ? 'grid-cols-3' :
+                      selectedImages.length === 2 ? 'grid-cols-1 sm:grid-cols-2' : 
+                      selectedImages.length === 3 ? 'grid-cols-2 sm:grid-cols-3' :
                       'grid-cols-2'
-                    } rounded-2xl overflow-hidden border border-border`}>
+                    } rounded-xl sm:rounded-2xl overflow-hidden border border-border`}>
                       {selectedImages.map((image, index) => (
                         <div key={index} className="relative group">
                           <div className="relative overflow-hidden bg-muted">
@@ -203,7 +203,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                               alt={`Upload ${index + 1}`}
                               className={`w-full object-cover transition-transform group-hover:scale-105 ${
                                 selectedImages.length === 1 
-                                  ? 'aspect-[16/10] max-h-[400px]' 
+                                  ? 'aspect-[16/10] max-h-[300px] sm:max-h-[400px]' 
                                   : selectedImages.length === 2
                                   ? 'aspect-square'
                                   : 'aspect-square'
@@ -213,7 +213,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                           </div>
                           <button
                             onClick={() => removeImage(index)}
-                            className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-full p-1.5 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+                            className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-full p-1.5 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm touch-manipulation"
                             aria-label="Remove image"
                           >
                             <X className="w-3.5 h-3.5" />
@@ -227,16 +227,16 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
             </div>
 
           {/* Everyone can reply - aligned with avatar */}
-          <div className="flex items-center gap-1 mt-4 pb-4 border-b border-border ml-3">
+          <div className="flex items-center gap-1 mt-4 pb-4 border-b border-border ml-2 sm:ml-3">
             <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
-            <span className="text-primary text-[15px] font-normal">Early access notification</span>
+            <span className="text-primary text-sm sm:text-[15px] font-normal">Early access notification</span>
           </div>
 
           {/* Bottom toolbar - aligned with avatar */}
-          <div className="flex items-center justify-between mt-3 ml-3">
-              <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between mt-3 ml-2 sm:ml-3 mr-3">
+              <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 overflow-x-auto">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -248,37 +248,37 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                 
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary"
+                  className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary touch-manipulation flex-shrink-0"
                 >
-                  <ImageIcon className="w-5 h-5" />
+                  <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 
-                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                  <Gift className="w-5 h-5" />
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary touch-manipulation flex-shrink-0 hidden sm:block">
+                  <Gift className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 
-                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                  <Hash className="w-5 h-5" />
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary touch-manipulation flex-shrink-0 hidden sm:block">
+                  <Hash className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 
-                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                  <Smile className="w-5 h-5" />
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary touch-manipulation flex-shrink-0">
+                  <Smile className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 
-                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                  <Calendar className="w-5 h-5" />
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary touch-manipulation flex-shrink-0 hidden lg:block">
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 
-                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                  <MapPin className="w-5 h-5" />
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary touch-manipulation flex-shrink-0 hidden lg:block">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
+                  className="rounded-full px-3 sm:px-4 py-1.5 text-sm sm:text-[15px] font-bold border-border text-foreground hover:bg-secondary hidden sm:inline-flex"
                 >
                   Share on X
                 </Button>
@@ -286,7 +286,7 @@ export const Waitlist = ({ onSignup }: WaitlistProps) => {
                 <Button
                   onClick={handleSignup}
                   disabled={isSubmitting || !waitlistText.trim()}
-                  className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
+                  className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-6 py-1.5 text-sm sm:text-[15px] font-bold min-w-[60px] h-8 touch-manipulation"
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   }}
