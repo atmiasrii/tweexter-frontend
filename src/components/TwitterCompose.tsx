@@ -123,7 +123,7 @@ export const TwitterCompose = ({
       improvedText = improvedText.replace(regex, improved);
     });
 
-    return improvedText + " #AI #TechInnovation";
+    return improvedText;
   };
 
   const createTextSegments = (original: string, improved: string): TextSegment[] => {
