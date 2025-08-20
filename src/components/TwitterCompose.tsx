@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Repeat2, Heart, Bookmark, Edit3 } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
 import { formatTextWithMarkdown } from "@/utils/formatText";
+import { improveText } from "@/lib/api";
 
 interface PostData {
   content: string;
@@ -191,24 +192,43 @@ export const TwitterCompose = ({
   const handleImproveClick = async () => {
     setIsImproving(true);
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const improvedText = generateImprovedText(postData.content);
-    const newSegments = createTextSegments(postData.content, improvedText);
-    
-    setTextSegments(newSegments);
-    setCurrentContent(improvedText);
-    setHasBeenImproved(true);
-    setIsImproving(false);
-    
-    if (onPostUpdate) {
-      onPostUpdate(improvedText);
-    }
-    
-    // Trigger analytics refresh with animation
-    if (onAnalyticsRefresh) {
-      onAnalyticsRefresh();
+    try {
+      const response = await improveText({ text: currentContent });
+      const improvedText = response.improved_text;
+      
+      const newSegments = createTextSegments(currentContent, improvedText);
+      
+      setTextSegments(newSegments);
+      setCurrentContent(improvedText);
+      setHasBeenImproved(true);
+      
+      if (onPostUpdate) {
+        onPostUpdate(improvedText);
+      }
+      
+      // Trigger analytics refresh with animation
+      if (onAnalyticsRefresh) {
+        onAnalyticsRefresh();
+      }
+    } catch (error) {
+      console.error('Failed to improve text:', error);
+      // Fallback to mock improvement if API fails
+      const improvedText = generateImprovedText(currentContent);
+      const newSegments = createTextSegments(currentContent, improvedText);
+      
+      setTextSegments(newSegments);
+      setCurrentContent(improvedText);
+      setHasBeenImproved(true);
+      
+      if (onPostUpdate) {
+        onPostUpdate(improvedText);
+      }
+      
+      if (onAnalyticsRefresh) {
+        onAnalyticsRefresh();
+      }
+    } finally {
+      setIsImproving(false);
     }
   };
 
@@ -430,14 +450,14 @@ export const TwitterCompose = ({
           <div className="flex-shrink-0 px-3 sm:px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
             <div className="flex items-center justify-center space-x-2 sm:space-x-3 pt-2">
               <Button 
-                onClick={() => {}}
-                disabled={false}
+                onClick={handleImproveClick}
+                disabled={isImproving}
                 className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
               >
-                Tweak
+                {isImproving ? "Tweaking..." : "Tweak"}
               </Button>
               <Button
                 onClick={handleEditClick}
