@@ -123,6 +123,11 @@ export const TwitterCompose = ({
       improvedText = improvedText.replace(regex, improved);
     });
 
+    if (improvedText.trim() === originalText.trim()) {
+      console.warn('⚠️ Fallback improvement made no changes; adding subtle enhancement.');
+      return originalText.replace(/\s+$/, '') + ' — thoughts?';
+    }
+
     return improvedText;
   };
 

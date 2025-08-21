@@ -99,7 +99,7 @@ export async function improveText(params: { text: string }): Promise<{ improved_
   console.log('🌐 improveText API called with text:', params.text);
   
   const baseUrl = import.meta.env.VITE_IMPROVE_API_BASE_URL as string | undefined;
-  const url = baseUrl ? `${baseUrl}/improve` : `https://api2.tweexter.co/improve`;
+  const url = baseUrl ? `${baseUrl}/improve` : `https://api.tweexter.co/improve`;
   
   console.log('🔗 Making request to URL:', url);
 
