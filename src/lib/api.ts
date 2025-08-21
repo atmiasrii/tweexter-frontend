@@ -96,8 +96,8 @@ export async function predictEngagement(params: { text: string; followers: numbe
 }
 
 export async function improveText(params: { text: string }): Promise<{ improved_text: string }> {
-  // Always use relative path to go through Vite proxy and avoid CORS issues
-  const url = `/improve`;
+  const baseUrl = import.meta.env.VITE_IMPROVE_API_BASE_URL as string | undefined;
+  const url = baseUrl ? `${baseUrl}/improve` : `/improve`;
 
   const res = await fetch(url, {
     method: "POST",
