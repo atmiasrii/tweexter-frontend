@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Repeat2, Heart, Bookmark, Edit3 } from "lucide-react";
+import { MessageCircle, Repeat2, Heart, Bookmark, Edit3, Loader2 } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
 import { formatTextWithMarkdown } from "@/utils/formatText";
 import { improveText } from "@/lib/api";
@@ -190,16 +190,26 @@ export const TwitterCompose = ({
   };
 
   const handleImproveClick = async () => {
+    console.log('🔧 Tweak button clicked, starting improvement...');
+    console.log('📝 Original text:', currentContent);
     setIsImproving(true);
     
     try {
+      console.log('🌐 Calling improveText API...');
       const response = await improveText({ text: currentContent });
       const improvedText = response.improved_text;
+      console.log('✅ API response received:', improvedText);
       
       // Replace entire text content
       setTextSegments([{ text: improvedText, isImproved: false }]);
       setCurrentContent(improvedText);
       setHasBeenImproved(false);
+      
+      // Sync with store to ensure text appears in the field
+      if (onTweetTextChange) {
+        console.log('🔄 Syncing improved text with store...');
+        onTweetTextChange(improvedText);
+      }
       
       if (onPostUpdate) {
         onPostUpdate(improvedText);
@@ -209,15 +219,24 @@ export const TwitterCompose = ({
       if (onAnalyticsRefresh) {
         onAnalyticsRefresh();
       }
+      
+      console.log('🎉 Text improvement completed successfully!');
     } catch (error) {
-      console.error('Failed to improve text:', error);
+      console.error('❌ Failed to improve text:', error);
       // Fallback to mock improvement if API fails
       const improvedText = generateImprovedText(currentContent);
+      console.log('🔄 Using fallback improvement:', improvedText);
       
       // Replace entire text content
       setTextSegments([{ text: improvedText, isImproved: false }]);
       setCurrentContent(improvedText);
       setHasBeenImproved(false);
+      
+      // Sync with store to ensure text appears in the field
+      if (onTweetTextChange) {
+        console.log('🔄 Syncing fallback text with store...');
+        onTweetTextChange(improvedText);
+      }
       
       if (onPostUpdate) {
         onPostUpdate(improvedText);
@@ -228,6 +247,7 @@ export const TwitterCompose = ({
       }
     } finally {
       setIsImproving(false);
+      console.log('🏁 Improvement process finished');
     }
   };
 
@@ -375,6 +395,15 @@ export const TwitterCompose = ({
   return (
     <div className="w-full">
       <Card className="bg-card border-border shadow-lg rounded-3xl w-full flex flex-col relative">
+        {/* Loading overlay */}
+        {isImproving && (
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-3xl z-50 flex items-center justify-center">
+            <div className="flex flex-col items-center space-y-3">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground font-medium">Improving your text...</p>
+            </div>
+          </div>
+        )}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Main content area with photo and text side by side */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6">
@@ -456,7 +485,14 @@ export const TwitterCompose = ({
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
                 }}
               >
-                {isImproving ? "Tweaking..." : "Tweak"}
+                {isImproving ? (
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Tweaking...</span>
+                  </div>
+                ) : (
+                  "Tweak"
+                )}
               </Button>
               <Button
                 onClick={handleEditClick}

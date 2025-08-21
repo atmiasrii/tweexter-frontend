@@ -96,8 +96,12 @@ export async function predictEngagement(params: { text: string; followers: numbe
 }
 
 export async function improveText(params: { text: string }): Promise<{ improved_text: string }> {
+  console.log('🌐 improveText API called with text:', params.text);
+  
   const baseUrl = import.meta.env.VITE_IMPROVE_API_BASE_URL as string | undefined;
-  const url = baseUrl ? `${baseUrl}/improve` : `/improve`;
+  const url = baseUrl ? `${baseUrl}/improve` : `https://api2.tweexter.co/improve`;
+  
+  console.log('🔗 Making request to URL:', url);
 
   const res = await fetch(url, {
     method: "POST",
@@ -107,15 +111,20 @@ export async function improveText(params: { text: string }): Promise<{ improved_
     }),
   });
 
+  console.log('📡 Response status:', res.status, res.statusText);
+
   if (!res.ok) {
     const body = await safeJson(res);
+    console.error('❌ API error response:', body);
     const reason =
       (body && (body.detail || body.message)) ||
       `${res.status} ${res.statusText}`;
     throw new Error(`/improve failed: ${reason}`);
   }
 
-  return await res.json();
+  const result = await res.json();
+  console.log('📦 API response data:', result);
+  return result;
 }
 
 async function safeJson(r: Response) {
