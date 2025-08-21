@@ -196,11 +196,10 @@ export const TwitterCompose = ({
       const response = await improveText({ text: currentContent });
       const improvedText = response.improved_text;
       
-      const newSegments = createTextSegments(currentContent, improvedText);
-      
-      setTextSegments(newSegments);
+      // Replace entire text content
+      setTextSegments([{ text: improvedText, isImproved: false }]);
       setCurrentContent(improvedText);
-      setHasBeenImproved(true);
+      setHasBeenImproved(false);
       
       if (onPostUpdate) {
         onPostUpdate(improvedText);
@@ -214,11 +213,11 @@ export const TwitterCompose = ({
       console.error('Failed to improve text:', error);
       // Fallback to mock improvement if API fails
       const improvedText = generateImprovedText(currentContent);
-      const newSegments = createTextSegments(currentContent, improvedText);
       
-      setTextSegments(newSegments);
+      // Replace entire text content
+      setTextSegments([{ text: improvedText, isImproved: false }]);
       setCurrentContent(improvedText);
-      setHasBeenImproved(true);
+      setHasBeenImproved(false);
       
       if (onPostUpdate) {
         onPostUpdate(improvedText);
