@@ -16,8 +16,8 @@ export type PredictResponse = {
 export async function predict(body: PredictRequest): Promise<PredictResponse> {
   const baseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
 
-  // Prefer relative path when base URL isn't provided (works with Vite dev proxy)
-  const url = baseUrl ? `${baseUrl}/predict` : `/predict`;
+  // Use https://api.tweexter.co/predict for scoring
+  const url = baseUrl ? `${baseUrl}/predict` : `https://api.tweexter.co/predict`;
 
   const res = await fetch(url, {
     method: "POST",
@@ -54,9 +54,8 @@ export async function predict(body: PredictRequest): Promise<PredictResponse> {
 export async function predictEngagement(params: { text: string; followers: number }): Promise<import("../types/prediction").PredictResponse> {
   const baseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
   
-  // Use relative path when base URL isn't provided (works with Vite dev proxy)
-  // This ensures consistency between local dev and production deployment
-  const url = baseUrl ? `${baseUrl}/predict` : `/predict`;
+  // Use https://api.tweexter.co/predict for scoring
+  const url = baseUrl ? `${baseUrl}/predict` : `https://api.tweexter.co/predict`;
 
   const res = await fetch(url, {
     method: "POST",
@@ -99,7 +98,7 @@ export async function improveText(params: { text: string }): Promise<{ improved_
   console.log('🌐 improveText API called with text:', params.text);
   
   const baseUrl = import.meta.env.VITE_IMPROVE_API_BASE_URL as string | undefined;
-  const url = baseUrl ? `${baseUrl}/improve` : `https://api.tweexter.co/improve`;
+  const url = baseUrl ? `${baseUrl}/improve` : `https://api2.tweexter.co/improve`;
   
   console.log('🔗 Making request to URL:', url);
 
