@@ -142,7 +142,7 @@ export const TwitterDashboard = ({
           {/* Right side - Analytics Container */}
           <div className="w-full lg:w-1/2 xl:w-3/5 flex justify-center min-h-0">
             <Card className="w-full max-w-2xl bg-card border-border shadow-lg rounded-3xl overflow-hidden flex flex-col">
-              <div className="p-3 sm:p-4 flex flex-col flex-1 min-h-0">
+              <div className="p-3 sm:p-4 flex flex-col flex-1 min-h-0 justify-center">
                 <div className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
                   <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">Analytics</h2>
                   <div className="flex items-center space-x-2 sm:space-x-3">
