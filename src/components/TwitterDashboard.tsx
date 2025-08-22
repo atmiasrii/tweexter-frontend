@@ -93,10 +93,10 @@ export const TwitterDashboard = ({
   };
 
   return (
-    <div className="min-h-screen bg-background animate-fade-in">
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+    <div className="h-screen bg-background animate-fade-in flex flex-col overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 flex flex-col h-full">
         {/* Mobile Header with Buttons */}
-        <div className="flex items-center justify-between py-3 sm:py-4 lg:py-6 relative z-10">
+        <div className="flex items-center justify-between py-2 sm:py-3 relative z-10 flex-shrink-0">
           <Button
             onClick={() => setIsComposeModalOpen(true)}
             size="sm"
@@ -117,7 +117,7 @@ export const TwitterDashboard = ({
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 pb-4 sm:pb-6 lg:pb-8">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 flex-1 min-h-0">
           {/* Left side - Twitter Compose */}
           <div className="w-full lg:w-1/2 xl:w-2/5 flex justify-center">
             <div className="w-full max-w-lg">
@@ -140,10 +140,10 @@ export const TwitterDashboard = ({
           </div>
           
           {/* Right side - Analytics Container */}
-          <div className="w-full lg:w-1/2 xl:w-3/5 flex justify-center">
-            <Card className="w-full max-w-2xl h-[500px] sm:h-[600px] lg:h-[700px] bg-card border-border shadow-lg rounded-3xl overflow-hidden">
-              <div className="p-4 sm:p-6 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <div className="w-full lg:w-1/2 xl:w-3/5 flex justify-center min-h-0">
+            <Card className="w-full max-w-2xl bg-card border-border shadow-lg rounded-3xl overflow-hidden flex flex-col">
+              <div className="p-3 sm:p-4 flex flex-col flex-1 min-h-0">
+                <div className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
                   <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">Analytics</h2>
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     {profile && (
@@ -160,12 +160,12 @@ export const TwitterDashboard = ({
                 </div>
                 
                 {/* Performance Metrics - Compact */}
-                <div className="h-[35%] mb-4">
+                <div className="flex-shrink-0 mb-3 sm:mb-4">
                   <TwitterMetrics key={`metrics-${refreshKey}`} ranges={ranges} />
                 </div>
                 
                 {/* Engagement Chart - Larger */}
-                <div className="h-[60%]">
+                <div className="flex-1 min-h-0">
                   <TwitterEngagementChart 
                     key={`chart-${refreshKey}`} 
                     likesRange={ranges?.likes} 
