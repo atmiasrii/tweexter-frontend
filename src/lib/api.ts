@@ -94,6 +94,32 @@ export async function predictEngagement(params: { text: string; followers: numbe
   return normalized as import("../types/prediction").PredictResponse;
 }
 
+function parseVersionedResponse(result: any): string {
+  // Handle versioned response format like {'v2': "text content"}
+  if (typeof result === 'object' && result !== null) {
+    // Look for version keys (v1, v2, v3, etc.)
+    const versionKeys = Object.keys(result).filter(key => /^v\d+$/.test(key));
+    if (versionKeys.length > 0) {
+      // Use the first version key found
+      const versionKey = versionKeys[0];
+      return result[versionKey];
+    }
+    
+    // Fallback: if 'improved_text' exists, use it
+    if (result.improved_text) {
+      return result.improved_text;
+    }
+  }
+  
+  // If it's already a string, return as is
+  if (typeof result === 'string') {
+    return result;
+  }
+  
+  // Last fallback - return the original stringified result
+  return String(result);
+}
+
 export async function improveText(params: { text: string }): Promise<{ improved_text: string }> {
   console.log('🌐 improveText API called with text:', params.text);
   
@@ -123,7 +149,11 @@ export async function improveText(params: { text: string }): Promise<{ improved_
 
   const result = await res.json();
   console.log('📦 API response data:', result);
-  return result;
+  
+  // Parse the versioned response and extract the text content
+  const improvedText = parseVersionedResponse(result);
+  
+  return { improved_text: improvedText };
 }
 
 async function safeJson(r: Response) {
