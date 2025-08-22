@@ -100,22 +100,23 @@ function parseVersionedResponse(result: any): string {
     // Look for version keys (v1, v2, v3, etc.)
     const versionKeys = Object.keys(result).filter(key => /^v\d+$/.test(key));
     if (versionKeys.length > 0) {
-      // Use the first version key found
+      // Return only the text content for the first version key
       const versionKey = versionKeys[0];
-      return result[versionKey];
+      const text = result[versionKey];
+      return typeof text === 'string' ? text : String(text);
     }
-    
+
     // Fallback: if 'improved_text' exists, use it
     if (result.improved_text) {
       return result.improved_text;
     }
   }
-  
+
   // If it's already a string, return as is
   if (typeof result === 'string') {
     return result;
   }
-  
+
   // Last fallback - return the original stringified result
   return String(result);
 }
