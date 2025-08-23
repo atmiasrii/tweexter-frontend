@@ -9,6 +9,7 @@ type State = {
   loading: boolean;
   error: string | null;
   ranges: PredictResponse["ranges"] | null;
+  winnerStats: PredictResponse["ranges"] | null;
 };
 
 type Actions = {
@@ -16,6 +17,7 @@ type Actions = {
   setFollowers: (n: number) => void;
   fetchPrediction: () => Promise<void>;
   clearError: () => void;
+  setWinnerStats: (ranges: PredictResponse["ranges"] | null) => void;
 };
 
 export const usePredictionStore = create<State & Actions>((set, get) => ({
@@ -24,9 +26,11 @@ export const usePredictionStore = create<State & Actions>((set, get) => ({
   loading: false,
   error: null,
   ranges: null,
+  winnerStats: null,
 
   setTweetText: (v) => set({ tweetText: v }),
   setFollowers: (n) => set({ followers: n }),
+  setWinnerStats: (ranges) => set({ winnerStats: ranges }),
 
   fetchPrediction: async () => {
     const { tweetText, followers } = get();

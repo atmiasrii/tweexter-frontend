@@ -23,6 +23,7 @@ interface TwitterComposeProps {
   onPostUpdate?: (updatedContent: string) => void;
   onPredict?: () => void;
   onAnalyticsRefresh?: () => void;
+  onWinnerStats?: (ranges: any) => void;
 }
 
 interface TextSegment {
@@ -41,7 +42,8 @@ export const TwitterCompose = ({
   onFollowersChange,
   onPostUpdate,
   onPredict,
-  onAnalyticsRefresh
+  onAnalyticsRefresh,
+  onWinnerStats
 }: TwitterComposeProps) => {
   const [currentContent, setCurrentContent] = useState(postData.content);
   const [textSegments, setTextSegments] = useState<TextSegment[]>([
@@ -215,9 +217,26 @@ export const TwitterCompose = ({
         onPostUpdate(improvedText);
       }
       
-      // Trigger analytics refresh with animation
+      // Trigger analytics refresh with animation and get new prediction for winner stats
       if (onAnalyticsRefresh) {
         onAnalyticsRefresh();
+      }
+      
+      // Get new prediction stats for the improved text
+      if (onWinnerStats) {
+        console.log('📊 Getting winner stats for improved text...');
+        try {
+          const predictionResponse = await import('@/lib/api').then(api => 
+            api.predictEngagement({ 
+              text: improvedText, 
+              followers: followers || 1000 
+            })
+          );
+          onWinnerStats(predictionResponse.ranges);
+          console.log('✅ Winner stats set:', predictionResponse.ranges);
+        } catch (error) {
+          console.error('❌ Failed to get winner stats:', error);
+        }
       }
       
       console.log('🎉 Text improvement completed successfully!');

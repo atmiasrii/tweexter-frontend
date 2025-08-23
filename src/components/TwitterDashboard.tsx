@@ -37,16 +37,18 @@ export const TwitterDashboard = ({
   const { signOut } = useAuth();
   const { toast } = useToast();
   
-  const {
-    tweetText,
-    followers,
-    setTweetText,
-    setFollowers,
+  const { 
+    tweetText, 
+    setTweetText, 
+    followers, 
+    setFollowers, 
+    loading, 
+    ranges, 
+    winnerStats,
+    setWinnerStats,
     fetchPrediction,
-    loading,
     error,
-    ranges,
-    clearError,
+    clearError
   } = usePredictionStore();
 
   // Initialize followers from profile
@@ -56,7 +58,7 @@ export const TwitterDashboard = ({
     }
   }, [profile?.follower_count, followers, setFollowers]);
 
-  // Show error toast
+// Show error toast
   useEffect(() => {
     if (error) {
       toast({
@@ -135,6 +137,7 @@ export const TwitterDashboard = ({
                 }}
                 onPredict={handlePredict}
                 onAnalyticsRefresh={handleAnalyticsRefresh}
+                onWinnerStats={setWinnerStats}
               />
             </div>
           </div>
@@ -161,7 +164,7 @@ export const TwitterDashboard = ({
                 
                 {/* Performance Metrics - Compact */}
                 <div className="flex-shrink-0 mb-3 sm:mb-4">
-                  <TwitterMetrics key={`metrics-${refreshKey}`} ranges={ranges} />
+                  <TwitterMetrics key={`metrics-${refreshKey}`} ranges={ranges} winnerRanges={winnerStats} />
                 </div>
                 
                 {/* Engagement Chart - Larger */}
