@@ -13,9 +13,10 @@ interface TwitterComposeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onPost: (data: PostData) => void;
+  isPredicting?: boolean;
 }
 
-export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen, onClose, onPost }) => {
+export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = false }: TwitterComposeModalProps) => {
   const [postText, setPostText] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -346,9 +347,9 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
                       strokeWidth="1.5"
                       fill="none"
                       strokeDasharray="37.7"
-                      strokeDashoffset={isUploading ? 37.7 - (uploadProgress / 100) * 37.7 : 25}
-                      strokeLinecap="round"
-                      className={`text-primary transition-all duration-100 ${isUploading ? 'animate-pulse' : ''}`}
+                     strokeDashoffset={isPredicting ? 0 : (isUploading ? 37.7 - (uploadProgress / 100) * 37.7 : 25)}
+                     strokeLinecap="round"
+                     className={`text-primary transition-all duration-300 ${isPredicting ? 'animate-spin' : isUploading ? 'animate-pulse' : ''}`}
                     />
                   </svg>
                 </div>

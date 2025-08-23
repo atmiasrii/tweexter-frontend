@@ -185,6 +185,7 @@ export const TwitterDashboard = ({
         isOpen={isComposeModalOpen}
         onClose={() => setIsComposeModalOpen(false)}
         onPost={handleNewPost}
+        isPredicting={loading}
       />
     </div>
   );
