@@ -22,6 +22,8 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
   const [cursorPosition, setCursorPosition] = useState(0);
   const [selectionStart, setSelectionStart] = useState(0);
   const [selectionEnd, setSelectionEnd] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,9 +142,25 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
     }, 0);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (selectedImages.length + files.length <= 4) {
+      setIsUploading(true);
+      setUploadProgress(0);
+      
+      // Simulate upload progress
+      const interval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            setIsUploading(false);
+            setUploadProgress(0);
+            return 100;
+          }
+          return prev + 10;
+        });
+      }, 100);
+      
       setSelectedImages(prev => [...prev, ...files]);
     }
   };
@@ -328,9 +346,9 @@ export const TwitterComposeModal: React.FC<TwitterComposeModalProps> = ({ isOpen
                       strokeWidth="1.5"
                       fill="none"
                       strokeDasharray="37.7"
-                      strokeDashoffset="25"
+                      strokeDashoffset={isUploading ? 37.7 - (uploadProgress / 100) * 37.7 : 25}
                       strokeLinecap="round"
-                      className="text-primary"
+                      className={`text-primary transition-all duration-100 ${isUploading ? 'animate-pulse' : ''}`}
                     />
                   </svg>
                 </div>
