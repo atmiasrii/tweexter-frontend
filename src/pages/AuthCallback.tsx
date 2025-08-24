@@ -6,23 +6,29 @@ export const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for the auth event triggered by Supabase when it parses the URL tokens
+    // Try to complete any auth flow (OAuth code or magic link) and establish a session
+    (async () => {
+      try {
+        // Handles OAuth code flow if present; harmless if not
+        await supabase.auth.exchangeCodeForSession(window.location.href);
+      } catch (_) {
+        // Ignore; not all flows use code exchange
+      }
+      // After attempting exchange, check for an established session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate("/home", { replace: true });
+      }
+    })();
+
+    // Also listen for any late auth events that might occur after the library parses the URL
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         navigate("/home", { replace: true });
       }
     });
 
-    // Safety: also check once after a short delay in case the event fired before mount
-    const timer = setTimeout(async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/home", { replace: true });
-      }
-    }, 100);
-
     return () => {
-      clearTimeout(timer);
       subscription.unsubscribe();
     };
   }, [navigate]);
