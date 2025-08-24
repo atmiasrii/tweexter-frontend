@@ -51,9 +51,9 @@ export const Login = () => {
     } else {
       toast({
         title: "Account created!",
-        description: "Please check your email to verify your account.",
+        description: "Welcome to your free trial! You can now start using the app.",
       });
-      navigate('/pay');
+      navigate('/home');
     }
     setIsLoading(false);
   };
