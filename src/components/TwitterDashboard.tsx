@@ -46,6 +46,7 @@ export const TwitterDashboard = ({
     ranges, 
     winnerStats,
     setWinnerStats,
+    clearWinnerStats,
     fetchPrediction,
     error,
     clearError
@@ -100,14 +101,23 @@ export const TwitterDashboard = ({
   };
 
   const handleNewPost = async (data: PostData) => {
+    console.log('🆕 New post created, refreshing analytics...');
+    
+    // Clear previous winner stats first
+    clearWinnerStats();
+    
     if (onNewPost) {
       onNewPost(data);
     }
 
     // Update store and trigger prediction
     setTweetText(data.content);
-    await fetchPrediction();
+    
+    // Trigger analytics refresh immediately
     handleAnalyticsRefresh();
+    
+    // Then fetch new prediction
+    await fetchPrediction();
   };
 
   const handlePredict = async () => {
@@ -183,6 +193,8 @@ export const TwitterDashboard = ({
                 onPostUpdate={(content) => {
                   if (onPostUpdate) onPostUpdate(content);
                   setTweetText(content);
+                  // Trigger analytics refresh when post is updated
+                  handleAnalyticsRefresh();
                 }}
                 onPredict={handlePredict}
                 onAnalyticsRefresh={handleAnalyticsRefresh}

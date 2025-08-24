@@ -216,6 +216,12 @@ export const TwitterCompose = ({
     console.log('📝 Original text:', currentContent);
     setIsImproving(true);
     
+    // Clear previous winner stats immediately to prevent confusion
+    if (onWinnerStats) {
+      console.log('🗑️ Clearing previous winner stats...');
+      onWinnerStats(null);
+    }
+    
     try {
       console.log('🌐 Calling improveText API...');
       const response = await improveText({ text: currentContent });
@@ -238,8 +244,9 @@ export const TwitterCompose = ({
         onPostUpdate(improvedText);
       }
       
-      // Trigger analytics refresh with animation and get new prediction for winner stats
+      // Trigger analytics refresh immediately
       if (onAnalyticsRefresh) {
+        console.log('📊 Triggering analytics refresh...');
         onAnalyticsRefresh();
       }
       
@@ -257,6 +264,7 @@ export const TwitterCompose = ({
           console.log('✅ Winner stats set:', predictionResponse.ranges);
         } catch (error) {
           console.error('❌ Failed to get winner stats:', error);
+          // Don't set winner stats if prediction fails
         }
       }
       
@@ -282,6 +290,7 @@ export const TwitterCompose = ({
         onPostUpdate(improvedText);
       }
       
+      // Trigger analytics refresh for fallback too
       if (onAnalyticsRefresh) {
         onAnalyticsRefresh();
       }
@@ -351,13 +360,40 @@ export const TwitterCompose = ({
 
   const handleEditableBlur = () => {
     setIsEditing(false);
+    // Trigger analytics refresh after editing finishes
+    if (onAnalyticsRefresh) {
+      console.log('📝 Text editing finished, refreshing analytics...');
+      onAnalyticsRefresh();
+    }
+    // Clear winner stats when manually editing
+    if (onWinnerStats) {
+      onWinnerStats(null);
+    }
   };
 
   const handleEditableKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Escape') {
       setIsEditing(false);
+      // Trigger analytics refresh when exiting edit mode
+      if (onAnalyticsRefresh) {
+        console.log('⌨️ Escape pressed, refreshing analytics...');
+        onAnalyticsRefresh();
+      }
+      // Clear winner stats when canceling edit
+      if (onWinnerStats) {
+        onWinnerStats(null);
+      }
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       setIsEditing(false);
+      // Trigger analytics refresh when saving with Cmd/Ctrl+Enter
+      if (onAnalyticsRefresh) {
+        console.log('⌨️ Cmd+Enter pressed, refreshing analytics...');
+        onAnalyticsRefresh();
+      }
+      // Clear winner stats when finishing edit via keyboard
+      if (onWinnerStats) {
+        onWinnerStats(null);
+      }
     }
   };
 
