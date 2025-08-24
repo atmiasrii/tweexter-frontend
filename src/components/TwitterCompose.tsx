@@ -370,7 +370,11 @@ export const TwitterCompose = ({
 
   const handleEditableBlur = () => {
     setIsEditing(false);
-    // Trigger analytics refresh after editing finishes
+    // Trigger prediction and analytics refresh after editing finishes
+    if (onPredict) {
+      console.log('🔮 Text editing finished, running prediction...');
+      onPredict();
+    }
     if (onAnalyticsRefresh) {
       console.log('📝 Text editing finished, refreshing analytics...');
       onAnalyticsRefresh();
@@ -384,7 +388,11 @@ export const TwitterCompose = ({
   const handleEditableKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Escape') {
       setIsEditing(false);
-      // Trigger analytics refresh when exiting edit mode
+      // Trigger prediction and analytics refresh when exiting edit mode
+      if (onPredict) {
+        console.log('🔮 Escape pressed, running prediction...');
+        onPredict();
+      }
       if (onAnalyticsRefresh) {
         console.log('⌨️ Escape pressed, refreshing analytics...');
         onAnalyticsRefresh();
@@ -395,7 +403,11 @@ export const TwitterCompose = ({
       }
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       setIsEditing(false);
-      // Trigger analytics refresh when saving with Cmd/Ctrl+Enter
+      // Trigger prediction and analytics refresh when saving with Cmd/Ctrl+Enter
+      if (onPredict) {
+        console.log('🔮 Cmd+Enter pressed, running prediction...');
+        onPredict();
+      }
       if (onAnalyticsRefresh) {
         console.log('⌨️ Cmd+Enter pressed, refreshing analytics...');
         onAnalyticsRefresh();
