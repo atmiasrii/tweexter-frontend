@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Repeat2, Heart, Bookmark, Edit3, Loader2, X, ImageIcon, Smile, MapPin, Calendar, Gift, Hash } from "lucide-react";
+import { MessageCircle, Repeat2, Heart, Bookmark, Edit3, Loader2 } from "lucide-react";
 import { HighlightedText } from "@/components/HighlightedText";
 import { formatTextWithMarkdown } from "@/utils/formatText";
 import { improveText } from "@/lib/api";
@@ -433,8 +433,8 @@ export const TwitterCompose = ({
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <Card className="bg-card border-border shadow-lg rounded-3xl w-full relative">
+    <div className="w-full">
+      <Card className="bg-card border-border shadow-lg rounded-3xl w-full flex flex-col relative">
         {/* Loading overlay */}
         {isImproving && (
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-3xl z-50 flex items-center justify-center">
@@ -444,104 +444,109 @@ export const TwitterCompose = ({
             </div>
           </div>
         )}
-
-        <div className="p-6">
-          <div className="flex gap-4">
-            {/* Avatar */}
-            <Avatar className="w-12 h-12 flex-shrink-0">
-              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-
-            {/* Content area */}
-            <div className="flex-1 min-w-0">
-              <div className="mb-4">
-                {renderContent()}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Main content area with photo and text side by side */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            <div className="flex items-start space-x-3 sm:space-x-4">
+              {/* Avatar */}
+              <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 ring-2 ring-border">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
+                <AvatarFallback className="bg-primary text-primary-foreground text-base sm:text-lg font-medium">DA</AvatarFallback>
+              </Avatar>
+              
+              {/* Text content */}
+              <div className="flex-1 min-w-0">
+                <div className="text-foreground space-y-3">
+                  {renderContent()}
+                  
+                  {/* Display uploaded images after text */}
+                  {postData.images.length > 0 && (
+                    <div className={`grid gap-2 ${
+                      postData.images.length === 1 ? 'grid-cols-1' : 
+                      postData.images.length === 2 ? 'grid-cols-2' : 
+                      'grid-cols-2'
+                    }`}>
+                      {postData.images.map((image, index) => (
+                        <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Post image ${index + 1}`}
+                            className="w-full aspect-square object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-
-              {/* Display uploaded images */}
-              {postData.images.length > 0 && (
-                <div className="mb-4">
-                  <div className={`grid gap-2 ${
-                    postData.images.length === 1 ? 'grid-cols-1' : 
-                    postData.images.length === 2 ? 'grid-cols-2' : 
-                    postData.images.length === 3 ? 'grid-cols-3' :
-                    'grid-cols-2'
-                  } rounded-2xl overflow-hidden border border-border`}>
-                    {postData.images.map((image, index) => (
-                      <div key={index} className="relative">
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={`Upload ${index + 1}`}
-                          className={`w-full object-cover ${
-                            postData.images.length === 1 
-                              ? 'aspect-[16/10] max-h-[400px]' 
-                              : 'aspect-square'
-                          }`}
-                        />
-                      </div>
-                    ))}
+            </div>
+            
+            {/* Bottom sections - Everyone can reply and engagement metrics */}
+            <div className="mt-4 sm:mt-6 space-y-3">
+              {/* Blue globe icon and reply setting */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer touch-manipulation">
+                  <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  <span className="text-primary text-xs sm:text-sm font-normal">Everyone can reply</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-center">
+                <div className="flex items-center justify-between w-full text-muted-foreground px-4 sm:px-8">
+                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-primary transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
+                    <MessageCircle className="h-4 w-4" />
+                    <span className="text-xs sm:text-sm font-medium">{ranges?.replies?.mid || 17}</span>
+                  </div>
+                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-green-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
+                    <Repeat2 className="h-4 w-4" />
+                    <span className="text-xs sm:text-sm font-medium">{ranges?.retweets?.mid || 4}</span>
+                  </div>
+                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-red-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
+                    <Heart className="h-4 w-4" />
+                    <span className="text-xs sm:text-sm font-medium">{ranges?.likes?.mid || 56}</span>
                   </div>
                 </div>
-              )}
-
-              {/* Engagement metrics */}
-              <div className="flex items-center justify-between text-muted-foreground mb-4">
-                <button className="flex items-center gap-2 hover:text-green-500 transition-colors group">
-                  <Repeat2 className="h-4 w-4" />
-                  <span className="text-sm">{ranges?.retweets?.mid || 4}</span>
-                </button>
-                <button className="flex items-center gap-2 hover:text-red-500 transition-colors group">
-                  <Heart className="h-4 w-4" />
-                  <span className="text-sm">{ranges?.likes?.mid || 56}</span>
-                </button>
-                <button className="flex items-center gap-2 hover:text-primary transition-colors group">
-                  <Bookmark className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* Action buttons */}
-              <div className="flex items-center gap-3">
-                {!isEditing && (
-                  <>
-                    <Button
-                      onClick={handleImproveClick}
-                      disabled={isImproving}
-                      variant="outline"
-                      className="rounded-full px-6 py-2 text-sm font-semibold"
-                    >
-                      {isImproving ? (
-                        <div className="flex items-center gap-2">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Tweaking...</span>
-                        </div>
-                      ) : (
-                        "Tweak"
-                      )}
-                    </Button>
-                    
-                    <Button
-                      onClick={handleEditClick}
-                      className="rounded-full px-6 py-2 text-sm font-semibold"
-                    >
-                      <Edit3 className="h-4 w-4 mr-2" />
-                      Edit
-                    </Button>
-                  </>
-                )}
-                
-                {isEditing && (
-                  <Button
-                    onClick={() => setIsEditing(false)}
-                    className="rounded-full px-6 py-2 text-sm font-semibold"
-                  >
-                    Done
-                  </Button>
-                )}
               </div>
             </div>
           </div>
         </div>
+        
+        {/* Fixed buttons at the bottom */}
+        {!isEditing && (
+          <div className="flex-shrink-0 px-3 sm:px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 pt-2">
+              <Button 
+                onClick={handleImproveClick}
+                disabled={isImproving}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                }}
+              >
+                {isImproving ? (
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Tweaking...</span>
+                  </div>
+                ) : (
+                  "Tweak"
+                )}
+              </Button>
+              <Button
+                onClick={handleEditClick}
+                disabled={false}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                }}
+              >
+                Edit
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );

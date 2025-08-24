@@ -172,12 +172,12 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-3xl shadow-xl">
+      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-2xl shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <button 
             onClick={handleClose}
-            className="p-2 hover:bg-secondary rounded-2xl transition-colors"
+            className="p-2 hover:bg-secondary rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-foreground" />
           </button>
@@ -224,7 +224,7 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
                     selectedImages.length === 2 ? 'grid-cols-2' : 
                     selectedImages.length === 3 ? 'grid-cols-3' :
                     'grid-cols-2'
-                  } rounded-3xl overflow-hidden border border-border`}>
+                  } rounded-2xl overflow-hidden border border-border`}>
                     {selectedImages.map((image, index) => (
                       <div key={index} className="relative group">
                         <div className="relative overflow-hidden bg-muted">
@@ -243,7 +243,7 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
                         </div>
                         <button
                           onClick={() => removeImage(index)}
-                          className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-2xl p-1.5 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+                          className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-full p-1.5 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
                           aria-label="Remove image"
                         >
                           <X className="w-3.5 h-3.5" />
@@ -278,51 +278,51 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
                 
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 hover:bg-primary/10 rounded-2xl transition-colors text-primary"
+                  className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary"
                 >
                   <ImageIcon className="w-5 h-5" />
                 </button>
                 
-              <button className="p-2 hover:bg-primary/10 rounded-2xl transition-colors text-primary">
-                <Gift className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-2xl transition-colors text-primary">
-                <Hash className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-2xl transition-colors text-primary">
-                <Smile className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-2xl transition-colors text-primary">
-                <Calendar className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-2xl transition-colors text-primary">
-                <MapPin className="w-5 h-5" />
-              </button>
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Gift className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Hash className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Smile className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Calendar className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <MapPin className="w-5 h-5" />
+                </button>
               </div>
 
             <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-2xl px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
-                >
-                  Promote
-                </Button>
-                
-                <Button
-                  onClick={handlePost}
-                  disabled={isPosting || !postText.trim()}
-                  className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-2xl px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
-                  style={{
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                  }}
-                >
-                  {isPosting ? "Posting..." : "Post"}
-                </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
+              >
+                Promote
+              </Button>
+              
+              <Button
+                onClick={handlePost}
+                disabled={isPosting || !postText.trim()}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                }}
+              >
+                {isPosting ? "Posting..." : "Post"}
+              </Button>
             </div>
           </div>
         </div>
