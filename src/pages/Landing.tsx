@@ -27,12 +27,16 @@ export const Landing = ({ onPost }: LandingProps) => {
     if (postText.trim() && !isPosting) {
       setIsPosting(true);
       
-      // Set tweet text in prediction store and fetch prediction
+      // Store tweet text and run prediction in background
       setTweetText(postText);
-      await fetchPrediction();
+      try {
+        await fetchPrediction();
+      } catch (error) {
+        console.error('Prediction failed:', error);
+      }
       
-      const postData = { content: postText, images: selectedImages };
-      onPost(postData);
+      // Always redirect to login, don't call onPost yet
+      navigate('/login');
       setIsPosting(false);
     }
   };

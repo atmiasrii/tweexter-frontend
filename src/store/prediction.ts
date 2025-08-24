@@ -18,6 +18,7 @@ type Actions = {
   fetchPrediction: () => Promise<void>;
   clearError: () => void;
   setWinnerStats: (ranges: PredictResponse["ranges"] | null) => void;
+  clearPrediction: () => void;
 };
 
 export const usePredictionStore = create<State & Actions>((set, get) => ({
@@ -50,4 +51,10 @@ export const usePredictionStore = create<State & Actions>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+  clearPrediction: () => set({ 
+    tweetText: "", 
+    ranges: null, 
+    winnerStats: null, 
+    error: null 
+  }),
 }));

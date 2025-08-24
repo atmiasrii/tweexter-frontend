@@ -32,7 +32,7 @@ export const Login = () => {
         title: "Welcome back!",
         description: "You've been successfully logged in.",
       });
-      navigate('/home');
+      navigate('/');
     }
     setIsLoading(false);
   };
@@ -53,7 +53,7 @@ export const Login = () => {
         title: "Account created!",
         description: "Welcome to your free trial! You can now start using the app.",
       });
-      navigate('/home');
+      navigate('/');
     }
     setIsLoading(false);
   };

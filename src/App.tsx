@@ -36,8 +36,6 @@ const App = () => {
     },
   }));
 
-  console.log("App component rendering", { queryClient });
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

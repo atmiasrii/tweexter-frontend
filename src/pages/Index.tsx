@@ -5,29 +5,36 @@ import { Landing } from "./Landing";
 import { Home } from "./Home";
 import { useAuth } from "@/hooks/useAuth";
 import { usePost } from "@/hooks/usePost";
+import { usePredictionStore } from "@/store/prediction";
 
 const Index = () => {
   const { user, loading } = useAuth();
   const { postData, hasPost, updatePost, updatePostContent } = usePost();
+  const { tweetText, ranges, clearPrediction } = usePredictionStore();
   const navigate = useNavigate();
 
-  // No need to navigate to /home since Index handles both states
-
+  // Handle post creation from stored prediction data
   const handlePost = (data: { content: string; images: File[] }) => {
     updatePost(data);
-    // After posting, if not authenticated, go to login
-    if (!user) {
-      navigate('/login');
-    }
-    // If authenticated, the component will re-render and show Home automatically
+    // Clear prediction data after using it
+    clearPrediction();
   };
 
-  // Redirect to login if user logs out
+  // Redirect to login if user logs out or not authenticated
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login');
     }
   }, [user, loading, navigate]);
+
+  // When authenticated user comes back from login with stored tweet text
+  useEffect(() => {
+    if (user && tweetText && ranges && !hasPost) {
+      // Auto-create post data from stored prediction
+      const postData = { content: tweetText, images: [] };
+      handlePost(postData);
+    }
+  }, [user, tweetText, ranges, hasPost]);
 
   if (loading) {
     return (
@@ -37,10 +44,14 @@ const Index = () => {
     );
   }
 
-  // Show landing page for:
-  // 1. Unauthenticated users (for signup flow)
-  // 2. Authenticated users without a post (for first tweet)
-  if (!user || !hasPost) {
+  // Redirect unauthenticated users to login
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
+  // Show landing page for authenticated users without a post
+  if (!hasPost) {
     return <Landing onPost={handlePost} />;
   }
 
