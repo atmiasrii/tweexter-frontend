@@ -41,6 +41,17 @@ export const useAuth = () => {
         }
       }
     });
+    
+    // If signup was successful and no email confirmation is required, 
+    // automatically sign in the user
+    if (!error) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      return { error: signInError };
+    }
+    
     return { error };
   };
 
