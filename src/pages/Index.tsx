@@ -17,8 +17,7 @@ const Index = () => {
   const handlePost = (data: { content: string; images: File[] }) => {
     console.log('📝 handlePost called with data:', data);
     updatePost(data);
-    // Clear prediction data after using it
-    clearPrediction();
+    // Don't clear prediction data - keep it for analytics display
   };
 
   // Redirect to login if user logs out or not authenticated

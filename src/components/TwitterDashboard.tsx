@@ -58,6 +58,31 @@ export const TwitterDashboard = ({
     }
   }, [profile?.follower_count, followers, setFollowers]);
 
+  // Auto-fetch prediction for existing post content when component mounts
+  useEffect(() => {
+    const shouldAutoPredict = hasPosted && 
+                             postData.content && 
+                             postData.content.trim() && 
+                             !ranges && 
+                             !loading &&
+                             tweetText !== postData.content;
+                             
+    console.log('🔍 TwitterDashboard - Auto-predict check:', {
+      hasPosted,
+      hasContent: !!postData.content,
+      hasRanges: !!ranges,
+      loading,
+      tweetTextMatches: tweetText === postData.content,
+      shouldAutoPredict
+    });
+
+    if (shouldAutoPredict) {
+      console.log('✅ Auto-running prediction for existing post content:', postData.content);
+      setTweetText(postData.content);
+      setTimeout(() => fetchPrediction(), 100); // Small delay to ensure text is set
+    }
+  }, [hasPosted, postData.content, ranges, loading, tweetText, setTweetText, fetchPrediction]);
+
 // Show error toast
   useEffect(() => {
     if (error) {
