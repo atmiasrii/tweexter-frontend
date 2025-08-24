@@ -172,9 +172,9 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-2xl">
+      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-2xl shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-3 border-b border-border">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <button 
             onClick={handleClose}
             className="p-2 hover:bg-secondary rounded-full transition-colors"
@@ -257,7 +257,7 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
           </div>
 
           {/* Everyone can reply - aligned with avatar */}
-          <div className="flex items-center gap-1 pb-3 border-b border-border">
+          <div className="flex items-center gap-1 mt-4 pb-4 border-b border-border ml-3">
             <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
@@ -265,96 +265,44 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
           </div>
 
           {/* Bottom toolbar - aligned with avatar */}
-          <div className="flex items-center justify-between pt-3">
-            <div className="flex items-center gap-3 flex-1">
-              {/* Existing media buttons */}
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                multiple
-                className="hidden"
-              />
-              
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary"
-              >
-                <ImageIcon className="w-4 h-4" />
-              </button>
-              
-              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                <Gift className="w-4 h-4" />
-              </button>
-              
-              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                <Hash className="w-4 h-4" />
-              </button>
-              
-              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                <Smile className="w-4 h-4" />
-              </button>
-              
-              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                <Calendar className="w-4 h-4" />
-              </button>
-              
-              <button className="p-1.5 hover:bg-primary/10 rounded-full transition-colors text-primary">
-                <MapPin className="w-4 h-4" />
-              </button>
-              
-              {/* Formatting buttons on the right */}
-              <button
-                onClick={toggleBold}
-                className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold ${
-                  isTextBold() 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'hover:bg-primary/10 text-primary'
-                }`}
-              >
-                B
-              </button>
-              
-              <button
-                onClick={toggleItalic}
-                className={`w-7 h-7 flex items-center justify-center rounded transition-colors text-sm font-bold italic ${
-                  isTextItalic() 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'hover:bg-primary/10 text-primary'
-                }`}
-              >
-                I
-              </button>
-              
-              <button className="w-7 h-7 flex items-center justify-center hover:bg-primary/10 rounded transition-colors text-primary">
-                <div className="w-4 h-4 relative">
-                  <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 16 16">
-                    <circle
-                      cx="8"
-                      cy="8"
-                      r="6"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      fill="none"
-                      className="opacity-20"
-                    />
-                    <circle
-                      cx="8"
-                      cy="8"
-                      r="6"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      fill="none"
-                      strokeDasharray="37.7"
-                     strokeDashoffset={isPredicting ? 0 : (isUploading ? 37.7 - (uploadProgress / 100) * 37.7 : 25)}
-                     strokeLinecap="round"
-                     className={`text-primary transition-all duration-300 ${isPredicting ? 'animate-spin' : isUploading ? 'animate-pulse' : ''}`}
-                    />
-                  </svg>
-                </div>
-              </button>
-            </div>
+          <div className="flex items-center justify-between mt-3 ml-3">
+              <div className="flex items-center gap-4">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                />
+                
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary"
+                >
+                  <ImageIcon className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Gift className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Hash className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Smile className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <Calendar className="w-5 h-5" />
+                </button>
+                
+                <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary">
+                  <MapPin className="w-5 h-5" />
+                </button>
+              </div>
 
             <div className="flex items-center gap-3">
               <Button
