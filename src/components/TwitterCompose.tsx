@@ -69,22 +69,22 @@ export const TwitterCompose = ({
 
   // Sync component state when postData.content changes (for new posts)
   useEffect(() => {
-    if (postData.content !== currentContent) {
+    if (postData.content && postData.content !== currentContent && !isEditing) {
       setCurrentContent(postData.content);
       setTextSegments([{ text: postData.content, isImproved: false }]);
       setHasBeenImproved(false);
       setShowFullText(false);
     }
-  }, [postData.content, currentContent]);
+  }, [postData.content, isEditing]);
 
-  // Sync with store's tweetText when editing directly
+  // Sync with store's tweetText when editing directly (but only if no postData.content)
   useEffect(() => {
-    if (tweetText && tweetText !== currentContent && !isEditing) {
+    if (tweetText && tweetText !== currentContent && !postData.content && !isEditing) {
       setCurrentContent(tweetText);
       setTextSegments([{ text: tweetText, isImproved: false }]);
       setHasBeenImproved(false);
     }
-  }, [tweetText, currentContent, isEditing]);
+  }, [tweetText, postData.content, isEditing]);
 
   useEffect(() => {
     if (isEditing && editableRef.current) {
