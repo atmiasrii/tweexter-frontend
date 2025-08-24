@@ -40,7 +40,7 @@ export const Login = () => {
   const handleSignUp = async () => {
     setIsLoading(true);
     const followerCountNum = parseInt(followerCount) || 0;
-    const { error, needsConfirmation } = await signUp(email, password, name, followerCountNum);
+    const { error } = await signUp(email, password, name, followerCountNum);
     
     if (error) {
       toast({
@@ -48,15 +48,10 @@ export const Login = () => {
         description: error.message,
         variant: "destructive",
       });
-    } else if (needsConfirmation) {
-      toast({
-        title: "Check your email!",
-        description: "We sent you a confirmation link. Please check your email and click the link to activate your account.",
-      });
     } else {
       toast({
         title: "Account created!",
-        description: "Welcome to your free trial! You can now start using the app.",
+        description: "Welcome! You've been automatically logged in.",
       });
       navigate('/home');
     }
