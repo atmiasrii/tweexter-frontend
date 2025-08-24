@@ -22,6 +22,13 @@ const Index = () => {
     // If authenticated, the component will re-render and show Home automatically
   };
 
+  // Redirect to login if user logs out
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
+
   if (loading) {
     return (
       <div className="h-screen bg-background flex items-center justify-center">
