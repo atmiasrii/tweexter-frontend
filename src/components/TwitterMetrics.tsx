@@ -18,8 +18,8 @@ export const TwitterMetrics = ({ ranges, winnerRanges }: { ranges?: Ranges; winn
           
           <div className="grid grid-cols-3 gap-4 w-full">
             <RangeStat label="Likes" range={displayRanges?.likes} />
-            <RangeStat label="Retweets" range={displayRanges?.replies} />
-            <RangeStat label="Replies" range={displayRanges?.retweets} />
+            <RangeStat label="Replies" range={displayRanges?.replies} />
+            <RangeStat label="Retweets" range={displayRanges?.retweets} />
           </div>
         </div>
       </Card>
