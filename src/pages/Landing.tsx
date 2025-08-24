@@ -27,9 +27,12 @@ export const Landing = ({ onPost }: LandingProps) => {
     if (postText.trim() && !isPosting) {
       setIsPosting(true);
       
+      console.log('🚀 Landing - storing tweet text:', postText);
+      
       // Store tweet text and run prediction in background
       setTweetText(postText);
       try {
+        console.log('🔮 Landing - fetching prediction for text:', postText);
         await fetchPrediction();
       } catch (error) {
         console.error('Prediction failed:', error);

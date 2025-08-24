@@ -29,12 +29,16 @@ export const usePredictionStore = create<State & Actions>((set, get) => ({
   ranges: null,
   winnerStats: null,
 
-  setTweetText: (v) => set({ tweetText: v }),
+  setTweetText: (v) => {
+    console.log('🔧 PredictionStore - setTweetText called with:', v);
+    set({ tweetText: v });
+  },
   setFollowers: (n) => set({ followers: n }),
   setWinnerStats: (ranges) => set({ winnerStats: ranges }),
 
   fetchPrediction: async () => {
     const { tweetText, followers } = get();
+    console.log('🔮 PredictionStore - fetchPrediction called with tweetText:', tweetText);
     if (!tweetText.trim()) {
       set({ error: "Please enter a post first." });
       return;
@@ -42,8 +46,10 @@ export const usePredictionStore = create<State & Actions>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await predictEngagement({ text: tweetText, followers });
+      console.log('✅ PredictionStore - prediction successful, ranges:', res.ranges);
       set({ ranges: res.ranges });
     } catch (e: any) {
+      console.error('❌ PredictionStore - prediction failed:', e);
       set({ error: e?.message ?? "Prediction failed" });
     } finally {
       set({ loading: false });

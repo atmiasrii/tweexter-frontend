@@ -15,6 +15,7 @@ const Index = () => {
 
   // Handle post creation from stored prediction data
   const handlePost = (data: { content: string; images: File[] }) => {
+    console.log('📝 handlePost called with data:', data);
     updatePost(data);
     // Clear prediction data after using it
     clearPrediction();
@@ -29,7 +30,15 @@ const Index = () => {
 
   // When authenticated user comes back from login with stored tweet text
   useEffect(() => {
+    console.log('🔍 Index useEffect - checking stored prediction data:', {
+      user: !!user,
+      tweetText,
+      ranges: !!ranges,
+      hasPost
+    });
+    
     if (user && tweetText && ranges && !hasPost) {
+      console.log('✅ Creating post from stored data - tweetText:', tweetText);
       // Auto-create post data from stored prediction
       const postData = { content: tweetText, images: [] };
       handlePost(postData);
