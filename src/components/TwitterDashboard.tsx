@@ -129,6 +129,7 @@ export const TwitterDashboard = ({
                 tweetText={tweetText}
                 followers={followers}
                 loading={loading}
+                ranges={ranges}
                 onTweetTextChange={setTweetText}
                 onFollowersChange={setFollowers}
                 onPostUpdate={(content) => {

@@ -18,6 +18,11 @@ interface TwitterComposeProps {
   tweetText?: string;
   followers?: number;
   loading?: boolean;
+  ranges?: {
+    likes: { low: number; mid: number; high: number };
+    retweets: { low: number; mid: number; high: number };
+    replies: { low: number; mid: number; high: number };
+  } | null;
   onTweetTextChange?: (text: string) => void;
   onFollowersChange?: (followers: number) => void;
   onPostUpdate?: (updatedContent: string) => void;
@@ -38,6 +43,7 @@ export const TwitterCompose = ({
   tweetText = "",
   followers = 1000,
   loading = false,
+  ranges = null,
   onTweetTextChange,
   onFollowersChange,
   onPostUpdate,
@@ -491,15 +497,15 @@ export const TwitterCompose = ({
                 <div className="flex items-center justify-between w-full text-muted-foreground px-4 sm:px-8">
                   <div className="flex items-center space-x-1 sm:space-x-2 hover:text-primary transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
                     <MessageCircle className="h-4 w-4" />
-                    <span className="text-xs sm:text-sm font-medium">17</span>
+                    <span className="text-xs sm:text-sm font-medium">{ranges?.replies?.mid || 17}</span>
                   </div>
                   <div className="flex items-center space-x-1 sm:space-x-2 hover:text-green-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
                     <Repeat2 className="h-4 w-4" />
-                    <span className="text-xs sm:text-sm font-medium">4</span>
+                    <span className="text-xs sm:text-sm font-medium">{ranges?.retweets?.mid || 4}</span>
                   </div>
                   <div className="flex items-center space-x-1 sm:space-x-2 hover:text-red-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
                     <Heart className="h-4 w-4" />
-                    <span className="text-xs sm:text-sm font-medium">56</span>
+                    <span className="text-xs sm:text-sm font-medium">{ranges?.likes?.mid || 56}</span>
                   </div>
                 </div>
               </div>
