@@ -433,11 +433,11 @@ export const TwitterCompose = ({
   };
 
   return (
-    <div className="w-full">
-      <div className="bg-background rounded-2xl w-full shadow-xl border border-border relative">
+    <div className="w-full flex items-center justify-center">
+      <Card className="bg-card border-border shadow-lg rounded-3xl w-full relative">
         {/* Loading overlay */}
         {isImproving && (
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-2xl z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-3xl z-50 flex items-center justify-center">
             <div className="flex flex-col items-center space-y-3">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p className="text-sm text-muted-foreground font-medium">Improving your text...</p>
@@ -445,182 +445,108 @@ export const TwitterCompose = ({
           </div>
         )}
 
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <div className="p-2 hover:bg-secondary rounded-full transition-colors opacity-50 cursor-not-allowed">
-            <X className="w-5 h-5 text-foreground" />
-          </div>
-          <Button
-            variant="ghost"
-            className="text-primary hover:text-primary font-normal text-[15px] px-0"
-          >
-            {isEditing ? "Editing" : "Published"}
-          </Button>
-        </div>
-
-        {/* Main compose area */}
-        <div className="p-4">
-          <div className="flex gap-3 mb-4">
+        <div className="p-6">
+          <div className="flex gap-4">
             {/* Avatar */}
-            <Avatar className="w-10 h-10 flex-shrink-0">
-              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" />
+            <Avatar className="w-12 h-12 flex-shrink-0">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
 
-            {/* Text area and content */}
-            <div className="flex-1 min-h-0">
-              {isEditing ? (
-                <div
-                  ref={editableRef}
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  onInput={handleEditableInput}
-                  onBlur={handleEditableBlur}
-                  onKeyDown={handleEditableKeyDown}
-                  className="w-full text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground cursor-text"
-                  style={{
-                    fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
-                  }}
-                  dangerouslySetInnerHTML={{ __html: currentContent }}
-                />
-              ) : (
-                <div className="w-full text-xl bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground">
-                  {renderContent()}
-                </div>
-              )}
+            {/* Content area */}
+            <div className="flex-1 min-w-0">
+              <div className="mb-4">
+                {renderContent()}
+              </div>
 
-              {/* Display uploaded images after text */}
+              {/* Display uploaded images */}
               {postData.images.length > 0 && (
-                <div className="mt-3">
-                  <div className={`grid gap-1 ${
+                <div className="mb-4">
+                  <div className={`grid gap-2 ${
                     postData.images.length === 1 ? 'grid-cols-1' : 
                     postData.images.length === 2 ? 'grid-cols-2' : 
                     postData.images.length === 3 ? 'grid-cols-3' :
                     'grid-cols-2'
                   } rounded-2xl overflow-hidden border border-border`}>
                     {postData.images.map((image, index) => (
-                      <div key={index} className="relative group">
-                        <div className="relative overflow-hidden bg-muted">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`Upload ${index + 1}`}
-                            className={`w-full object-cover transition-transform group-hover:scale-105 ${
-                              postData.images.length === 1 
-                                ? 'aspect-[16/10] max-h-[400px]' 
-                                : postData.images.length === 2
-                                ? 'aspect-square'
-                                : 'aspect-square'
-                            }`}
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                        </div>
+                      <div key={index} className="relative">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Upload ${index + 1}`}
+                          className={`w-full object-cover ${
+                            postData.images.length === 1 
+                              ? 'aspect-[16/10] max-h-[400px]' 
+                              : 'aspect-square'
+                          }`}
+                        />
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-            </div>
-          </div>
 
-          {/* Everyone can reply - aligned with avatar */}
-          <div className="flex items-center gap-1 mt-4 pb-4 border-b border-border ml-3">
-            <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-            <span className="text-primary text-[15px] font-normal">Everyone can reply</span>
-          </div>
+              {/* Engagement metrics */}
+              <div className="flex items-center gap-6 text-muted-foreground mb-4">
+                <button className="flex items-center gap-2 hover:text-primary transition-colors group">
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="text-sm">{ranges?.replies?.mid || 17}</span>
+                </button>
+                <button className="flex items-center gap-2 hover:text-green-500 transition-colors group">
+                  <Repeat2 className="h-4 w-4" />
+                  <span className="text-sm">{ranges?.retweets?.mid || 4}</span>
+                </button>
+                <button className="flex items-center gap-2 hover:text-red-500 transition-colors group">
+                  <Heart className="h-4 w-4" />
+                  <span className="text-sm">{ranges?.likes?.mid || 56}</span>
+                </button>
+                <button className="flex items-center gap-2 hover:text-primary transition-colors group">
+                  <Bookmark className="h-4 w-4" />
+                </button>
+              </div>
 
-          {/* Engagement metrics */}
-          <div className="flex items-center justify-between w-full text-muted-foreground px-4 mt-3 mb-4">
-            <div className="flex items-center space-x-1 hover:text-primary transition-colors cursor-pointer p-2 -m-2 rounded-full hover:bg-muted/20">
-              <MessageCircle className="h-4 w-4" />
-              <span className="text-sm font-medium">{ranges?.replies?.mid || 17}</span>
-            </div>
-            <div className="flex items-center space-x-1 hover:text-green-500 transition-colors cursor-pointer p-2 -m-2 rounded-full hover:bg-muted/20">
-              <Repeat2 className="h-4 w-4" />
-              <span className="text-sm font-medium">{ranges?.retweets?.mid || 4}</span>
-            </div>
-            <div className="flex items-center space-x-1 hover:text-red-500 transition-colors cursor-pointer p-2 -m-2 rounded-full hover:bg-muted/20">
-              <Heart className="h-4 w-4" />
-              <span className="text-sm font-medium">{ranges?.likes?.mid || 56}</span>
-            </div>
-          </div>
-
-          {/* Bottom toolbar - aligned with avatar */}
-          <div className="flex items-center justify-between mt-3 ml-3">
-            <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary opacity-50 cursor-not-allowed">
-                <ImageIcon className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary opacity-50 cursor-not-allowed">
-                <Gift className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary opacity-50 cursor-not-allowed">
-                <Hash className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary opacity-50 cursor-not-allowed">
-                <Smile className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary opacity-50 cursor-not-allowed">
-                <Calendar className="w-5 h-5" />
-              </button>
-              
-              <button className="p-2 hover:bg-primary/10 rounded-full transition-colors text-primary opacity-50 cursor-not-allowed">
-                <MapPin className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {!isEditing && (
-                <>
+              {/* Action buttons */}
+              <div className="flex items-center gap-3">
+                {!isEditing && (
+                  <>
+                    <Button
+                      onClick={handleImproveClick}
+                      disabled={isImproving}
+                      variant="outline"
+                      className="rounded-full px-6 py-2 text-sm font-semibold"
+                    >
+                      {isImproving ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Tweaking...</span>
+                        </div>
+                      ) : (
+                        "Tweak"
+                      )}
+                    </Button>
+                    
+                    <Button
+                      onClick={handleEditClick}
+                      className="rounded-full px-6 py-2 text-sm font-semibold"
+                    >
+                      <Edit3 className="h-4 w-4 mr-2" />
+                      Edit
+                    </Button>
+                  </>
+                )}
+                
+                {isEditing && (
                   <Button
-                    onClick={handleImproveClick}
-                    disabled={isImproving}
-                    variant="outline"
-                    size="sm"
-                    className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
+                    onClick={() => setIsEditing(false)}
+                    className="rounded-full px-6 py-2 text-sm font-semibold"
                   >
-                    {isImproving ? (
-                      <div className="flex items-center space-x-1">
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                        <span>Tweaking...</span>
-                      </div>
-                    ) : (
-                      "Tweak"
-                    )}
+                    Done
                   </Button>
-                  
-                  <Button
-                    onClick={handleEditClick}
-                    className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
-                    style={{
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </>
-              )}
-              
-              {isEditing && (
-                <Button
-                  onClick={() => setIsEditing(false)}
-                  className="bg-foreground hover:bg-foreground/90 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
-                  style={{
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                  }}
-                >
-                  Done
-                </Button>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
