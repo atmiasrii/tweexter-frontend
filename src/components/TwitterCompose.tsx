@@ -486,11 +486,7 @@ export const TwitterCompose = ({
               )}
 
               {/* Engagement metrics */}
-              <div className="flex items-center gap-6 text-muted-foreground mb-4">
-                <button className="flex items-center gap-2 hover:text-primary transition-colors group">
-                  <MessageCircle className="h-4 w-4" />
-                  <span className="text-sm">{ranges?.replies?.mid || 17}</span>
-                </button>
+              <div className="flex items-center justify-between text-muted-foreground mb-4">
                 <button className="flex items-center gap-2 hover:text-green-500 transition-colors group">
                   <Repeat2 className="h-4 w-4" />
                   <span className="text-sm">{ranges?.retweets?.mid || 4}</span>
