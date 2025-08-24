@@ -96,25 +96,48 @@ export async function predictEngagement(params: { text: string; followers: numbe
 
 function parseVersionedResponse(result: any): string {
   // Handle versioned response format like {'v2': "text content"}
-  if (typeof result === 'object' && result !== null) {
+  let processedResult = result;
+  
+  // If result is a string that looks like stringified JSON, try to parse it
+  if (typeof result === 'string') {
+    try {
+      // Check if it looks like a stringified versioned response
+      if (result.includes("'v") || result.includes('"v')) {
+        processedResult = JSON.parse(result.replace(/'/g, '"'));
+      } else {
+        // Clean any version wrapper patterns from string
+        const versionPattern = /^\{'v\d+'\s*:\s*'(.+)'\}$|^\{"v\d+"\s*:\s*"(.+)"\}$/;
+        const match = result.match(versionPattern);
+        if (match) {
+          return match[1] || match[2];
+        }
+        return result;
+      }
+    } catch {
+      // If parsing fails, clean any obvious version wrapper patterns
+      const cleaned = result
+        .replace(/^\{'v\d+'\s*:\s*'/, '')
+        .replace(/'\}$/, '')
+        .replace(/^\{"v\d+"\s*:\s*"/, '')
+        .replace(/"\}$/, '');
+      return cleaned !== result ? cleaned : result;
+    }
+  }
+  
+  if (typeof processedResult === 'object' && processedResult !== null) {
     // Look for version keys (v1, v2, v3, etc.)
-    const versionKeys = Object.keys(result).filter(key => /^v\d+$/.test(key));
+    const versionKeys = Object.keys(processedResult).filter(key => /^v\d+$/.test(key));
     if (versionKeys.length > 0) {
       // Return only the text content for the first version key
       const versionKey = versionKeys[0];
-      const text = result[versionKey];
+      const text = processedResult[versionKey];
       return typeof text === 'string' ? text : String(text);
     }
 
     // Fallback: if 'improved_text' exists, use it
-    if (result.improved_text) {
-      return result.improved_text;
+    if (processedResult.improved_text) {
+      return processedResult.improved_text;
     }
-  }
-
-  // If it's already a string, return as is
-  if (typeof result === 'string') {
-    return result;
   }
 
   // Last fallback - return the original stringified result

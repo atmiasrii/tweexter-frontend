@@ -107,6 +107,20 @@ export const TwitterCompose = ({
     );
   }
 
+  // Utility to strip version wrapper format as failsafe
+  const stripVersionWrapper = (text: string): string => {
+    if (!text || typeof text !== 'string') return text;
+    
+    // Remove patterns like {'v2': 'text'} or {"v2": "text"}
+    const versionPattern = /^\{'v\d+'\s*:\s*'(.+)'\}$|^\{"v\d+"\s*:\s*"(.+)"\}$/;
+    const match = text.match(versionPattern);
+    if (match) {
+      return match[1] || match[2];
+    }
+    
+    return text;
+  };
+
   const generateImprovedText = (originalText: string): string => {
     const improvements = [
       { original: "built", improved: "developed" },
@@ -199,7 +213,8 @@ export const TwitterCompose = ({
     try {
       console.log('🌐 Calling improveText API...');
       const response = await improveText({ text: currentContent });
-      const improvedText = response.improved_text;
+      const rawImprovedText = response.improved_text;
+      const improvedText = stripVersionWrapper(rawImprovedText);
       console.log('✅ API response received:', improvedText);
       
       // Replace entire text content
