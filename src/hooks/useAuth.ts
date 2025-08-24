@@ -30,7 +30,7 @@ export const useAuth = () => {
   const signUp = async (email: string, password: string, displayName?: string, followerCount?: number) => {
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -42,17 +42,17 @@ export const useAuth = () => {
       }
     });
     
-    // If signup was successful and no email confirmation is required, 
-    // automatically sign in the user
-    if (!error) {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-      return { error: signInError };
+    // If signup was successful but user needs to confirm email
+    if (!error && data.user && !data.session) {
+      return { error: null, needsConfirmation: true };
     }
     
-    return { error };
+    // If signup was successful and user is automatically signed in
+    if (!error && data.session) {
+      return { error: null, needsConfirmation: false };
+    }
+    
+    return { error, needsConfirmation: false };
   };
 
   const signIn = async (email: string, password: string) => {

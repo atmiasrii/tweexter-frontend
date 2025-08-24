@@ -40,13 +40,18 @@ export const Login = () => {
   const handleSignUp = async () => {
     setIsLoading(true);
     const followerCountNum = parseInt(followerCount) || 0;
-    const { error } = await signUp(email, password, name, followerCountNum);
+    const { error, needsConfirmation } = await signUp(email, password, name, followerCountNum);
     
     if (error) {
       toast({
         title: "Sign up failed",
         description: error.message,
         variant: "destructive",
+      });
+    } else if (needsConfirmation) {
+      toast({
+        title: "Check your email!",
+        description: "We sent you a confirmation link. Please check your email and click the link to activate your account.",
       });
     } else {
       toast({
