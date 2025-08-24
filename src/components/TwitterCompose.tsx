@@ -117,11 +117,20 @@ export const TwitterCompose = ({
   const stripVersionWrapper = (text: string): string => {
     if (!text || typeof text !== 'string') return text;
     
-    // Remove patterns like {'v2': 'text'} or {"v2": "text"}
-    const versionPattern = /^\{'v\d+'\s*:\s*'(.+)'\}$|^\{"v\d+"\s*:\s*"(.+)"\}$/;
-    const match = text.match(versionPattern);
-    if (match) {
-      return match[1] || match[2];
+    // Remove patterns like {'v2': 'text'}, {"v2": "text"}, {'v2': "text"}, {"v2": 'text'}
+    // Handle any combination of quotes and any version number
+    const versionPatterns = [
+      /^\{\s*'v\d+'\s*:\s*'(.+?)'\s*\}$/,  // {'v2': 'text'}
+      /^\{\s*"v\d+"\s*:\s*"(.+?)"\s*\}$/,  // {"v2": "text"}
+      /^\{\s*'v\d+'\s*:\s*"(.+?)"\s*\}$/,  // {'v2': "text"}
+      /^\{\s*"v\d+"\s*:\s*'(.+?)'\s*\}$/,  // {"v2": 'text'}
+    ];
+    
+    for (const pattern of versionPatterns) {
+      const match = text.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
     }
     
     return text;
