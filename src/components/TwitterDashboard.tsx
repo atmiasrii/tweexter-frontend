@@ -232,7 +232,8 @@ export const TwitterDashboard = ({
                 <div className="flex-1 min-h-0">
                   <TwitterEngagementChart 
                     key={`chart-${refreshKey}`} 
-                    likesRange={ranges?.likes} 
+                    ranges={ranges}
+                    winnerRanges={winnerStats}
                   />
                 </div>
               </div>
