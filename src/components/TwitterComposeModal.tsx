@@ -172,7 +172,7 @@ export const TwitterComposeModal = ({ isOpen, onClose, onPost, isPredicting = fa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-2xl shadow-xl">
+      <DialogContent className="max-w-[600px] p-0 gap-0 bg-background border-border [&>button[aria-label='Close']]:hidden rounded-3xl shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <button 
