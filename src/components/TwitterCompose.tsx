@@ -272,7 +272,8 @@ export const TwitterCompose = ({
     } catch (error) {
       console.error('❌ Failed to improve text:', error);
       // Fallback to mock improvement if API fails
-      const improvedText = generateImprovedText(currentContent);
+      const rawImprovedText = generateImprovedText(currentContent);
+      const improvedText = stripVersionWrapper(rawImprovedText);
       console.log('🔄 Using fallback improvement:', improvedText);
       
       // Replace entire text content
