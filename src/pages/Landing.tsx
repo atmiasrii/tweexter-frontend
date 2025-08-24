@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { X, ImageIcon, Smile, MapPin, Calendar, BarChart3, Gift, Hash } from "lucide-react";
 import { TwitterDashboard } from "@/components/TwitterDashboard";
+import { usePredictionStore } from "@/store/prediction";
 
 interface PostData {
   content: string;
@@ -20,11 +21,16 @@ export const Landing = ({ onPost }: LandingProps) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const { setTweetText, fetchPrediction } = usePredictionStore();
 
   const handlePost = async () => {
     if (postText.trim() && !isPosting) {
       setIsPosting(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Set tweet text in prediction store and fetch prediction
+      setTweetText(postText);
+      await fetchPrediction();
+      
       const postData = { content: postText, images: selectedImages };
       onPost(postData);
       setIsPosting(false);
