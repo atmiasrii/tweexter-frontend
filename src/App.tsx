@@ -11,6 +11,7 @@ import { Login } from "./pages/Login";
 import { Pay } from "./pages/Pay";
 import { Waitlist } from "./pages/Waitlist";
 import NotFound from "./pages/NotFound";
+import { AuthCallback } from "./pages/AuthCallback";
 
 // Landing page wrapper component
 const LandingWrapper = () => {
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/home" element={<Index />} />
             <Route path="/landing" element={<LandingWrapper />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/pay" element={<Pay />} />
             <Route path="/waitlist" element={<Waitlist />} />
             <Route path="*" element={<NotFound />} />
