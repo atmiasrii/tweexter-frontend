@@ -89,7 +89,6 @@ export const TwitterCompose = ({
   useEffect(() => {
     if (isEditing && editableRef.current) {
       editableRef.current.focus();
-      // Restore cursor position after edit
       const range = document.createRange();
       const selection = window.getSelection();
       const textNode = editableRef.current.firstChild;
@@ -113,12 +112,10 @@ export const TwitterCompose = ({
     );
   }
 
-  // Utility to strip version wrapper format as failsafe
   const stripVersionWrapper = (text: string): string => {
     if (!text || typeof text !== 'string') return text;
     
-    // Remove patterns like {'v2': 'text'} or {"v2": "text"}
-    const versionPattern = /^\{'v\d+'\s*:\s*'(.+)'\}$|^\{"v\d+"\s*:\s*"(.+)"\}$/;
+    const versionPattern = /^\{'v\d+'\s*:\s*'(.+)'\}$|^\{\"v\d+\"\s*:\s*\"(.+)\"\}$/;
     const match = text.match(versionPattern);
     if (match) {
       return match[1] || match[2];
@@ -160,7 +157,6 @@ export const TwitterCompose = ({
       if (originalIndex < originalWords.length && 
           improvedIndex < improvedWords.length && 
           originalWords[originalIndex] === improvedWords[improvedIndex]) {
-        // Words are the same
         segments.push({
           text: originalWords[originalIndex],
           isImproved: false
@@ -168,14 +164,11 @@ export const TwitterCompose = ({
         originalIndex++;
         improvedIndex++;
       } else {
-        // Find the next matching point or handle differences
         let foundMatch = false;
         
-        // Look for next matching word
         for (let i = improvedIndex; i < improvedWords.length; i++) {
           if (originalIndex < originalWords.length && 
               originalWords[originalIndex] === improvedWords[i]) {
-            // Found match, everything before is an improvement
             const improvedSegment = improvedWords.slice(improvedIndex, i).join('');
             if (improvedSegment.trim()) {
               segments.push({
@@ -191,7 +184,6 @@ export const TwitterCompose = ({
         }
         
         if (!foundMatch) {
-          // Handle remaining text
           if (improvedIndex < improvedWords.length) {
             const remainingImproved = improvedWords.slice(improvedIndex).join('');
             const remainingOriginal = originalIndex < originalWords.length ? 
@@ -223,12 +215,10 @@ export const TwitterCompose = ({
       const improvedText = stripVersionWrapper(rawImprovedText);
       console.log('✅ API response received:', improvedText);
       
-      // Replace entire text content
       setTextSegments([{ text: improvedText, isImproved: false }]);
       setCurrentContent(improvedText);
       setHasBeenImproved(false);
       
-      // Sync with store to ensure text appears in the field
       if (onTweetTextChange) {
         console.log('🔄 Syncing improved text with store...');
         onTweetTextChange(improvedText);
@@ -238,12 +228,10 @@ export const TwitterCompose = ({
         onPostUpdate(improvedText);
       }
       
-      // Trigger analytics refresh with animation and get new prediction for winner stats
       if (onAnalyticsRefresh) {
         onAnalyticsRefresh();
       }
       
-      // Get new prediction stats for the improved text
       if (onWinnerStats) {
         console.log('📊 Getting winner stats for improved text...');
         try {
@@ -263,16 +251,13 @@ export const TwitterCompose = ({
       console.log('🎉 Text improvement completed successfully!');
     } catch (error) {
       console.error('❌ Failed to improve text:', error);
-      // Fallback to mock improvement if API fails
       const improvedText = generateImprovedText(currentContent);
       console.log('🔄 Using fallback improvement:', improvedText);
       
-      // Replace entire text content
       setTextSegments([{ text: improvedText, isImproved: false }]);
       setCurrentContent(improvedText);
       setHasBeenImproved(false);
       
-      // Sync with store to ensure text appears in the field
       if (onTweetTextChange) {
         console.log('🔄 Syncing fallback text with store...');
         onTweetTextChange(improvedText);
@@ -310,12 +295,10 @@ export const TwitterCompose = ({
   const handlePost = async () => {
     setIsPosting(true);
     
-    // Simulate posting delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     setIsPosting(false);
     
-    // Trigger analytics refresh
     if (onAnalyticsRefresh) {
       onAnalyticsRefresh();
     }
@@ -327,7 +310,6 @@ export const TwitterCompose = ({
 
   const handleEditableInput = () => {
     if (editableRef.current) {
-      // Save cursor position before updating content
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
@@ -339,7 +321,6 @@ export const TwitterCompose = ({
       setTextSegments([{ text: newContent, isImproved: false }]);
       setHasBeenImproved(false);
       
-      // Update both callbacks
       if (onPostUpdate) {
         onPostUpdate(newContent);
       }
@@ -410,7 +391,7 @@ export const TwitterCompose = ({
       });
 
     return (
-      <div className="text-sm sm:text-[15px] leading-5 font-normal">
+      <div className="text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground">
         {content}
         {shouldTruncateText() && (
           <button
@@ -434,119 +415,166 @@ export const TwitterCompose = ({
 
   return (
     <div className="w-full">
-      <Card className="bg-card border-border shadow-lg rounded-3xl w-full flex flex-col relative">
+      <Card className="bg-background border-border shadow-xl rounded-2xl w-full flex flex-col relative p-0 gap-0">
         {/* Loading overlay */}
         {isImproving && (
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-3xl z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-2xl z-50 flex items-center justify-center">
             <div className="flex flex-col items-center space-y-3">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p className="text-sm text-muted-foreground font-medium">Improving your text...</p>
             </div>
           </div>
         )}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Main content area with photo and text side by side */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-            <div className="flex items-start space-x-3 sm:space-x-4">
-              {/* Avatar */}
-              <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 ring-2 ring-border">
-                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" />
-                <AvatarFallback className="bg-primary text-primary-foreground text-base sm:text-lg font-medium">DA</AvatarFallback>
-              </Avatar>
-              
-              {/* Text content */}
-              <div className="flex-1 min-w-0">
-                <div className="text-foreground space-y-3">
-                  {renderContent()}
-                  
-                  {/* Display uploaded images after text */}
-                  {postData.images.length > 0 && (
-                    <div className={`grid gap-2 ${
-                      postData.images.length === 1 ? 'grid-cols-1' : 
-                      postData.images.length === 2 ? 'grid-cols-2' : 
-                      'grid-cols-2'
-                    }`}>
-                      {postData.images.map((image, index) => (
-                        <div key={index} className="relative overflow-hidden rounded-2xl border border-border">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleEditClick}
+            className="text-muted-foreground hover:text-foreground p-2 h-auto"
+            disabled={isEditing}
+          >
+            <Edit3 className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            className="text-primary hover:text-primary font-normal text-[15px] px-0"
+          >
+            Drafts
+          </Button>
+        </div>
+
+        {/* Main compose area */}
+        <div className="p-4">
+          <div className="flex gap-3 mb-4">
+            {/* Avatar */}
+            <Avatar className="w-10 h-10 flex-shrink-0">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+
+            {/* Text area and content */}
+            <div className="flex-1 min-h-0">
+              <div 
+                className="text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[120px] font-normal text-foreground"
+                style={{
+                  fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+                }}
+              >
+                {renderContent()}
+              </div>
+
+              {/* Image previews */}
+              {postData.images.length > 0 && (
+                <div className="mt-3">
+                  <div className={`grid gap-1 ${
+                    postData.images.length === 1 ? 'grid-cols-1' : 
+                    postData.images.length === 2 ? 'grid-cols-2' : 
+                    postData.images.length === 3 ? 'grid-cols-3' :
+                    'grid-cols-2'
+                  } rounded-2xl overflow-hidden border border-border`}>
+                    {postData.images.map((image, index) => (
+                      <div key={index} className="relative group">
+                        <div className="relative overflow-hidden bg-muted">
                           <img
                             src={URL.createObjectURL(image)}
-                            alt={`Post image ${index + 1}`}
-                            className="w-full aspect-square object-cover"
+                            alt={`Upload ${index + 1}`}
+                            className={`w-full object-cover transition-transform group-hover:scale-105 ${
+                              postData.images.length === 1 
+                                ? 'aspect-[16/10] max-h-[400px]' 
+                                : postData.images.length === 2
+                                ? 'aspect-square'
+                                : 'aspect-square'
+                            }`}
                           />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-            
-            {/* Bottom sections - Everyone can reply and engagement metrics */}
-            <div className="mt-4 sm:mt-6 space-y-3">
-              {/* Blue globe icon and reply setting */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 hover:bg-muted/50 rounded-full px-2 py-1 -mx-2 transition-colors cursor-pointer touch-manipulation">
-                  <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                  <span className="text-primary text-xs sm:text-sm font-normal">Everyone can reply</span>
-                </div>
-              </div>
+          </div>
+
+          {/* Everyone can reply - aligned with avatar */}
+          <div className="flex items-center gap-1 mt-4 pb-4 border-b border-border ml-3">
+            <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span className="text-primary text-[15px] font-normal">Everyone can reply</span>
+          </div>
+
+          {/* Bottom toolbar - aligned with avatar */}
+          <div className="flex items-center justify-between mt-3 ml-3">
+            {/* Engagement Metrics Row */}
+            <div className="flex items-center justify-between flex-1 space-x-6 mr-6">
+              {/* Retweet */}
+              <button className="group flex items-center space-x-2 text-muted-foreground hover:text-green-600 transition-colors p-2 -m-2 rounded-full hover:bg-green-50">
+                <Repeat2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-medium group-hover:font-semibold">
+                  {ranges?.retweets ? 
+                    `${ranges.retweets.low}–${ranges.retweets.high}` : 
+                    `${Math.floor(Math.random() * 50) + 10}`
+                  }
+                </span>
+              </button>
               
-              <div className="flex items-center justify-center">
-                <div className="flex items-center justify-between w-full text-muted-foreground px-4 sm:px-8">
-                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-primary transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
-                    <MessageCircle className="h-4 w-4" />
-                    <span className="text-xs sm:text-sm font-medium">{ranges?.replies?.mid || 17}</span>
-                  </div>
-                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-green-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
-                    <Repeat2 className="h-4 w-4" />
-                    <span className="text-xs sm:text-sm font-medium">{ranges?.retweets?.mid || 4}</span>
-                  </div>
-                  <div className="flex items-center space-x-1 sm:space-x-2 hover:text-red-500 transition-colors cursor-pointer touch-manipulation p-2 -m-2 rounded-full hover:bg-muted/20">
-                    <Heart className="h-4 w-4" />
-                    <span className="text-xs sm:text-sm font-medium">{ranges?.likes?.mid || 56}</span>
-                  </div>
-                </div>
-              </div>
+              {/* Like */}
+              <button className="group flex items-center space-x-2 text-muted-foreground hover:text-red-600 transition-colors p-2 -m-2 rounded-full hover:bg-red-50">
+                <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-medium group-hover:font-semibold">
+                  {ranges?.likes ? 
+                    `${ranges.likes.low}–${ranges.likes.high}` : 
+                    `${Math.floor(Math.random() * 200) + 50}`
+                  }
+                </span>
+              </button>
+              
+              {/* Bookmark */}
+              <button className="group flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors p-2 -m-2 rounded-full hover:bg-primary/10">
+                <Bookmark className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-medium group-hover:font-semibold">
+                  {ranges?.replies ? 
+                    `${ranges.replies.low}–${ranges.replies.high}` : 
+                    `${Math.floor(Math.random() * 30) + 5}`
+                  }
+                </span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button 
+                onClick={handleImproveClick} 
+                variant="outline" 
+                size="sm"
+                disabled={isImproving || !currentContent.trim()}
+                className="rounded-full px-4 py-1.5 text-[15px] font-bold border-border text-foreground hover:bg-secondary"
+              >
+                {isImproving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Tweaking...
+                  </>
+                ) : (
+                  'Promote'
+                )}
+              </Button>
+              
+              <Button 
+                onClick={handlePost}
+                disabled={isPosting || !currentContent.trim()}
+                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-6 py-1.5 text-[15px] font-bold min-w-[60px] h-8"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                }}
+              >
+                {isPosting ? "Posting..." : "Post"}
+              </Button>
             </div>
           </div>
         </div>
-        
-        {/* Fixed buttons at the bottom */}
-        {!isEditing && (
-          <div className="flex-shrink-0 px-3 sm:px-4 pb-3 border-t border-border/50 bg-card/80 backdrop-blur-sm rounded-b-3xl">
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 pt-2">
-              <Button 
-                onClick={handleImproveClick}
-                disabled={isImproving}
-                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
-                style={{
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                }}
-              >
-                {isImproving ? (
-                  <div className="flex items-center space-x-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Tweaking...</span>
-                  </div>
-                ) : (
-                  "Tweak"
-                )}
-              </Button>
-              <Button
-                onClick={handleEditClick}
-                disabled={false}
-                className="bg-foreground hover:bg-foreground/90 disabled:bg-foreground/50 text-background rounded-full px-4 sm:px-8 py-2 text-sm sm:text-[15px] font-bold min-w-[80px] sm:min-w-[100px] h-9 sm:h-10 transition-all duration-200 touch-manipulation"
-                style={{
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                }}
-              >
-                Edit
-              </Button>
-            </div>
-          </div>
-        )}
       </Card>
     </div>
   );
