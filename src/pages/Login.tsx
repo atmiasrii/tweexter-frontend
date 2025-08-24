@@ -32,7 +32,7 @@ export const Login = () => {
         title: "Welcome back!",
         description: "You've been successfully logged in.",
       });
-      navigate('/');
+      navigate('/home');
     }
     setIsLoading(false);
   };
@@ -53,7 +53,7 @@ export const Login = () => {
         title: "Account created!",
         description: "Welcome to your free trial! You can now start using the app.",
       });
-      navigate('/');
+      navigate('/home');
     }
     setIsLoading(false);
   };
@@ -143,7 +143,7 @@ export const Login = () => {
 
               <div className="text-center mt-4">
                 <button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/landing')}
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors"
                 >
                   ← Back to landing

@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Index from "./pages/Index";
 import { Landing } from "./pages/Landing";
@@ -19,7 +19,7 @@ const LandingWrapper = () => {
   const handlePost = (data: { content: string; images: File[] }) => {
     // Handle post and redirect to main app
     console.log("Posted:", data);
-    navigate('/');
+    navigate('/login');
   };
   
   return <Landing onPost={handlePost} />;
@@ -43,7 +43,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Navigate to="/landing" replace />} />
             <Route path="/home" element={<Index />} />
             <Route path="/landing" element={<LandingWrapper />} />
             <Route path="/login" element={<Login />} />

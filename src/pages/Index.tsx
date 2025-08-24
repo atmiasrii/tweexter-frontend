@@ -37,7 +37,7 @@ const Index = () => {
       hasPost
     });
     
-    if (user && tweetText && ranges && !hasPost) {
+    if (user && tweetText && ranges) {
       console.log('✅ Creating post from stored data - tweetText:', tweetText);
       // Auto-create post data from stored prediction
       const postData = { content: tweetText, images: [] };
@@ -55,7 +55,6 @@ const Index = () => {
 
   // Redirect unauthenticated users to login
   if (!user) {
-    navigate('/login');
     return null;
   }
 
