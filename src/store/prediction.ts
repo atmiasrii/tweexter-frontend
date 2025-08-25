@@ -2,6 +2,7 @@
 import { create } from "zustand";
 import { predictEngagement } from "@/lib/api";
 import type { PredictResponse } from "@/types/prediction";
+import { logUserAnalytics } from "@/lib/analytics";
 
 type State = {
   tweetText: string;
@@ -35,7 +36,20 @@ export const usePredictionStore = create<State & Actions>((set, get) => ({
     set({ tweetText: v });
   },
   setFollowers: (n) => set({ followers: n }),
-  setWinnerStats: (ranges) => set({ winnerStats: ranges }),
+  setWinnerStats: (ranges) => {
+    set({ winnerStats: ranges });
+    
+    // Log analytics for winner selection
+    const { tweetText, followers } = get();
+    if (ranges && tweetText) {
+      logUserAnalytics({
+        actionType: 'winner_selection',
+        originalText: tweetText,
+        winnerStats: ranges,
+        followerCount: followers
+      });
+    }
+  },
   clearWinnerStats: () => set({ winnerStats: null }),
 
   fetchPrediction: async () => {

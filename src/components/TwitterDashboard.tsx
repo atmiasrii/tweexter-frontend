@@ -12,6 +12,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { usePredictionStore } from "@/store/prediction";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { logUserAnalytics } from "@/lib/analytics";
 
 interface PostData {
   content: string;
@@ -118,11 +119,31 @@ export const TwitterDashboard = ({
     
     // Then fetch new prediction
     await fetchPrediction();
+    
+    // Log analytics for new post prediction
+    if (data.content && ranges) {
+      logUserAnalytics({
+        actionType: 'initial_prediction',
+        originalText: data.content,
+        originalPredictions: ranges,
+        followerCount: profile?.follower_count || followers
+      });
+    }
   };
 
   const handlePredict = async () => {
     await fetchPrediction();
     handleAnalyticsRefresh();
+    
+    // Log analytics for prediction
+    if (tweetText && ranges) {
+      logUserAnalytics({
+        actionType: 'initial_prediction',
+        originalText: tweetText,
+        originalPredictions: ranges,
+        followerCount: profile?.follower_count || followers
+      });
+    }
   };
 
   const handleSignOut = async () => {

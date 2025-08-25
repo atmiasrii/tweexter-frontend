@@ -44,6 +44,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_analytics: {
+        Row: {
+          action_type: string
+          created_at: string
+          follower_count: number
+          id: string
+          improved_predictions: Json | null
+          improved_text: string | null
+          original_predictions: Json | null
+          original_text: string
+          updated_at: string
+          user_id: string
+          winner_stats: Json | null
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          follower_count?: number
+          id?: string
+          improved_predictions?: Json | null
+          improved_text?: string | null
+          original_predictions?: Json | null
+          original_text: string
+          updated_at?: string
+          user_id: string
+          winner_stats?: Json | null
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          follower_count?: number
+          id?: string
+          improved_predictions?: Json | null
+          improved_text?: string | null
+          original_predictions?: Json | null
+          original_text?: string
+          updated_at?: string
+          user_id?: string
+          winner_stats?: Json | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

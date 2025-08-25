@@ -6,6 +6,7 @@ import { MessageCircle, Repeat2, Heart, Bookmark, Edit3, Loader2 } from "lucide-
 import { HighlightedText } from "@/components/HighlightedText";
 import { formatTextWithMarkdown } from "@/utils/formatText";
 import { improveText } from "@/lib/api";
+import { logUserAnalytics } from "@/lib/analytics";
 
 interface PostData {
   content: string;
@@ -278,6 +279,14 @@ export const TwitterCompose = ({
       }
       
       console.log('🎉 Text improvement completed successfully!');
+      
+      // Log analytics for text improvement
+      logUserAnalytics({
+        actionType: 'text_improvement',
+        originalText: currentContent,
+        improvedText: improvedText,
+        followerCount: followers
+      });
     } catch (error) {
       console.error('❌ Failed to improve text:', error);
       // Fallback to mock improvement if API fails
@@ -370,6 +379,21 @@ export const TwitterCompose = ({
 
   const handleEditableBlur = () => {
     setIsEditing(false);
+    
+    // If the content actually changed, log analytics and trigger prediction
+    if (editableRef.current) {
+      const newContent = editableRef.current.textContent || "";
+      if (newContent !== currentContent) {
+        // Log analytics for text edit
+        logUserAnalytics({
+          actionType: 'text_edit',
+          originalText: currentContent,
+          improvedText: newContent,
+          followerCount: followers
+        });
+      }
+    }
+    
     // Trigger prediction and analytics refresh after editing finishes
     if (onPredict) {
       console.log('🔮 Text editing finished, running prediction...');
