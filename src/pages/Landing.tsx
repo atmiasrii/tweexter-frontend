@@ -93,7 +93,8 @@ export const Landing = ({ onPost }: LandingProps) => {
                   value={postText}
                   onChange={(e) => setPostText(e.target.value)}
                   placeholder="What's happening?
-                  Type in a tweet to see its predicted likes."
+                  Type a tweet to see its predicted likes."
+                  className="w-full text-lg sm:text-xl placeholder:text-muted-foreground bg-transparent border-none outline-none resize-none min-h-[100px] sm:min-h-[120px] font-normal text-foreground"
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   }}
