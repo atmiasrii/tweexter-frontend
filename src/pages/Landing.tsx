@@ -92,8 +92,8 @@ export const Landing = ({ onPost }: LandingProps) => {
                 <textarea
                   value={postText}
                   onChange={(e) => setPostText(e.target.value)}
-                  <textarea placeholder="What's happening?
-                  Type in a tweet to see its predicted likes."></textarea>
+                  placeholder="What's happening?
+                  Type in a tweet to see its predicted likes."
                   style={{
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   }}
